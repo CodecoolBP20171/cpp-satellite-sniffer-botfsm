@@ -2,8 +2,17 @@
 #include "TLE.h"
 #include "CelMechConst.h"
 #include <cmath>
+#include <sstream>
 
 TLE::TLE(std::string line1, std::string line2) {
+	std::stringstream l1s(line1);
+	std::stringstream l2s(line2);
+	std::string current;
+	l1s >> current >> current >> current;
+	l1s >> EpochTime;
+	l2s >> current >> current;
+	l2s >> Inclination >> RAAN >> current >> ArgPerigree >> MeanAnomaly >> MeanMotion;
+	Eccentricity = std::stod("." + current);
 }
 
 std::pair<double, double> TLE::calculate(double t) {
