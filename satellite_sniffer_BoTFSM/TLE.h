@@ -12,5 +12,13 @@ private:
 	double Inclination;
 	double Eccentricity;
 	double MeanAnomaly;
+	double MeanMotion;
+
+	void rangeNorm(double& value, double range);
+	double calcSemiMajorAxis();
+	double calcTrueAnomaly();
+
+	void getPrecession(double SemiMajorAxis, double& RAANPrecession, double& PerigeePrecession);
+	void getSatPosition(double SemiMajorAxis, double RAANPrecession, double PerigeePrecession, double currTime, double TrueAnomaly, double& x, double& y, double& z, double& radius);
 };
 
