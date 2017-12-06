@@ -76,13 +76,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\devlibs\SDL2_ttf-2.0.14\include;C:\devlibs\SDL2_image-2.0.2\include;C:\devlibs\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <OutDir>$(SolutionDir)out</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)out</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,17 +151,21 @@
   <ItemGroup>
     <ClCompile Include="MechStandards.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Satellite.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TLE.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MechStandards.h" />
+    <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TLE.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
