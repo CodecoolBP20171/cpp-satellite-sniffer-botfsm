@@ -25,18 +25,26 @@ Satellite::Satellite(std::string name, std::string noradId)
 
 // TODO make as non parametered
 std::pair<double, double> Satellite::calculate(std::tm& time) {
-	return { 0,0 };
-}
-
-std::pair<double, double> Satellite::calculate() {
-	std::string cmd = "python ../getSatPos.py \"" + name + "\" \"" + tle1 + "\" \"" + tle2 + "\"";
+	// '1984/05/30 16:23:45.12'
+	std::stringstream strtime;
+	strtime << time.tm_year + 1900 << "/" << time.tm_mon + 1 << "/" << time.tm_mday << " " 
+			<< time.tm_hour << ":" << time.tm_min << ":" << time.tm_sec;
+	std::string cmd = "python ../getSatPos.py \"" + name + "\" \"" + tle1 + "\" \"" + tle2 + "\" \"" + strtime.str() + "\"";
 	std::string result(exec(cmd.c_str()));
-	
+
 	std::stringstream stris(result);
 
 	double longi, lati;
 	stris >> longi >> lati;
 	return { longi, lati };
+}
+
+std::pair<double, double> Satellite::calculate() {
+
+	auto utime(time(0));
+	std::tm time;
+	gmtime_s(&time, &utime);
+	return calculate(time);
 }
 
 Satellite::~Satellite() {}
