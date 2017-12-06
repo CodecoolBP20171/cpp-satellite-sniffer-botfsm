@@ -3,7 +3,7 @@
 
 namespace satelliteSniffer {
 	// Earth constatnts
-	const double PI = cos(-1);
+	const double PI = acos(-1);
 	const double EarthRadius = 6378.16;
 	const double MinutesPerDay = 24 * 60.0;
 	const double SecondsPerDay = MinutesPerDay * 60;
@@ -19,4 +19,6 @@ namespace satelliteSniffer {
 
 	// Calculate date to Julian date
 	double calcMJD(int mn, double dy, int yr);
+
+	double degrad(double value);
 }

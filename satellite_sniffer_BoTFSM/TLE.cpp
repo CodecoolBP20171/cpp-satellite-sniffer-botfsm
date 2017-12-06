@@ -17,6 +17,12 @@ TLE::TLE(std::string line1, std::string line2) {
 	EpochTime = satelliteSniffer::calcMJD(1, EpochDay, EpochYear);
 	l2s >> current >> current;
 	l2s >> Inclination >> RAAN >> current >> ArgPerigree >> MeanAnomaly >> MeanMotion;
+
+	Inclination = satelliteSniffer::degrad(Inclination);
+	RAAN = satelliteSniffer::degrad(RAAN);
+	ArgPerigree = satelliteSniffer::degrad(ArgPerigree);
+	MeanAnomaly = satelliteSniffer::degrad(MeanAnomaly);
+
 	Eccentricity = std::stod("." + current);
 }
 

@@ -33,3 +33,7 @@ double satelliteSniffer::calcMJD(int mn, double dy, int yr)
 
 	return mjp;
 }
+
+double satelliteSniffer::degrad(double value) {
+	return (value * PI / 180);
+}
