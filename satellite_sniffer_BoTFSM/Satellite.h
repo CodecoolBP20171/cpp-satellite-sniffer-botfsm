@@ -5,7 +5,8 @@
 class Satellite {
 public:
 	Satellite(std::string name, std::string noradId);
-	std::pair<double, double> calculate(double time = 0);
+	std::pair<double, double> calculate(std::tm& time);
+	std::pair<double, double> calculate();
 	~Satellite();
 private:
 	std::string name, noradId;

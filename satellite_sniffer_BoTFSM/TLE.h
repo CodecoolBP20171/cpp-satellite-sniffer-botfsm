@@ -7,6 +7,8 @@ public:
 	std::pair<double, double> calculate(double t);
 	double EpochTime;
 private:
+	int EpochYear;
+	double EpochDay;
 	double RAAN;
 	double ArgPerigree;
 	double Inclination;

@@ -9,7 +9,12 @@ TLE::TLE(std::string line1, std::string line2) {
 	std::stringstream l2s(line2);
 	std::string current;
 	l1s >> current >> current >> current;
-	l1s >> EpochTime;
+	l1s >> current;
+	EpochYear = std::stoi(current.substr(0, 2));
+	EpochDay = std::stod(current.substr(2));
+	if (EpochYear < 57) EpochYear += 100;
+	EpochYear += 1900;
+	EpochTime = satelliteSniffer::calcMJD(1, EpochDay, EpochYear);
 	l2s >> current >> current;
 	l2s >> Inclination >> RAAN >> current >> ArgPerigree >> MeanAnomaly >> MeanMotion;
 	Eccentricity = std::stod("." + current);
