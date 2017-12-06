@@ -16,4 +16,7 @@ namespace satelliteSniffer {
 	const double SidRate = PI * SiderealSolar / SecondsPerDay;
 	
 	const double Epsilon = RadiansPerDegree / 36000;  // 1 arc. sec.
+
+	// Calculate date to Julian date
+	double calcMJD(int mn, double dy, int yr);
 }

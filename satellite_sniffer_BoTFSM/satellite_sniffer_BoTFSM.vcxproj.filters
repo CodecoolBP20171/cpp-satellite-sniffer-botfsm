@@ -21,13 +21,13 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CelMechConst.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TLE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Satellite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MechStandards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -42,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Satellite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MechStandards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
