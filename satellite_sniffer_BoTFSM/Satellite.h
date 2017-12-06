@@ -9,6 +9,9 @@ public:
 	std::pair<double, double> calculate();
 	~Satellite();
 private:
+	std::string tle1;
+	std::string tle2;
+	std::string exec(const char* cmd);
 	std::string name, noradId;
 	std::list<TLE> tleData;
 };
