@@ -77,14 +77,14 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\devlibs\SDL2_ttf-2.0.14\include;C:\devlibs\SDL2_image-2.0.2\include;C:\devlibs\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_d</TargetName>
-    <OutDir>$(SolutionDir)out</OutDir>
+    <OutDir>$(SolutionDir)out\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)out</OutDir>
+    <OutDir>$(SolutionDir)out\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
