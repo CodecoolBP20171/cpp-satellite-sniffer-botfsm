@@ -47,7 +47,7 @@ std::pair<double, double> TLE::calculate(double t) {
 
 	r = sqrt(pow(satX, 2) + pow(satY, 2) + pow(satZ, 2));
 
-	longi = satelliteSniffer::PI * 2 * ((T - SidDay) * satelliteSniffer::SiderealSolar + SidReference) - atan2(satY, satX);
+	longi = satelliteSniffer::PI * 2 * ((t - SidDay) * satelliteSniffer::SiderealSolar + SidReference) - atan2(satY, satX);
 
 	rangeNorm(longi, satelliteSniffer::PI * 2);
 	if (longi > satelliteSniffer::PI) longi -= satelliteSniffer::PI * 2;
@@ -81,7 +81,7 @@ double TLE::calcTrueAnomaly()
 		EccAnomaly -= Error;
 	} while (abs(Error) >= satelliteSniffer::Epsilon);
 
-	if( abs(EccAnomaly - satelliteSniffer::PI) ){
+	if( abs(EccAnomaly - satelliteSniffer::PI) < satelliteSniffer::Epsilon ){
 		TrueAnomaly = satelliteSniffer::PI;
 	}
 	else
@@ -121,8 +121,8 @@ void TLE::getSatPosition(double SemiMajorAxis, double RAANPrecession, double Per
 
 	Raan = RAAN - (currTime - EpochTime) * RAANPrecession;
 
-	CosRAAN = cos(RAAN);
-	SinRAAN = sin(RAAN);
+	CosRAAN = cos(Raan);
+	SinRAAN = sin(Raan);
 	CosArgPerigee = cos(ArgPerig);
 	SinArgPerigee = sin(ArgPerig);
 	CoSinclination = cos(Inclination);
