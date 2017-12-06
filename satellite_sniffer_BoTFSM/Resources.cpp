@@ -5,7 +5,7 @@
 
 sptr<Resources> Resources::instance = nullptr;
 Resources::Resources() {
-	std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("TheMadSquirrels : Stratego",
+	std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		960, 640, SDL_WINDOW_SHOWN));
