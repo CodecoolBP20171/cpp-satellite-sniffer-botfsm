@@ -37,8 +37,12 @@ sptr<Resources>& Resources::getInstance() {
 }
 
 void Resources::loadTextures() {
-	map = sptr<Texture>(new Texture("map.png"));
-	sat = sptr<Texture>(new Texture("sat.png"));
+	cleanMap = sptr<Texture>(new Texture("map.png"));
+	map = sptr<Texture>(new Texture(cleanMap));
+
+	sats.emplace("STATION", sptr<Texture>(new Texture("station.png")));
+	sats.emplace("TELESCOPE", sptr<Texture>(new Texture("telescope.png")));
+	sats.emplace("GPS", sptr<Texture>(new Texture("gps.png")));
 }
 
 
@@ -58,9 +62,11 @@ void Resources::releaseResources() {
 void  Resources::renderText(const std::string& text, SDL_Rect position)
 {
 	SDL_Color color = { 0,0,0 };
-	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), TTF_RenderUTF8_Blended(ttffont.get(), text.c_str(), color)));
+	auto textSurface(TTF_RenderUTF8_Blended(ttffont.get(), text.c_str(), color));
+	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), textSurface));
 	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
 	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
+	SDL_FreeSurface(textSurface);
 	SDL_DestroyTexture(finalText);
 }
 
@@ -68,14 +74,23 @@ sptr<Texture>& Resources::getMap() {
 	return map;
 }
 
-sptr<Texture>& Resources::getSat(std::string& name) {
-	return sat;
+void Resources::clearMap() {
+	map->setAsRenderTarget();
+	cleanMap->render(nullptr);
+	resetRenderer();
+}
+
+sptr<Texture>& Resources::getSat(std::string& type) {
+	return sats[type];
 }
 
 void Resources::release() {
 	ttffont.reset();
 	map.reset();
-	sat.reset();
+	cleanMap.reset();
+	for (auto& sat : sats) {
+		sat.second.reset();
+	}
 	renderer.reset();
 	window.reset();
 }
