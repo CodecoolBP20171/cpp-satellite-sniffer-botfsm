@@ -49,11 +49,11 @@ void Resources::releaseResources() {
 	if (instance) instance->release();
 }
 
-Texture Resources::getMap() {
-	return Texture(map);
+sptr<Texture>& Resources::getMap() {
+	return map;
 }
 
-sptr<Texture>& Resources::getSat() {
+sptr<Texture>& Resources::getSat(std::string& name) {
 	return sat;
 }
 

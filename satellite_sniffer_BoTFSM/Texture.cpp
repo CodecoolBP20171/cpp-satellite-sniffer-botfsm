@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "Texture.h"
 #include "Resources.h"
+#include <iostream>
 
 
 Texture::Texture(const std::string fileName)
 	: texture(IMG_LoadTexture_RW(Resources::getInstance()->getRenderer(),
 		SDL_RWFromFile(fileName.c_str(), "rb"),
 		1)) {
+	std::cout << IMG_GetError();
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 }
 
@@ -15,6 +17,7 @@ Texture::Texture(const std::shared_ptr<Texture>& other) {
 	SDL_SetRenderTarget(Resources::getInstance()->getRenderer(), texture);
 	other->render(nullptr);
 	Resources::getInstance()->resetRenderer();
+	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 }
 
 Texture::~Texture() {
@@ -25,8 +28,8 @@ void Texture::render(const SDL_Rect* pos) {
 	SDL_RenderCopy(Resources::getInstance()->getRenderer(), texture, nullptr, pos);
 }
 
-SDL_Texture * Texture::get() {
-	return texture;
+void Texture::setAsRenderTarget() {
+	SDL_SetRenderTarget(Resources::getInstance()->getRenderer(), texture);
 }
 
 SDL_Rect Texture::getDimensions() {
