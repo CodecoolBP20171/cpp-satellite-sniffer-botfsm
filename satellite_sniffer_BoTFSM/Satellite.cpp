@@ -14,15 +14,14 @@
 #include "MechStandards.h"
 
 
-Satellite::Satellite(std::string name, std::string noradId)
+Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	: name(name),
 	noradId(noradId),
+	type(type),
 	texture(Resources::getInstance()->getSat(name)) {
 	std::ifstream file("satellites/" + noradId + ".dat");
-	std::string line1, line2;
-	while (std::getline(file, tle1)) {
-		std::getline(file, tle2);
-	}
+	std::getline(file, tle1);
+	std::getline(file, tle2);
 	file.close();
 }
 
@@ -51,6 +50,7 @@ std::pair<double, double> Satellite::calculate() {
 }
 
 void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
+	if (tle1 == "" || tle2 == "") return;
 	std::pair<double, double> satpos;
 	if (time == 0) satpos = calculate();
 	else {
@@ -79,6 +79,7 @@ Satellite::~Satellite() {}
 
 std::string Satellite::exec(const char* cmd)
 {
+	std::cout << cmd << std::endl;
 	std::array<char, 128> buffer;
 	std::string result;
 	std::shared_ptr<FILE> pipe(_popen(cmd, "r"), _pclose);
