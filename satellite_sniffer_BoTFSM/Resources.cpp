@@ -21,7 +21,7 @@ Resources::Resources() {
 	}
 	ren.swap(renderer);
 
-	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("Mermaid1001.ttf", 100));
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("Mermaid1001.ttf", 128));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
 	}
@@ -57,8 +57,8 @@ void Resources::releaseResources() {
 
 void  Resources::renderText(const std::string& text, SDL_Rect position)
 {
-	SDL_Color color = { 0,0,0 }, bgcolor = { 255,255,0 };
-	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), TTF_RenderUTF8_Shaded(ttffont.get(), text.c_str(), color, bgcolor)));
+	SDL_Color color = { 0,0,0 };
+	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), TTF_RenderUTF8_Blended(ttffont.get(), text.c_str(), color)));
 	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
 	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
 	SDL_DestroyTexture(finalText);

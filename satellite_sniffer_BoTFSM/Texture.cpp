@@ -8,7 +8,6 @@ Texture::Texture(const std::string fileName)
 	: texture(IMG_LoadTexture_RW(Resources::getInstance()->getRenderer(),
 		SDL_RWFromFile(fileName.c_str(), "rb"),
 		1)) {
-	std::cout << IMG_GetError();
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 }
 
