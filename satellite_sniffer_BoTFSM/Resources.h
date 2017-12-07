@@ -2,6 +2,7 @@
 #include <memory>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <map>
 #include "Texture.h"
 template<typename T>
 using sptr = std::shared_ptr<T>;
@@ -20,7 +21,8 @@ public:
 	static void releaseResources();
 	void renderText(const std::string& text, SDL_Rect position);
 	sptr<Texture>& getMap();
-	sptr<Texture>& getSat(std::string& name);
+	void clearMap();
+	sptr<Texture>& getSat(std::string& type);
 
 	SDL_Renderer* getRenderer();
 	void resetRenderer();
@@ -32,7 +34,8 @@ private:
 	std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
 
 	sptr<Texture> map;
-	sptr<Texture> sat;
+	sptr<Texture> cleanMap;
+	std::map<std::string, sptr<Texture>> sats;
 
 	void release();
 

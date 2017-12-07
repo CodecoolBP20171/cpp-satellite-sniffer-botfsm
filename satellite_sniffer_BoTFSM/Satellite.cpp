@@ -18,7 +18,7 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	: name(name),
 	noradId(noradId),
 	type(type),
-	texture(Resources::getInstance()->getSat(name)) {
+	texture(Resources::getInstance()->getSat(type)) {
 	std::ifstream file("satellites/" + noradId + ".dat");
 	std::getline(file, tle1);
 	std::getline(file, tle2);
@@ -78,7 +78,6 @@ Satellite::~Satellite() {}
 
 std::string Satellite::exec(const char* cmd)
 {
-	std::cout << cmd << std::endl;
 	std::array<char, 128> buffer;
 	std::string result;
 	std::shared_ptr<FILE> pipe(_popen(cmd, "r"), _pclose);
