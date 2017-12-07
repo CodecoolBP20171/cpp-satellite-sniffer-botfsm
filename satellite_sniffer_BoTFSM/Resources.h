@@ -16,8 +16,8 @@ public:
 	static sptr<Resources>& getInstance();
 	static void releaseResources();
 	
-	Texture getMap();
-	sptr<Texture>& getSat();
+	sptr<Texture>& getMap();
+	sptr<Texture>& getSat(std::string& name);
 
 	SDL_Renderer* getRenderer();
 	void resetRenderer();

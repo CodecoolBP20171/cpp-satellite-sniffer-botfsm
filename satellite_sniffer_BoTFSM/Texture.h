@@ -8,7 +8,7 @@ public:
 	explicit Texture(const std::shared_ptr<Texture>& other);
 	virtual ~Texture();
 	void render(const SDL_Rect* pos);
-	SDL_Texture* get();
+	void setAsRenderTarget();
 	SDL_Rect getDimensions();
 private:
 	SDL_Texture* texture;

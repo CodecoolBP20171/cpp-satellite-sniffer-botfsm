@@ -10,11 +10,14 @@
 #include <string>
 #include <array>
 #include "Satellite.h"
+#include "Resources.h"
+#include "MechStandards.h"
 
 
 Satellite::Satellite(std::string name, std::string noradId)
 	: name(name),
-	noradId(noradId) {
+	noradId(noradId),
+	texture(Resources::getInstance()->getSat(name)) {
 	std::ifstream file("satellites/" + noradId + ".dat");
 	std::string line1, line2;
 	while (std::getline(file, tle1)) {
@@ -45,6 +48,30 @@ std::pair<double, double> Satellite::calculate() {
 	std::tm time;
 	gmtime_s(&time, &utime);
 	return calculate(time);
+}
+
+void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
+	std::pair<double, double> satpos;
+	if (time == 0) satpos = calculate();
+	else {
+		std::tm stime;
+		gmtime_s(&stime, &time);
+		satpos = calculate(stime);
+	}
+	std::cout << satpos.first << " " << satpos.second << std::endl;
+	satpos.first += satelliteSniffer::PI;
+	satpos.second -= satelliteSniffer::PI / 2;
+	satpos.second = -satpos.second;
+
+	auto satSize(texture->getDimensions());
+	SDL_Rect satRect = { 
+		static_cast<int>(round(satpos.first / (satelliteSniffer::PI * 2) * mapSize.w - satSize.w/2)),
+		static_cast<int>(round(satpos.second / (satelliteSniffer::PI) * mapSize.h - satSize.h/2)),
+		satSize.w,
+		satSize.h 
+	};
+	std::cout << satRect.x << " " << satRect.y << std::endl;
+	texture->render(&satRect);
 }
 
 Satellite::~Satellite() {}
