@@ -21,7 +21,7 @@ Resources::Resources() {
 	}
 	ren.swap(renderer);
 
-	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 72));
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 64));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
 	}
