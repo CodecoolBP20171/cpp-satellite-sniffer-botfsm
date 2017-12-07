@@ -72,6 +72,7 @@ void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
 	};
 	std::cout << satRect.x << " " << satRect.y << std::endl;
 	texture->render(&satRect);
+	Resources::getInstance()->renderText(name, satRect);
 }
 
 Satellite::~Satellite() {}

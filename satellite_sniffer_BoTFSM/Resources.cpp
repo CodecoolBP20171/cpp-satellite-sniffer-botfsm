@@ -20,6 +20,12 @@ Resources::Resources() {
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 	}
 	ren.swap(renderer);
+
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("Mermaid1001.ttf", 100));
+	if (!fon) {
+		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
+	}
+	fon.swap(ttffont);
 }
 
 sptr<Resources>& Resources::getInstance() {
@@ -49,6 +55,15 @@ void Resources::releaseResources() {
 	if (instance) instance->release();
 }
 
+void  Resources::renderText(const std::string& text, SDL_Rect position)
+{
+	SDL_Color color = { 0,0,0 }, bgcolor = { 255,255,0 };
+	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), TTF_RenderUTF8_Shaded(ttffont.get(), text.c_str(), color, bgcolor)));
+	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
+	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
+	SDL_DestroyTexture(finalText);
+}
+
 sptr<Texture>& Resources::getMap() {
 	return map;
 }
@@ -58,6 +73,7 @@ sptr<Texture>& Resources::getSat(std::string& name) {
 }
 
 void Resources::release() {
+	ttffont.reset();
 	map.reset();
 	sat.reset();
 	renderer.reset();
