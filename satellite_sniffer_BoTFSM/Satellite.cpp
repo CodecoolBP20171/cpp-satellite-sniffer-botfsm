@@ -58,7 +58,6 @@ void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
 		gmtime_s(&stime, &time);
 		satpos = calculate(stime);
 	}
-	std::cout << satpos.first << " " << satpos.second << std::endl;
 	satpos.first += satelliteSniffer::PI;
 	satpos.second -= satelliteSniffer::PI / 2;
 	satpos.second = -satpos.second;
@@ -70,8 +69,8 @@ void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
 		satSize.w,
 		satSize.h 
 	};
-	std::cout << satRect.x << " " << satRect.y << std::endl;
 	texture->render(&satRect);
+	satRect.x += satSize.w;
 	Resources::getInstance()->renderText(name, satRect);
 }
 
