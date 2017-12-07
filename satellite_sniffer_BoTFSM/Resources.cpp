@@ -8,7 +8,7 @@ Resources::Resources() {
 	std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		960, 640, SDL_WINDOW_SHOWN));
+		1280, 640, SDL_WINDOW_SHOWN));
 	if (!win) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 	}
@@ -21,7 +21,7 @@ Resources::Resources() {
 	}
 	ren.swap(renderer);
 
-	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("Mermaid1001.ttf", 128));
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 72));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
 	}
@@ -37,12 +37,12 @@ sptr<Resources>& Resources::getInstance() {
 }
 
 void Resources::loadTextures() {
-	cleanMap = sptr<Texture>(new Texture("map.png"));
+	cleanMap = sptr<Texture>(new Texture("map_s.png"));
 	map = sptr<Texture>(new Texture(cleanMap));
 
-	sats.emplace("STATION", sptr<Texture>(new Texture("station.png")));
-	sats.emplace("TELESCOPE", sptr<Texture>(new Texture("telescope.png")));
-	sats.emplace("GPS", sptr<Texture>(new Texture("gps.png")));
+	sats.emplace("STATION", sptr<Texture>(new Texture("station_s.png")));
+	sats.emplace("TELESCOPE", sptr<Texture>(new Texture("telescope_s.png")));
+	sats.emplace("GPS", sptr<Texture>(new Texture("gps_s.png")));
 }
 
 
@@ -62,7 +62,7 @@ void Resources::releaseResources() {
 void  Resources::renderText(const std::string& text, SDL_Rect position)
 {
 	SDL_Color color = { 0,0,0 };
-	auto textSurface(TTF_RenderUTF8_Blended(ttffont.get(), text.c_str(), color));
+	auto textSurface(TTF_RenderText_Blended(ttffont.get(), text.c_str(), color));
 	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), textSurface));
 	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
 	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
