@@ -17,21 +17,24 @@
 #include <CoordGeodetic.h>
 
 
+Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
+	std::ifstream file("satellites/" + noradId + ".dat");
+	std::string tle1, tle2;
+	std::getline(file, tle1);
+	std::getline(file, tle2);
+	file.close();
+	return Tle(name, tle1, tle2);
+}
+
 Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	: name(name),
 	noradId(noradId),
 	type(type),
-	texture(Resources::getInstance()->getSat(type)) {
-	std::ifstream file("satellites/" + noradId + ".dat");
-	std::getline(file, tle1);
-	std::getline(file, tle2);
-	file.close();
-}
+	sgp4(Satellite::loadTle(name, noradId)),
+	texture(Resources::getInstance()->getSat(type)) {}
 
 
 std::pair<double, double> Satellite::calculate(std::tm& time) {
-	Tle tle(name, tle1, tle2);
-	SGP4 sgp4(tle);
 	DateTime tm(time.tm_year + 1900, time.tm_mon + 1, time.tm_mday, time.tm_hour, time.tm_min, time.tm_sec);
 	Eci eci(sgp4.FindPosition(tm));
 	CoordGeodetic geo(eci.ToGeodetic());
@@ -39,8 +42,6 @@ std::pair<double, double> Satellite::calculate(std::tm& time) {
 }
 
 std::pair<double, double> Satellite::calculate() {
-	Tle tle(name, tle1, tle2);
-	SGP4 sgp4(tle);
 	DateTime tm(DateTime::Now(true));
 	Eci eci(sgp4.FindPosition(tm));
 	CoordGeodetic geo(eci.ToGeodetic());
@@ -48,7 +49,6 @@ std::pair<double, double> Satellite::calculate() {
 }
 
 void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
-	if (tle1 == "" || tle2 == "") return;
 	std::pair<double, double> satpos;
 	if (time == 0) satpos = calculate();
 	else {
@@ -73,15 +73,3 @@ void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
 }
 
 Satellite::~Satellite() {}
-
-std::string Satellite::exec(const char* cmd) {
-	std::array<char, 128> buffer;
-	std::string result;
-	std::shared_ptr<FILE> pipe(_popen(cmd, "r"), _pclose);
-	if (!pipe) throw std::runtime_error("popen() failed!");
-	while (!feof(pipe.get())) {
-		if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-			result += buffer.data();
-	}
-	return result;
-}
