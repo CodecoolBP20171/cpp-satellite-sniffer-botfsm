@@ -1,7 +1,6 @@
 #pragma once
 #include <utility>
 #include <list>
-#include "TLE.h"
 #include "Texture.h"
 #include <ctime>
 #include <SDL.h>
@@ -17,7 +16,6 @@ private:
 	std::string tle2;
 	std::string exec(const char* cmd);
 	std::string name, noradId, type;
-	std::list<TLE> tleData;
 	std::shared_ptr<Texture> texture;
 };
 
