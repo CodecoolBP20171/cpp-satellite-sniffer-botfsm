@@ -21,9 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TLE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Satellite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,9 +39,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TLE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Satellite.cpp">
