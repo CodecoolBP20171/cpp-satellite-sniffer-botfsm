@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LoadSatellites.cpp" />
     <ClCompile Include="MechStandards.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Resources.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LoadSatellites.h" />
     <ClInclude Include="MechStandards.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
