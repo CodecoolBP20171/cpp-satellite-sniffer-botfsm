@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GeoCoordinate.cpp" />
     <ClCompile Include="LoadSatellites.cpp" />
     <ClCompile Include="MechStandards.cpp" />
     <ClCompile Include="main.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GeoCoordinate.h" />
     <ClInclude Include="LoadSatellites.h" />
     <ClInclude Include="MechStandards.h" />
     <ClInclude Include="Resources.h" />
