@@ -59,16 +59,10 @@ void Resources::releaseResources() {
 	if (instance) instance->release();
 }
 
-void  Resources::renderText(const std::string& text, SDL_Rect position)
-{
-	SDL_Color color = { 0,0,0 };
-	auto textSurface(TTF_RenderText_Blended(ttffont.get(), text.c_str(), color));
-	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), textSurface));
-	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
-	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
-	SDL_FreeSurface(textSurface);
-	SDL_DestroyTexture(finalText);
+TTF_Font * Resources::getFont() {
+	return ttffont.get();
 }
+
 
 sptr<Texture>& Resources::getMap() {
 	return map;
@@ -78,6 +72,10 @@ void Resources::clearMap() {
 	map->setAsRenderTarget();
 	cleanMap->render(nullptr);
 	resetRenderer();
+}
+
+SDL_Rect Resources::getMapDimensions() {
+	return map->getDimensions();
 }
 
 sptr<Texture>& Resources::getSat(std::string& type) {

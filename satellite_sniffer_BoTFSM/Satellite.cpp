@@ -12,6 +12,7 @@
 #include "Satellite.h"
 #include "Resources.h"
 #include "MechStandards.h"
+#include "Resources.h"
 
 #include <SGP4.h>
 #include <CoordGeodetic.h>
@@ -21,7 +22,8 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	noradId(noradId),
 	type(type),
 	sgp4(Satellite::loadTle(name, noradId)),
-	texture(Resources::getInstance()->getSat(type)) {
+	texture(Resources::getInstance()->getSat(type)),
+	text(new ScreenText(name)) {
 	setPosition();
 }
 
@@ -62,7 +64,8 @@ void Satellite::setPosition(std::time_t time) {
 	satpos.latitude = -satpos.latitude;
 }
 
-void Satellite::render(SDL_Rect & mapSize) {
+void Satellite::render() {
+	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto satSize(texture->getDimensions());
 	SDL_Rect satRect = {
 		static_cast<int>(round(satpos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - satSize.w / 2)),
@@ -71,8 +74,11 @@ void Satellite::render(SDL_Rect & mapSize) {
 		satSize.h
 	};
 	texture->render(&satRect);
-	satRect.x += satSize.w;
-	Resources::getInstance()->renderText(name, satRect);
+	satRect.x + satSize.w;
+	auto textPos(text->getDimensions());
+	textPos.x = satRect.x + satSize.w;
+	textPos.y = satRect.y;
+	text->render(&textPos);
 }
 
 Satellite::~Satellite() {}

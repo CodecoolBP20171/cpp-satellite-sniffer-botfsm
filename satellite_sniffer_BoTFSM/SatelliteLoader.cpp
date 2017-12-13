@@ -1,19 +1,10 @@
 #include "stdafx.h"
-#include "LoadSatellites.h"
+#include "SatelliteLoader.h"
 #include <fstream>
 #include <sstream>
 #include <string>
 
-LoadSatellites::LoadSatellites()
-{
-}
-
-
-LoadSatellites::~LoadSatellites()
-{
-}
-
-void LoadSatellites::load(std::list<Satellite>& sats)
+void SatelliteLoader::loadSatellites(std::list<Satellite>& sats)
 {
 	std::ifstream file("satellites/satellites.dat");
 	std::string line;

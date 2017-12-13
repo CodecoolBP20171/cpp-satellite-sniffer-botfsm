@@ -19,9 +19,10 @@ class Resources {
 public:
 	static sptr<Resources>& getInstance();
 	static void releaseResources();
-	void renderText(const std::string& text, SDL_Rect position);
+	TTF_Font* getFont();
 	sptr<Texture>& getMap();
 	void clearMap();
+	SDL_Rect getMapDimensions();
 	sptr<Texture>& getSat(std::string& type);
 
 	SDL_Renderer* getRenderer();
