@@ -43,6 +43,7 @@ sptr<Resources>& Resources::getInstance() {
 void Resources::loadTextures() {
 	cleanMap = sptr<Texture>(new Texture("map_s.png"));
 	map = sptr<Texture>(new Texture(cleanMap));
+	point = sptr<Texture>(new Texture("trajectory_s.png"));
 
 	sats.emplace("STATION", sptr<Texture>(new Texture("station_s.png")));
 	sats.emplace("TELESCOPE", sptr<Texture>(new Texture("telescope_s.png")));
@@ -87,10 +88,15 @@ sptr<Texture>& Resources::getSat(std::string& type) {
 	return sats[type];
 }
 
+sptr<Texture>& Resources::getPoint() {
+	return point;
+}
+
 void Resources::release() {
 	ttffont.reset();
 	map.reset();
 	cleanMap.reset();
+	point.reset();
 	for (auto& sat : sats) {
 		sat.second.reset();
 	}
