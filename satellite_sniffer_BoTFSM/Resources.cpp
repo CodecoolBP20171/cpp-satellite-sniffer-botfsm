@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Resources.h"
+#include "LoadError.hpp"
 #include <iostream>
 
 
@@ -11,6 +12,7 @@ Resources::Resources() {
 		1280, 640, SDL_WINDOW_SHOWN));
 	if (!win) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		throw LoadError();
 	}
 	win.swap(window);
 
@@ -18,12 +20,14 @@ Resources::Resources() {
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
 	if (!ren) {
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+		throw LoadError();
 	}
 	ren.swap(renderer);
 
 	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 64));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
+		throw LoadError();
 	}
 	fon.swap(ttffont);
 }
@@ -57,18 +61,13 @@ void Resources::resetRenderer() {
 
 void Resources::releaseResources() {
 	if (instance) instance->release();
+	instance.reset();
 }
 
-void  Resources::renderText(const std::string& text, SDL_Rect position)
-{
-	SDL_Color color = { 0,0,0 };
-	auto textSurface(TTF_RenderText_Blended(ttffont.get(), text.c_str(), color));
-	auto finalText(SDL_CreateTextureFromSurface(renderer.get(), textSurface));
-	SDL_QueryTexture(finalText, nullptr, nullptr, &position.w, &position.h);
-	SDL_RenderCopy(renderer.get(), finalText, nullptr, &position);
-	SDL_FreeSurface(textSurface);
-	SDL_DestroyTexture(finalText);
+TTF_Font * Resources::getFont() {
+	return ttffont.get();
 }
+
 
 sptr<Texture>& Resources::getMap() {
 	return map;
@@ -78,6 +77,10 @@ void Resources::clearMap() {
 	map->setAsRenderTarget();
 	cleanMap->render(nullptr);
 	resetRenderer();
+}
+
+SDL_Rect Resources::getMapDimensions() {
+	return map->getDimensions();
 }
 
 sptr<Texture>& Resources::getSat(std::string& type) {

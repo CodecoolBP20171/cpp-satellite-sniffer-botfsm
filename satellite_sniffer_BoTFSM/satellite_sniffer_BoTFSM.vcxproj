@@ -153,11 +153,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GeoCoordinate.cpp" />
-    <ClCompile Include="LoadSatellites.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="SatelliteLoader.cpp" />
     <ClCompile Include="MechStandards.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Satellite.cpp" />
+    <ClCompile Include="ScreenText.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -166,10 +168,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeoCoordinate.h" />
-    <ClInclude Include="LoadSatellites.h" />
+    <ClInclude Include="LoadError.hpp" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="SatelliteLoader.h" />
     <ClInclude Include="MechStandards.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
+    <ClInclude Include="ScreenText.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
