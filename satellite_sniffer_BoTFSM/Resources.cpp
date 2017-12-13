@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Resources.h"
+#include "LoadError.hpp"
 #include <iostream>
 
 
@@ -11,6 +12,7 @@ Resources::Resources() {
 		1280, 640, SDL_WINDOW_SHOWN));
 	if (!win) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		throw LoadError();
 	}
 	win.swap(window);
 
@@ -18,12 +20,14 @@ Resources::Resources() {
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
 	if (!ren) {
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+		throw LoadError();
 	}
 	ren.swap(renderer);
 
 	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 64));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
+		throw LoadError();
 	}
 	fon.swap(ttffont);
 }
@@ -57,6 +61,7 @@ void Resources::resetRenderer() {
 
 void Resources::releaseResources() {
 	if (instance) instance->release();
+	instance.reset();
 }
 
 TTF_Font * Resources::getFont() {
