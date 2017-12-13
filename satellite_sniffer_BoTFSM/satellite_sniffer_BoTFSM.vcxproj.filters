@@ -33,6 +33,12 @@
     <ClInclude Include="Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LoadSatellites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoCoordinate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadSatellites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoCoordinate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
