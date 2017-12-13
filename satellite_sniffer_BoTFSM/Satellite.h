@@ -11,7 +11,8 @@ class Satellite {
 public:
 	static Tle loadTle(const std::string& name, const std::string& noradId);
 	Satellite(std::string name, std::string noradId, std::string type);
-	void render(SDL_Rect& mapSize, std::time_t time = 0);
+	void setPosition(std::time_t time = 0);
+	void render(SDL_Rect& mapSize);
 	~Satellite();
 private:
 	SGP4 sgp4;

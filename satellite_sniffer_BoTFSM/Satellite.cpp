@@ -21,7 +21,9 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	noradId(noradId),
 	type(type),
 	sgp4(Satellite::loadTle(name, noradId)),
-	texture(Resources::getInstance()->getSat(type)) {}
+	texture(Resources::getInstance()->getSat(type)) {
+	setPosition();
+}
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
 	std::ifstream file("satellites/" + noradId + ".dat");
@@ -48,7 +50,7 @@ void Satellite::calculate() {
 	satpos.latitude = geo.latitude;
 }
 
-void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
+void Satellite::setPosition(std::time_t time) {
 	if (time == 0) calculate();
 	else {
 		std::tm stime;
@@ -58,7 +60,9 @@ void Satellite::render(SDL_Rect & mapSize, std::time_t time) {
 	satpos.longitude += satelliteSniffer::PI;
 	satpos.latitude -= satelliteSniffer::PI / 2;
 	satpos.latitude = -satpos.latitude;
+}
 
+void Satellite::render(SDL_Rect & mapSize) {
 	auto satSize(texture->getDimensions());
 	SDL_Rect satRect = {
 		static_cast<int>(round(satpos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - satSize.w / 2)),
