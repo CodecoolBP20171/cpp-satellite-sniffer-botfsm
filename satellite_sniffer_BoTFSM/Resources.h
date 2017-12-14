@@ -24,6 +24,7 @@ public:
 	void clearMap();
 	SDL_Rect getMapDimensions();
 	sptr<Texture>& getSat(std::string& type);
+	sptr<Texture>& getPoint();
 
 	SDL_Renderer* getRenderer();
 	void resetRenderer();
@@ -36,6 +37,7 @@ private:
 
 	sptr<Texture> map;
 	sptr<Texture> cleanMap;
+	sptr<Texture> point;
 	std::map<std::string, sptr<Texture>> sats;
 
 	void release();
