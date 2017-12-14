@@ -21,7 +21,8 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	: name(name),
 	noradId(noradId),
 	type(type),
-	sgp4(Satellite::loadTle(name, noradId)),
+	tle(Satellite::loadTle(name, noradId)),
+	sgp4(tle),
 	texture(Resources::getInstance()->getSat(type)),
 	text(new ScreenText(name)) {
 	setPosition();
@@ -60,15 +61,16 @@ void Satellite::renderTrajectory() {
 	GeoCoordinate currentSatPos(satpos);
 	std::time_t now;
 	std::time(&now);
+	auto delta((24 * 60 * 60) / tle.MeanMotion() / 200);
 
 	for (auto point : pointsForward) {
-		now += 20;
+		now += delta;
 		renderPoint(now, point);
 	}
 	now = 0;
 	std::time(&now);
 	for (auto point : pointsBackward) {
-		now -= 20;
+		now -= delta;
 		renderPoint(now, point);
 	}
 	satpos = currentSatPos;

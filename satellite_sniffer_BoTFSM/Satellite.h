@@ -17,6 +17,7 @@ public:
 	void render();
 	~Satellite();
 private:
+	Tle tle;
 	SGP4 sgp4;
 	std::string name, noradId, type;
 	std::shared_ptr<Texture> texture;
