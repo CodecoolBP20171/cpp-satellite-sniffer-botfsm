@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Globals.h"
 #include "Program.h"
 #include "Resources.h"
 #include "SatelliteLoader.h"
@@ -76,7 +77,12 @@ void Program::render() {
 	}
 
 	Resources::getInstance()->resetRenderer();
-	SDL_Rect pos = { 0,0,1280,640 };
+	SDL_Rect pos = {
+		0,
+		Dimensions::MENU_HEIGHT,
+		Dimensions::MAP_WIDTH,
+		Dimensions::MAP_HEIGHT
+	};
 	Resources::getInstance()->getMap()->render(&pos);
 
 	SDL_RenderPresent(Resources::getInstance()->getRenderer());

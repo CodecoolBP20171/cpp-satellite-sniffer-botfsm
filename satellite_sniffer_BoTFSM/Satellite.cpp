@@ -2,13 +2,8 @@
 
 #include <fstream>
 #include <sstream>
-#include <time.h>
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
+#include <ctime>
 #include <string>
-#include <array>
 #include "Satellite.h"
 #include "Resources.h"
 #include "MechStandards.h"

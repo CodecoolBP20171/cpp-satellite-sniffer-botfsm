@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeoCoordinate.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="LoadError.hpp" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="SatelliteLoader.h" />

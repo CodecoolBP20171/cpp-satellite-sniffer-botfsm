@@ -1,6 +1,4 @@
 #pragma once
-#include <utility>
-#include <list>
 #include <ctime>
 #include <vector>
 #include "GeoCoordinate.h"

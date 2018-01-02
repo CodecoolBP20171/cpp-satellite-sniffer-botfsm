@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Globals.h"
 #include "Resources.h"
 #include "LoadError.hpp"
 #include <iostream>
@@ -9,7 +10,9 @@ Resources::Resources() {
 	std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		1280, 640, SDL_WINDOW_SHOWN));
+		Dimensions::WINDOW_WIDTH,
+		Dimensions::WINDOW_HEIGHT,
+		SDL_WINDOW_SHOWN));
 	if (!win) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 		throw LoadError();
@@ -24,7 +27,7 @@ Resources::Resources() {
 	}
 	ren.swap(renderer);
 
-	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont("monofonto.ttf", 64));
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont(FontFiles::MAP_TEXT.c_str(), Dimensions::MAP_TEXT_SIZE));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
 		throw LoadError();
@@ -41,13 +44,13 @@ sptr<Resources>& Resources::getInstance() {
 }
 
 void Resources::loadTextures() {
-	cleanMap = sptr<Texture>(new Texture("map_s.png"));
+	cleanMap = sptr<Texture>(new Texture(TextureFiles::MAP));
 	map = sptr<Texture>(new Texture(cleanMap));
-	point = sptr<Texture>(new Texture("trajectory_s.png"));
+	point = sptr<Texture>(new Texture(TextureFiles::PATH));
 
-	sats.emplace("STATION", sptr<Texture>(new Texture("station_s.png")));
-	sats.emplace("TELESCOPE", sptr<Texture>(new Texture("telescope_s.png")));
-	sats.emplace("GPS", sptr<Texture>(new Texture("gps_s.png")));
+	sats.emplace("STATION", sptr<Texture>(new Texture(TextureFiles::STATION)));
+	sats.emplace("TELESCOPE", sptr<Texture>(new Texture(TextureFiles::TELESCOPE)));
+	sats.emplace("GPS", sptr<Texture>(new Texture(TextureFiles::GPS)));
 }
 
 
