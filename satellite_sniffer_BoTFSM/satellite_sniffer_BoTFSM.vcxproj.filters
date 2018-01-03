@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Renderable">
       <UniqueIdentifier>{060542dd-474c-40f4-9d35-6ad843d653f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Renderable\UI">
+      <UniqueIdentifier>{eea31571-93c8-4b2b-ac56-da0d84af4fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderable\UI">
+      <UniqueIdentifier>{51c291d6-6d82-4407-a113-8c403327b9f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,6 +63,15 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Renderable</Filter>
     </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,6 +103,15 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

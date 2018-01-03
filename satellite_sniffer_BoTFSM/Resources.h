@@ -24,6 +24,7 @@ public:
 	void clearMap();
 	SDL_Rect getMapDimensions();
 	sptr<Sprite>& getSat(std::string& type);
+	sptr<Sprite>& getButton(const std::string& name);
 	sptr<Sprite>& getPoint();
 
 	SDL_Renderer* getRenderer();
@@ -38,6 +39,7 @@ private:
 	sptr<Sprite> map;
 	sptr<Sprite> cleanMap;
 	sptr<Sprite> point;
+	std::map<std::string, sptr<Sprite>> buttons;
 	std::map<std::string, sptr<Sprite>> sats;
 
 	void release();

@@ -48,9 +48,11 @@ void Resources::loadTextures() {
 	map = sptr<Sprite>(new Sprite(cleanMap));
 	point = sptr<Sprite>(new Sprite(TextureFiles::PATH));
 
-	sats.emplace("STATION", sptr<Sprite>(new Sprite(TextureFiles::STATION)));
-	sats.emplace("TELESCOPE", sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));
-	sats.emplace("GPS", sptr<Sprite>(new Sprite(TextureFiles::GPS)));
+	buttons.emplace(ButtonName::SATELITES, sptr<Sprite>(new Sprite(TextureFiles::PATH))); // TODO: Add button png to resources
+
+	sats.emplace(SatelliteType::STATION, sptr<Sprite>(new Sprite(TextureFiles::STATION)));
+	sats.emplace(SatelliteType::TELESCOPE, sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));
+	sats.emplace(SatelliteType::GPS, sptr<Sprite>(new Sprite(TextureFiles::GPS)));
 }
 
 
@@ -91,6 +93,11 @@ sptr<Sprite>& Resources::getSat(std::string& type) {
 	return sats[type];
 }
 
+sptr<Sprite>& Resources::getButton(const std::string & name)
+{
+	return buttons[name];
+}
+
 sptr<Sprite>& Resources::getPoint() {
 	return point;
 }
@@ -102,6 +109,9 @@ void Resources::release() {
 	point.reset();
 	for (auto& sat : sats) {
 		sat.second.reset();
+	}
+	for (auto& button : buttons) {
+		button.second.reset();
 	}
 	renderer.reset();
 	window.reset();
