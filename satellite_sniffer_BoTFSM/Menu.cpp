@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "Globals.h"
 
+
 Menu::Menu(SDL_Rect rect) : UIElement(rect)
 {
 	rect.h = Dimensions::MENU_BUTTON_HEIGHT;

@@ -3,6 +3,7 @@
 #include "Program.h"
 #include "Resources.h"
 #include "SatelliteLoader.h"
+#include "Menu.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -31,6 +32,9 @@ void Program::init() {
 	// init resources
 	Resources::getInstance();
 	SatelliteLoader::loadSatellites(sats);
+	SDL_Rect menuRect{ 0, 0, Dimensions::WINDOW_WIDTH, Dimensions::MENU_HEIGHT };
+
+	UIElements.emplace_back(new Menu(menuRect));
 	loaded = true;
 }
 
@@ -84,6 +88,10 @@ void Program::render() {
 		Dimensions::MAP_HEIGHT
 	};
 	Resources::getInstance()->getMap()->render(&pos);
+
+	for (auto & element : UIElements) {
+		element->render();
+	}
 
 	SDL_RenderPresent(Resources::getInstance()->getRenderer());
 }

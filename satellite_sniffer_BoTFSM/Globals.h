@@ -16,7 +16,11 @@ namespace Dimensions {
 	const int MENU_BUTTON_WIDTH = 200;
 	const int MENU_BUTTON_HEIGHT = 70;
 	const int MENU_BUTTON_SPACING = 15;
-	const int MENU_BUTTON_VERTICAL_SPACING = (MENU_HEIGHT + MENU_BUTTON_HEIGHT) / 2;
+	const int MENU_BUTTON_VERTICAL_SPACING = (MENU_HEIGHT - MENU_BUTTON_HEIGHT) / 2;
+	const int POPUP_WIDTH = WINDOW_WIDTH - MENU_BUTTON_WIDTH;
+	const int POPUP_HEIGHT = MAP_HEIGHT;
+	const int POPUP_OFFSET_X = (WINDOW_WIDTH - POPUP_WIDTH) / 2;
+	const int POPUP_OFFSET_Y = (WINDOW_HEIGHT - POPUP_HEIGHT) / 2;
 }
 
 namespace FontFiles {
@@ -29,6 +33,7 @@ namespace TextureFiles {
 	const std::string STATION = "station_s.png";
 	const std::string TELESCOPE = "telescope_s.png";
 	const std::string GPS = "gps_s.png";
+	const std::string SAT_BUTTON = "satellite_button_active_s.png";
 }
 
 namespace SatelliteType {

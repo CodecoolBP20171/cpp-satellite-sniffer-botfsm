@@ -1,5 +1,5 @@
 #pragma once
-#include "Resources.h"
+#include <SDL.h>
 
 class UIElement
 {

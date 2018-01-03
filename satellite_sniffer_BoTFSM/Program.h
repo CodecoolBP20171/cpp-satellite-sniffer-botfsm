@@ -1,7 +1,9 @@
 #pragma once
 #include <list>
+#include <memory>
 
 #include "Satellite.h"
+#include "UIElement.h"
 
 class Program {
 public:
@@ -12,6 +14,7 @@ public:
 	void unload();
 private:
 	std::list<Satellite> sats;
+	std::list<std::unique_ptr<UIElement>> UIElements;
 	bool quit;
 	bool loaded;
 	Uint32 timePassed;

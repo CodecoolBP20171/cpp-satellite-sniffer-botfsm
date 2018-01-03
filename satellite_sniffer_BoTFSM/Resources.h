@@ -4,6 +4,7 @@
 #include <SDL_ttf.h>
 #include <map>
 #include "Sprite.h"
+
 template<typename T>
 using sptr = std::shared_ptr<T>;
 struct sdl_deleter {
