@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
 
+namespace MathConstants {
+	const double PI = acos(-1);
+}
+
 namespace Dimensions {
 	/* pixel dimensions */
 	const int MAP_WIDTH = 1024;

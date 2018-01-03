@@ -6,7 +6,7 @@
 #include <string>
 #include "Satellite.h"
 #include "Resources.h"
-#include "MechStandards.h"
+#include "Globals.h"
 #include "Resources.h"
 
 #include <SGP4.h>
@@ -21,8 +21,9 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	texture(Resources::getInstance()->getSat(type)),
 	trajectoryForward(Resources::getInstance()->getPoint()),
 	trajectoryBackward(Resources::getInstance()->getPoint()),
-	text(new ScreenText(name)) {
-	setPosition();
+	text(new ScreenText(name)),
+	_shown(true) {
+	updatePosition();
 }
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
@@ -64,14 +65,14 @@ void Satellite::renderTrajectory() {
 	}
 }
 
-void Satellite::renderPoint(std::time_t & now, std::shared_ptr<Texture>& point) {
+void Satellite::renderPoint(std::time_t & now, std::shared_ptr<Sprite>& point) {
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto pos(getPositionAtTime(now));
 	auto pointSize(point->getDimensions());
 
 	SDL_Rect pointRect = {
-		static_cast<int>(round(pos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - pointSize.w / 2)),
-		static_cast<int>(round(pos.latitude / (satelliteSniffer::PI) * mapSize.h - pointSize.h / 2)),
+		static_cast<int>(round(pos.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize.w / 2)),
+		static_cast<int>(round(pos.latitude / (MathConstants::PI) * mapSize.h - pointSize.h / 2)),
 		pointSize.w,
 		pointSize.h
 	};
@@ -86,32 +87,34 @@ GeoCoordinate Satellite::getPositionAtTime(std::time_t& time) {
 	CoordGeodetic geo(eci.ToGeodetic());
 	auto longitude(geo.longitude);
 	auto latitude(geo.latitude);
-	longitude += satelliteSniffer::PI;
-	latitude -= satelliteSniffer::PI / 2;
+	longitude += MathConstants::PI;
+	latitude -= MathConstants::PI / 2;
 	latitude = -latitude;
 	return { longitude, latitude };
 }
 
-void Satellite::setPosition(std::time_t time) {
+void Satellite::updatePosition(std::time_t time) {
+	if (!_shown) return;
 	if (time == 0) calculate();
 	else {
 		std::tm stime;
 		gmtime_s(&stime, &time);
 		calculate(stime);
 	}
-	satpos.longitude += satelliteSniffer::PI;
-	satpos.latitude -= satelliteSniffer::PI / 2;
+	satpos.longitude += MathConstants::PI;
+	satpos.latitude -= MathConstants::PI / 2;
 	satpos.latitude = -satpos.latitude;
 }
 
 void Satellite::render() {
+	if (!_shown) return;
 	renderTrajectory();
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto satSize(texture->getDimensions());
 
 	SDL_Rect satRect = {
-		static_cast<int>(round(satpos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - satSize.w / 2)),
-		static_cast<int>(round(satpos.latitude / (satelliteSniffer::PI) * mapSize.h - satSize.h / 2)),
+		static_cast<int>(round(satpos.longitude / (MathConstants::PI * 2) * mapSize.w - satSize.w / 2)),
+		static_cast<int>(round(satpos.latitude / (MathConstants::PI) * mapSize.h - satSize.h / 2)),
 		satSize.w,
 		satSize.h
 	};

@@ -1,15 +1,10 @@
 #pragma once
 #include <string>
-#include <SDL.h>
+#include "Texture.h"
 
-class ScreenText {
+class ScreenText : public Texture {
 public:
 	ScreenText(std::string& text);
-	virtual ~ScreenText();
-	void render(const SDL_Rect* pos);
-	SDL_Rect getDimensions();
-private:
-	SDL_Texture * texture;
-	int width, height;
+	void setAsRenderTarget() override;
 };
 

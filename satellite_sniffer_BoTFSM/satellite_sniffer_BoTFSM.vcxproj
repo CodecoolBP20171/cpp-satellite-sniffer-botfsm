@@ -155,7 +155,6 @@
     <ClCompile Include="GeoCoordinate.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="SatelliteLoader.cpp" />
-    <ClCompile Include="MechStandards.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Satellite.cpp" />
@@ -164,6 +163,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,12 +172,12 @@
     <ClInclude Include="LoadError.hpp" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="SatelliteLoader.h" />
-    <ClInclude Include="MechStandards.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
     <ClInclude Include="ScreenText.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

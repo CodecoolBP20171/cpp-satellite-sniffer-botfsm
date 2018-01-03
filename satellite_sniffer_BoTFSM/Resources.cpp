@@ -44,13 +44,13 @@ sptr<Resources>& Resources::getInstance() {
 }
 
 void Resources::loadTextures() {
-	cleanMap = sptr<Texture>(new Texture(TextureFiles::MAP));
-	map = sptr<Texture>(new Texture(cleanMap));
-	point = sptr<Texture>(new Texture(TextureFiles::PATH));
+	cleanMap = sptr<Sprite>(new Sprite(TextureFiles::MAP));
+	map = sptr<Sprite>(new Sprite(cleanMap));
+	point = sptr<Sprite>(new Sprite(TextureFiles::PATH));
 
-	sats.emplace("STATION", sptr<Texture>(new Texture(TextureFiles::STATION)));
-	sats.emplace("TELESCOPE", sptr<Texture>(new Texture(TextureFiles::TELESCOPE)));
-	sats.emplace("GPS", sptr<Texture>(new Texture(TextureFiles::GPS)));
+	sats.emplace("STATION", sptr<Sprite>(new Sprite(TextureFiles::STATION)));
+	sats.emplace("TELESCOPE", sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));
+	sats.emplace("GPS", sptr<Sprite>(new Sprite(TextureFiles::GPS)));
 }
 
 
@@ -73,7 +73,7 @@ TTF_Font * Resources::getFont() {
 }
 
 
-sptr<Texture>& Resources::getMap() {
+sptr<Sprite>& Resources::getMap() {
 	return map;
 }
 
@@ -87,11 +87,11 @@ SDL_Rect Resources::getMapDimensions() {
 	return map->getDimensions();
 }
 
-sptr<Texture>& Resources::getSat(std::string& type) {
+sptr<Sprite>& Resources::getSat(std::string& type) {
 	return sats[type];
 }
 
-sptr<Texture>& Resources::getPoint() {
+sptr<Sprite>& Resources::getPoint() {
 	return point;
 }
 

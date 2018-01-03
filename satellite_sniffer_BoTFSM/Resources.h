@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <map>
-#include "Texture.h"
+#include "Sprite.h"
 template<typename T>
 using sptr = std::shared_ptr<T>;
 struct sdl_deleter {
@@ -20,11 +20,11 @@ public:
 	static sptr<Resources>& getInstance();
 	static void releaseResources();
 	TTF_Font* getFont();
-	sptr<Texture>& getMap();
+	sptr<Sprite>& getMap();
 	void clearMap();
 	SDL_Rect getMapDimensions();
-	sptr<Texture>& getSat(std::string& type);
-	sptr<Texture>& getPoint();
+	sptr<Sprite>& getSat(std::string& type);
+	sptr<Sprite>& getPoint();
 
 	SDL_Renderer* getRenderer();
 	void resetRenderer();
@@ -35,10 +35,10 @@ private:
 	std::unique_ptr<SDL_Renderer, sdl_deleter> renderer;
 	std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
 
-	sptr<Texture> map;
-	sptr<Texture> cleanMap;
-	sptr<Texture> point;
-	std::map<std::string, sptr<Texture>> sats;
+	sptr<Sprite> map;
+	sptr<Sprite> cleanMap;
+	sptr<Sprite> point;
+	std::map<std::string, sptr<Sprite>> sats;
 
 	void release();
 
