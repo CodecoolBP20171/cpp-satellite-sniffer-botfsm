@@ -1,7 +1,11 @@
 #pragma once
 #include <list>
+#include <memory>
 
 #include "Satellite.h"
+#include "UISatellite.h"
+#include "UIElement.h"
+#include "ProgramState.h"
 
 class Program {
 public:
@@ -12,6 +16,9 @@ public:
 	void unload();
 private:
 	std::list<Satellite> sats;
+	std::list<UISatellite> UISats;
+	std::list<std::unique_ptr<UIElement>> UIElements;
+	PState state;
 	bool quit;
 	bool loaded;
 	Uint32 timePassed;
@@ -21,5 +28,6 @@ private:
 	bool handleEvents();
 	void updatePositions();
 	void render();
+	void renderMainScreen();
 };
 

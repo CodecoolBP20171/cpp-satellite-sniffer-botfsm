@@ -2,16 +2,11 @@
 
 #include <fstream>
 #include <sstream>
-#include <time.h>
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
+#include <ctime>
 #include <string>
-#include <array>
 #include "Satellite.h"
 #include "Resources.h"
-#include "MechStandards.h"
+#include "Globals.h"
 #include "Resources.h"
 
 #include <SGP4.h>
@@ -23,11 +18,8 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	type(type),
 	tle(Satellite::loadTle(name, noradId)),
 	sgp4(tle),
-	texture(Resources::getInstance()->getSat(type)),
-	trajectoryForward(Resources::getInstance()->getPoint()),
-	trajectoryBackward(Resources::getInstance()->getPoint()),
-	text(new ScreenText(name)) {
-	setPosition();
+	_shown(true) {
+	updatePosition();
 }
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
@@ -55,33 +47,6 @@ void Satellite::calculate() {
 	satpos.latitude = geo.latitude;
 }
 
-void Satellite::renderTrajectory() {
-	std::time_t forward;
-	std::time(&forward);
-	auto back(forward);
-	auto delta(static_cast<int>(round((24 * 60 * 60) / tle.MeanMotion() / 200)));
-
-	for (int i = 0; i < 8; ++i) {
-		forward += delta;
-		back -= delta;
-		renderPoint(forward, trajectoryForward);
-		renderPoint(back, trajectoryBackward);
-	}
-}
-
-void Satellite::renderPoint(std::time_t & now, std::shared_ptr<Texture>& point) {
-	auto mapSize(Resources::getInstance()->getMapDimensions());
-	auto pos(getPositionAtTime(now));
-	auto pointSize(point->getDimensions());
-
-	SDL_Rect pointRect = {
-		static_cast<int>(round(pos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - pointSize.w / 2)),
-		static_cast<int>(round(pos.latitude / (satelliteSniffer::PI) * mapSize.h - pointSize.h / 2)),
-		pointSize.w,
-		pointSize.h
-	};
-	point->render(&pointRect);
-}
 
 GeoCoordinate Satellite::getPositionAtTime(std::time_t& time) {
 	std::tm stime;
@@ -91,40 +56,54 @@ GeoCoordinate Satellite::getPositionAtTime(std::time_t& time) {
 	CoordGeodetic geo(eci.ToGeodetic());
 	auto longitude(geo.longitude);
 	auto latitude(geo.latitude);
-	longitude += satelliteSniffer::PI;
-	latitude -= satelliteSniffer::PI / 2;
+	longitude += MathConstants::PI;
+	latitude -= MathConstants::PI / 2;
 	latitude = -latitude;
 	return { longitude, latitude };
 }
 
-void Satellite::setPosition(std::time_t time) {
+GeoCoordinate & Satellite::getPosition()
+{
+	return satpos;
+}
+
+void Satellite::updatePosition(std::time_t time) {
+	if (!_shown) return;
 	if (time == 0) calculate();
 	else {
 		std::tm stime;
 		gmtime_s(&stime, &time);
 		calculate(stime);
 	}
-	satpos.longitude += satelliteSniffer::PI;
-	satpos.latitude -= satelliteSniffer::PI / 2;
+	satpos.longitude += MathConstants::PI;
+	satpos.latitude -= MathConstants::PI / 2;
 	satpos.latitude = -satpos.latitude;
 }
 
-void Satellite::render() {
-	renderTrajectory();
-	auto mapSize(Resources::getInstance()->getMapDimensions());
-	auto satSize(texture->getDimensions());
-
-	SDL_Rect satRect = {
-		static_cast<int>(round(satpos.longitude / (satelliteSniffer::PI * 2) * mapSize.w - satSize.w / 2)),
-		static_cast<int>(round(satpos.latitude / (satelliteSniffer::PI) * mapSize.h - satSize.h / 2)),
-		satSize.w,
-		satSize.h
-	};
-	texture->render(&satRect);
-	auto textPos(text->getDimensions());
-	textPos.x = satRect.x + satSize.w;
-	textPos.y = satRect.y;
-	text->render(&textPos);
-}
 
 Satellite::~Satellite() {}
+
+void Satellite::toggleShown()
+{
+	_shown = !_shown;
+}
+
+int Satellite::getDelta()
+{
+	return static_cast<int>(round((24 * 60 * 60) / tle.MeanMotion() / 200));
+}
+
+bool & Satellite::isShown()
+{
+	return _shown;
+}
+
+std::string & Satellite::getName()
+{
+	return name;
+}
+
+std::string & Satellite::getType()
+{
+	return type;
+}
