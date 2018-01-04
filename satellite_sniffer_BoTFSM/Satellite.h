@@ -1,18 +1,33 @@
 #pragma once
-#include <utility>
-#include <list>
-#include "TLE.h"
+#include <ctime>
+#include <vector>
+#include "GeoCoordinate.h"
+#include "Sprite.h"
+#include "ScreenText.h"
+
+#include <SGP4.h>
+
 class Satellite {
 public:
-	Satellite(std::string name, std::string noradId);
-	std::pair<double, double> calculate(std::tm& time);
-	std::pair<double, double> calculate();
+	static Tle loadTle(const std::string& name, const std::string& noradId);
+	Satellite(std::string name, std::string noradId, std::string type);
+	void updatePosition(std::time_t time = 0);
+	GeoCoordinate getPositionAtTime(std::time_t& time);
+	GeoCoordinate& getPosition();
+
 	~Satellite();
+	void toggleShown();
+	int getDelta();
+	bool& isShown();
+	std::string& getName();
+	std::string& getType();
 private:
-	std::string tle1;
-	std::string tle2;
-	std::string exec(const char* cmd);
-	std::string name, noradId;
-	std::list<TLE> tleData;
+	Tle tle;
+	SGP4 sgp4;
+	std::string name, noradId, type;
+	GeoCoordinate satpos;
+	bool _shown;
+	void calculate(std::tm& time);
+	void calculate();
 };
 

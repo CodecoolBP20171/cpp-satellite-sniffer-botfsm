@@ -2,62 +2,108 @@
 
 #include <fstream>
 #include <sstream>
-#include <time.h>
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
+#include <ctime>
 #include <string>
-#include <array>
 #include "Satellite.h"
+#include "Resources.h"
+#include "Globals.h"
+#include "Resources.h"
 
+#include <SGP4.h>
+#include <CoordGeodetic.h>
 
-Satellite::Satellite(std::string name, std::string noradId)
+Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	: name(name),
-	noradId(noradId) {
+	noradId(noradId),
+	type(type),
+	tle(Satellite::loadTle(name, noradId)),
+	sgp4(tle),
+	_shown(true) {
+	updatePosition();
+}
+
+Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
 	std::ifstream file("satellites/" + noradId + ".dat");
-	std::string line1, line2;
-	while (std::getline(file, tle1)) {
-		std::getline(file, tle2);
-	}
+	std::string tle1, tle2;
+	std::getline(file, tle1);
+	std::getline(file, tle2);
 	file.close();
+	return Tle(name, tle1, tle2);
 }
 
-// TODO make as non parametered
-std::pair<double, double> Satellite::calculate(std::tm& time) {
-	// '1984/05/30 16:23:45.12'
-	std::stringstream strtime;
-	strtime << time.tm_year + 1900 << "/" << time.tm_mon + 1 << "/" << time.tm_mday << " " 
-			<< time.tm_hour << ":" << time.tm_min << ":" << time.tm_sec;
-	std::string cmd("python getSatPos.py \"" + name + "\" \"" + tle1 + "\" \"" + tle2 + "\" \"" + strtime.str() + "\"");
-	std::string result(exec(cmd.c_str()));
-
-	std::stringstream stris(result);
-
-	double longi, lati;
-	stris >> longi >> lati;
-	return { longi, lati };
+void Satellite::calculate(std::tm& time) {
+	DateTime tm(time.tm_year + 1900, time.tm_mon + 1, time.tm_mday, time.tm_hour, time.tm_min, time.tm_sec);
+	Eci eci(sgp4.FindPosition(tm));
+	CoordGeodetic geo(eci.ToGeodetic());
+	satpos.longitude = geo.longitude;
+	satpos.latitude = geo.latitude;
 }
 
-std::pair<double, double> Satellite::calculate() {
-
-	auto utime(time(0));
-	std::tm time;
-	gmtime_s(&time, &utime);
-	return calculate(time);
+void Satellite::calculate() {
+	DateTime tm(DateTime::Now(true));
+	Eci eci(sgp4.FindPosition(tm));
+	CoordGeodetic geo(eci.ToGeodetic());
+	satpos.longitude = geo.longitude;
+	satpos.latitude = geo.latitude;
 }
+
+
+GeoCoordinate Satellite::getPositionAtTime(std::time_t& time) {
+	std::tm stime;
+	gmtime_s(&stime, &time);
+	DateTime tm(stime.tm_year + 1900, stime.tm_mon + 1, stime.tm_mday, stime.tm_hour, stime.tm_min, stime.tm_sec);
+	Eci eci(sgp4.FindPosition(tm));
+	CoordGeodetic geo(eci.ToGeodetic());
+	auto longitude(geo.longitude);
+	auto latitude(geo.latitude);
+	longitude += MathConstants::PI;
+	latitude -= MathConstants::PI / 2;
+	latitude = -latitude;
+	return { longitude, latitude };
+}
+
+GeoCoordinate & Satellite::getPosition()
+{
+	return satpos;
+}
+
+void Satellite::updatePosition(std::time_t time) {
+	if (!_shown) return;
+	if (time == 0) calculate();
+	else {
+		std::tm stime;
+		gmtime_s(&stime, &time);
+		calculate(stime);
+	}
+	satpos.longitude += MathConstants::PI;
+	satpos.latitude -= MathConstants::PI / 2;
+	satpos.latitude = -satpos.latitude;
+}
+
 
 Satellite::~Satellite() {}
 
-std::string Satellite::exec(const char* cmd)
+void Satellite::toggleShown()
 {
-	std::array<char, 128> buffer;
-	std::string result;
-	std::shared_ptr<FILE> pipe(_popen(cmd, "r"), _pclose);
-	if (!pipe) throw std::runtime_error("popen() failed!");
-	while (!feof(pipe.get())) {
-		if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-			result += buffer.data();
-	}
-	return result;
+	_shown = !_shown;
+}
+
+int Satellite::getDelta()
+{
+	return static_cast<int>(round((24 * 60 * 60) / tle.MeanMotion() / 200));
+}
+
+bool & Satellite::isShown()
+{
+	return _shown;
+}
+
+std::string & Satellite::getName()
+{
+	return name;
+}
+
+std::string & Satellite::getType()
+{
+	return type;
 }
