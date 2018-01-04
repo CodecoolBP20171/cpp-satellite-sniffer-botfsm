@@ -16,7 +16,7 @@ public:
 	GeoCoordinate& getPosition();
 
 	~Satellite();
-
+	void toggleShown();
 	int getDelta();
 	bool& isShown();
 	std::string& getName();

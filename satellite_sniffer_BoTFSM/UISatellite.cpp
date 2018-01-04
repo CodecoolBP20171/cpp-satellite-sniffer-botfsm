@@ -3,8 +3,8 @@
 #include "Resources.h"
 #include "Globals.h"
 
-UISatellite::UISatellite(Satellite& sat) 
-	: UIElement({0,0,0,0}, PState::MAIN_SCREEN),
+UISatellite::UISatellite(Satellite& sat, int pos)
+	: UIElement({ 0,0,0,0 }, PState::MAIN_SCREEN),
 	sat(sat),
 	texture(Resources::getInstance()->getSat(sat.getType())),
 	trajectoryForward(Resources::getInstance()->getPoint()),
@@ -12,6 +12,16 @@ UISatellite::UISatellite(Satellite& sat)
 	text(new ScreenText(sat.getName())),
 	popupText(new ScreenText(sat.getName()))
 {
+	rect = popupText->getDimensions();
+	double oldH(rect.h);
+	rect.h = Dimensions::POPUP_HEIGHT / 10;
+	rect.w *= rect.h / oldH;
+	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
+	if (pos > 10) {
+		rect.x += Dimensions::POPUP_WIDTH / 2;
+		pos -= 10;
+	}
+	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos - 1);
 	text->setColor({ 0,0,0 });
 }
 
@@ -35,17 +45,22 @@ void UISatellite::render()
 	text->render(&textPos);
 }
 
-void UISatellite::popupRender(int pos)
+bool UISatellite::isClicked(const int x, const int y, PState & state)
+{
+	if (UIElement::isClicked(x, y, state)) {
+		sat.toggleShown();
+		return true;
+	}
+	return false;
+}
+
+void UISatellite::popupRender()
 {
 	if (sat.isShown()) {
-		popupText->setColor({ 0, 200, 0 });
-	}
-	else {
+		popupText->setColor({ 15, 200, 15 });
+	} else {
 		popupText->setColor({ 100, 100, 100 });
 	}
-	auto rect(popupText->getDimensions());
-	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
-	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos - 1) + Dimensions::MENU_BUTTON_SPACING * pos;
 	popupText->render(&rect);
 }
 

@@ -9,9 +9,10 @@
 class UISatellite : UIElement
 {
 public:
-	UISatellite(Satellite& sat);
+	UISatellite(Satellite& sat, int pos);
 	void render() override;
-	void popupRender(int pos);
+	bool isClicked(const int x, const int y, PState& state) override;
+	void popupRender();
 private:
 	Satellite & sat;
 	std::shared_ptr<Sprite> texture;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Globals.h"
 #include "Program.h"
+#include "Popup.h"
 #include "Resources.h"
 #include "SatelliteLoader.h"
 #include "Menu.h"
@@ -9,8 +10,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-Program::Program()
-	:quit(false),
+Program::Program() :
+	quit(false),
 	loaded(false),
 	timePassed(0),
 	timestep(16), // frame time length 1000 / 60
@@ -35,13 +36,19 @@ void Program::init()
 	// init resources
 	Resources::getInstance();
 	SatelliteLoader::loadSatellites(sats);
+	int pos(1);
 	for (auto& sat : sats) {
-		UISats.emplace_back(sat);
+		UISats.emplace_back(sat, pos++);
 	}
 
 	SDL_Rect menuRect{ 0, 0, Dimensions::WINDOW_WIDTH, Dimensions::MENU_HEIGHT };
+	SDL_Rect popupRect{ Dimensions::POPUP_OFFSET_X,
+					   Dimensions::POPUP_OFFSET_Y,
+					   Dimensions::POPUP_WIDTH,
+					   Dimensions::POPUP_HEIGHT };
 
 	UIElements.emplace_back(new Menu(menuRect, PState::MAIN_SCREEN));
+	UIElements.emplace_back(new Popup(popupRect, PState::MENU_SCREEN, UISats));
 	loaded = true;
 }
 
@@ -84,11 +91,17 @@ void Program::updatePositions()
 
 void Program::render()
 {
+	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
 	switch (state) {
 	case PState::MAIN_SCREEN:
 		renderMainScreen();
 		break;
 	case PState::MENU_SCREEN:
+		for (auto& elem : UIElements) {
+			if (elem->isActive(state)) {
+				elem->render();
+			}
+		}
 		break;
 	}
 
@@ -114,7 +127,9 @@ void Program::renderMainScreen()
 	Resources::getInstance()->getMap()->render(&pos);
 
 	for (auto & element : UIElements) {
-		element->render();
+		if (element->isActive(state)) {
+			element->render();
+		}
 	}
 }
 

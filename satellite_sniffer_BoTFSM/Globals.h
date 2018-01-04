@@ -34,6 +34,7 @@ namespace TextureFiles {
 	const std::string TELESCOPE = "telescope_s.png";
 	const std::string GPS = "gps_s.png";
 	const std::string SAT_BUTTON = "satellite_button_active_s.png";
+	const std::string OK_BUTTON = "ok_button_active_s.png";
 }
 
 namespace SatelliteType {

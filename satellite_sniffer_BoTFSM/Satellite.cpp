@@ -83,6 +83,11 @@ void Satellite::updatePosition(std::time_t time) {
 
 Satellite::~Satellite() {}
 
+void Satellite::toggleShown()
+{
+	_shown = !_shown;
+}
+
 int Satellite::getDelta()
 {
 	return static_cast<int>(round((24 * 60 * 60) / tle.MeanMotion() / 200));
