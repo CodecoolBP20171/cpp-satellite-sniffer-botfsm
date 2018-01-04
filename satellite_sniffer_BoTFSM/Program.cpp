@@ -35,9 +35,13 @@ void Program::init()
 	// init resources
 	Resources::getInstance();
 	SatelliteLoader::loadSatellites(sats);
+	for (auto& sat : sats) {
+		UISats.emplace_back(sat);
+	}
+
 	SDL_Rect menuRect{ 0, 0, Dimensions::WINDOW_WIDTH, Dimensions::MENU_HEIGHT };
 
-	UIElements.emplace_back(new Menu(menuRect));
+	UIElements.emplace_back(new Menu(menuRect, PState::MAIN_SCREEN));
 	loaded = true;
 }
 
@@ -96,7 +100,7 @@ void Program::renderMainScreen()
 	SDL_RenderClear(Resources::getInstance()->getRenderer());
 	Resources::getInstance()->clearMap();
 	Resources::getInstance()->getMap()->setAsRenderTarget();
-	for (auto& sat : sats) {
+	for (auto& sat : UISats) {
 		sat.render();
 	}
 
@@ -123,7 +127,7 @@ bool Program::handleEvents()
 		}
 		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
 			for (auto& elem : UIElements) {
-				if (elem->isClicked(e.button.x, e.button.y, state)) {
+				if (elem->isActive(state) && elem->isClicked(e.button.x, e.button.y, state)) {
 					break;
 				}
 			}

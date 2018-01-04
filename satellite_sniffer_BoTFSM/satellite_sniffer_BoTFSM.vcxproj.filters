@@ -75,6 +75,12 @@
     <ClInclude Include="ProgramState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UISatellite.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Popup.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,6 +120,12 @@
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Popup.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UISatellite.cpp">
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
   </ItemGroup>

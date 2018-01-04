@@ -3,8 +3,8 @@
 #include "Resources.h"
 #include "Globals.h"
 
-Button::Button(SDL_Rect rect, const std::string& name) 
-	: UIElement(rect),
+Button::Button(SDL_Rect rect, PState state, const std::string& name)
+	: UIElement(rect, state),
 	name(name),
 	sprite(Resources::getInstance()->getButton(name))
 {}

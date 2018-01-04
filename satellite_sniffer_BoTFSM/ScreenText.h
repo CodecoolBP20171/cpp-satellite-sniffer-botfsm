@@ -6,5 +6,6 @@ class ScreenText : public Texture {
 public:
 	ScreenText(std::string& text);
 	void setAsRenderTarget() override;
+	void setColor(SDL_Color color);
 };
 

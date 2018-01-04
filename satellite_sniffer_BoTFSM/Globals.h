@@ -44,4 +44,5 @@ namespace SatelliteType {
 
 namespace ButtonName {
 	const std::string SATELLITES = "SATELLITES";
+	const std::string OK = "OK";
 }

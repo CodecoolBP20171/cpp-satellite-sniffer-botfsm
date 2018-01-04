@@ -3,13 +3,13 @@
 #include "Globals.h"
 
 
-Menu::Menu(SDL_Rect rect) : UIElement(rect)
+Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
 {
 	rect.h = Dimensions::MENU_BUTTON_HEIGHT;
 	rect.w = Dimensions::MENU_BUTTON_WIDTH;
 	rect.x += Dimensions::MENU_BUTTON_SPACING;
 	rect.y += Dimensions::MENU_BUTTON_VERTICAL_SPACING;
-	menuButtons.emplace_back(new Button(rect, ButtonName::SATELLITES));
+	menuButtons.emplace_back(new Button(rect, state, ButtonName::SATELLITES));
 }
 
 bool Menu::isClicked(const int x, const int y, PState & state)

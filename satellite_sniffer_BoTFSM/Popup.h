@@ -1,17 +1,18 @@
 #pragma once
 #include <memory>
 #include <list>
+
 #include "UIElement.h"
 #include "Button.h"
-#include "Sprite.h"
+#include "Satellite.h"
 
-class Menu : public UIElement
+class Popup : public UIElement
 {
 public:
-	Menu(SDL_Rect rect, PState state);
+	Popup(SDL_Rect rect, PState state);
 	bool isClicked(const int x, const int y, PState& state) override;
 	void render() override;
 private:
-	std::list<std::shared_ptr<Button>> menuButtons;
+	std::unique_ptr<Button> button;
 };
 

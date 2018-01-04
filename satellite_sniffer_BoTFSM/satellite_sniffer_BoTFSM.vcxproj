@@ -155,6 +155,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="GeoCoordinate.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Popup.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="SatelliteLoader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="UISatellite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="LoadError.hpp" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Popup.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="ProgramState.h" />
     <ClInclude Include="SatelliteLoader.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UIElement.h" />
+    <ClInclude Include="UISatellite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
