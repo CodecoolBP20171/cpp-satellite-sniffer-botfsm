@@ -48,7 +48,7 @@ void Resources::loadTextures() {
 	map = sptr<Sprite>(new Sprite(cleanMap));
 	point = sptr<Sprite>(new Sprite(TextureFiles::PATH));
 
-	buttons.emplace(ButtonName::SATELITES, sptr<Sprite>(new Sprite(TextureFiles::SAT_BUTTON)));
+	buttons.emplace(ButtonName::SATELLITES, sptr<Sprite>(new Sprite(TextureFiles::SAT_BUTTON)));
 
 	sats.emplace(SatelliteType::STATION, sptr<Sprite>(new Sprite(TextureFiles::STATION)));
 	sats.emplace(SatelliteType::TELESCOPE, sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));

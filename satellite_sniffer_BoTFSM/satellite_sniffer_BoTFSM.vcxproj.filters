@@ -72,6 +72,9 @@
     <ClInclude Include="Button.h">
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
+    <ClInclude Include="ProgramState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

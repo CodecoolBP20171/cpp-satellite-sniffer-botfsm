@@ -15,15 +15,18 @@ Program::Program()
 	timePassed(0),
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
-	calculationTimeStep(1000) // 1 sec
+	calculationTimeStep(1000), // 1 sec
+	state(PState::MAIN_SCREEN)
 {}
 
 
-Program::~Program() {
+Program::~Program()
+{
 	if (loaded) unload();
 }
 
-void Program::init() {
+void Program::init()
+{
 	// init SDL
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
@@ -38,7 +41,8 @@ void Program::init() {
 	loaded = true;
 }
 
-void Program::run() {
+void Program::run()
+{
 	if (!loaded) init();
 	while (!quit) {
 		timePassed = SDL_GetTicks();
@@ -55,7 +59,8 @@ void Program::run() {
 	}
 }
 
-void Program::unload() {
+void Program::unload()
+{
 	Resources::releaseResources();
 	TTF_Quit();
 	IMG_Quit();
@@ -63,7 +68,8 @@ void Program::unload() {
 	loaded = false;
 }
 
-void Program::updatePositions() {
+void Program::updatePositions()
+{
 	if (timePassed > lastCalculationTime + 1000) {
 		for (auto& sat : sats) {
 			sat.updatePosition();
@@ -72,7 +78,21 @@ void Program::updatePositions() {
 	}
 }
 
-void Program::render() {
+void Program::render()
+{
+	switch (state) {
+	case PState::MAIN_SCREEN:
+		renderMainScreen();
+		break;
+	case PState::MENU_SCREEN:
+		break;
+	}
+
+	SDL_RenderPresent(Resources::getInstance()->getRenderer());
+}
+
+void Program::renderMainScreen()
+{
 	SDL_RenderClear(Resources::getInstance()->getRenderer());
 	Resources::getInstance()->clearMap();
 	Resources::getInstance()->getMap()->setAsRenderTarget();
@@ -92,15 +112,21 @@ void Program::render() {
 	for (auto & element : UIElements) {
 		element->render();
 	}
-
-	SDL_RenderPresent(Resources::getInstance()->getRenderer());
 }
 
-bool Program::handleEvents() {
+bool Program::handleEvents()
+{
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
 			return true;
+		}
+		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+			for (auto& elem : UIElements) {
+				if (elem->isClicked(e.button.x, e.button.y, state)) {
+					break;
+				}
+			}
 		}
 	}
 	return false;

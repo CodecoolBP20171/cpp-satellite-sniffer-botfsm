@@ -4,6 +4,7 @@
 
 #include "Satellite.h"
 #include "UIElement.h"
+#include "ProgramState.h"
 
 class Program {
 public:
@@ -15,6 +16,7 @@ public:
 private:
 	std::list<Satellite> sats;
 	std::list<std::unique_ptr<UIElement>> UIElements;
+	PState state;
 	bool quit;
 	bool loaded;
 	Uint32 timePassed;
@@ -24,5 +26,6 @@ private:
 	bool handleEvents();
 	void updatePositions();
 	void render();
+	void renderMainScreen();
 };
 

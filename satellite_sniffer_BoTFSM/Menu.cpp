@@ -9,7 +9,20 @@ Menu::Menu(SDL_Rect rect) : UIElement(rect)
 	rect.w = Dimensions::MENU_BUTTON_WIDTH;
 	rect.x += Dimensions::MENU_BUTTON_SPACING;
 	rect.y += Dimensions::MENU_BUTTON_VERTICAL_SPACING;
-	menuButtons.emplace_back(new Button(rect, ButtonName::SATELITES));
+	menuButtons.emplace_back(new Button(rect, ButtonName::SATELLITES));
+}
+
+bool Menu::isClicked(const int x, const int y, PState & state)
+{
+	if (UIElement::isClicked(x, y, state)) {
+		for (auto& button : menuButtons) {
+			if (button->isClicked(x, y, state)) {
+				break;
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 void Menu::render()

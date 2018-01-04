@@ -176,6 +176,7 @@
     <ClInclude Include="LoadError.hpp" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Program.h" />
+    <ClInclude Include="ProgramState.h" />
     <ClInclude Include="SatelliteLoader.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
