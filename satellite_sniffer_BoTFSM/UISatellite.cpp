@@ -2,6 +2,7 @@
 #include "UISatellite.h"
 #include "Resources.h"
 #include "Globals.h"
+#include <list>
 
 int UISatellite::pos{ 1 };
 
@@ -60,7 +61,8 @@ void UISatellite::popupRender()
 {
 	if (sat.isShown()) {
 		popupText->setColor({ 15, 200, 15 });
-	} else {
+	}
+	else {
 		popupText->setColor({ 100, 100, 100 });
 	}
 	popupText->render(&rect);
@@ -68,31 +70,56 @@ void UISatellite::popupRender()
 
 void UISatellite::renderTrajectory()
 {
+	std::list<CoordGeodetic> trajectoryPoints;
 	std::time_t forward;
 	std::time(&forward);
 	auto back(forward);
-	auto delta(sat.getDelta());
+	auto forwarddelta(sat.getDelta(forward));
+	auto backdelta(sat.getDelta(back));
+	double threshold(0.5);
+	int maxpoints(100);
+	int cntr(0);
 
-	for (int i = 0; i < 8; ++i) {
+	while (trajectoryPoints.size() <= 1
+		   || (getDistance(trajectoryPoints.front(), trajectoryPoints.back()) < threshold
+		   && cntr < maxpoints)) {
+		forward += forwarddelta;
+		forwarddelta = sat.getDelta(forward);
+		back -= backdelta;
+		backdelta = sat.getDelta(back);
+		trajectoryPoints.push_front(sat.getPositionAtTime(back));
+		trajectoryPoints.push_back(sat.getPositionAtTime(forward));
+		cntr += 2;
+	}
+
+	for (auto& point : trajectoryPoints) {
+		renderPoint(point, trajectoryForward);
+	}
+
+	/*for (int i = 0; i < 8; ++i) {
 		forward += delta;
 		back -= delta;
 		renderPoint(forward, trajectoryForward);
 		renderPoint(back, trajectoryBackward);
-	}
+	}*/
 }
 
-void UISatellite::renderPoint(std::time_t & now, std::shared_ptr<Sprite>& point)
+void UISatellite::renderPoint(const CoordGeodetic& coord, std::shared_ptr<Sprite>& point)
 {
 	auto mapSize(Resources::getInstance()->getMapDimensions());
-	auto pos(sat.getPositionAtTime(now));
 	auto pointSize(point->getDimensions());
 
 	SDL_Rect pointRect = {
-		static_cast<int>(round(pos.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize.w / 2)),
-		static_cast<int>(round(pos.latitude / (MathConstants::PI) * mapSize.h - pointSize.h / 2)),
+		static_cast<int>(round(coord.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize.w / 2)),
+		static_cast<int>(round(coord.latitude / (MathConstants::PI) * mapSize.h - pointSize.h / 2)),
 		pointSize.w,
 		pointSize.h
 	};
 	point->render(&pointRect);
+}
+
+double UISatellite::getDistance(const CoordGeodetic & a, const CoordGeodetic & b)
+{
+	return sqrt(pow(a.latitude - b.latitude, 2) + pow(a.longitude - b.longitude, 2));
 }
 

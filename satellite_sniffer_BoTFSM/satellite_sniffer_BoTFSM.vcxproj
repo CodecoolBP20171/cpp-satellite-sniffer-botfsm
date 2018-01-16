@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="GeoCoordinate.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="UISatellite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="GeoCoordinate.h" />
     <ClInclude Include="Globals.h" />
@@ -186,6 +188,7 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Satellite.h" />
     <ClInclude Include="ScreenText.h" />
+    <ClInclude Include="SDL_PointOperators.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Sprite.h" />

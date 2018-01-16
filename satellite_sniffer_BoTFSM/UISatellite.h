@@ -22,6 +22,7 @@ private:
 	std::unique_ptr<ScreenText> text;
 	std::unique_ptr<ScreenText> popupText;
 	void renderTrajectory();
-	void renderPoint(std::time_t& now, std::shared_ptr<Sprite>& point);
+	void renderPoint(const CoordGeodetic& coord, std::shared_ptr<Sprite>& point);
+	double getDistance(const CoordGeodetic& a, const CoordGeodetic& b);
 };
 
