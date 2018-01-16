@@ -22,6 +22,7 @@ public:
 	static void releaseResources();
 	TTF_Font* getFont();
 	sptr<Sprite>& getMap();
+	sptr<Sprite>& getCleanMap();
 	void clearMap();
 	SDL_Rect getMapDimensions();
 	sptr<Sprite>& getSat(std::string& type);

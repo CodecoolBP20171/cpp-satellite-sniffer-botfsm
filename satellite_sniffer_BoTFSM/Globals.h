@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <SDL.h>
 
 namespace MathConstants {
 	const double PI = acos(-1);
@@ -46,4 +47,16 @@ namespace SatelliteType {
 namespace ButtonName {
 	const std::string SATELLITES = "SATELLITES";
 	const std::string OK = "OK";
+}
+
+namespace UIRects {
+	const SDL_Rect MENU{ 0, 0, Dimensions::WINDOW_WIDTH, Dimensions::MENU_HEIGHT };
+	const SDL_Rect POPUP{ Dimensions::POPUP_OFFSET_X,
+						Dimensions::POPUP_OFFSET_Y,
+						Dimensions::POPUP_WIDTH,
+						Dimensions::POPUP_HEIGHT };
+	const SDL_Rect MAP{ 0,
+						Dimensions::MENU_HEIGHT,
+						Dimensions::MAP_WIDTH,
+						Dimensions::MAP_HEIGHT };
 }

@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="GeoCoordinate.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Popup.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="GeoCoordinate.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="LoadError.hpp" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Popup.h" />
     <ClInclude Include="Program.h" />

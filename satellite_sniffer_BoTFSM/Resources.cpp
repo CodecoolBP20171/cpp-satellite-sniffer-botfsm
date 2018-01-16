@@ -80,6 +80,10 @@ sptr<Sprite>& Resources::getMap() {
 	return map;
 }
 
+sptr<Sprite>& Resources::getCleanMap() {
+	return cleanMap;
+}
+
 void Resources::clearMap() {
 	map->setAsRenderTarget();
 	cleanMap->render(nullptr);

@@ -28,6 +28,5 @@ private:
 	bool handleEvents();
 	void updatePositions();
 	void render();
-	void renderMainScreen();
 };
 

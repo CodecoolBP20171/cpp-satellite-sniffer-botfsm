@@ -3,7 +3,9 @@
 #include "Resources.h"
 #include "Globals.h"
 
-UISatellite::UISatellite(Satellite& sat, int pos)
+int UISatellite::pos{ 1 };
+
+UISatellite::UISatellite(Satellite& sat)
 	: UIElement({ 0,0,0,0 }, PState::MAIN_SCREEN),
 	sat(sat),
 	texture(Resources::getInstance()->getSat(sat.getType())),
@@ -19,10 +21,10 @@ UISatellite::UISatellite(Satellite& sat, int pos)
 	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
 	if (pos > 10) {
 		rect.x += Dimensions::POPUP_WIDTH / 2;
-		pos -= 10;
 	}
-	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos - 1);
+	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos % 10);
 	text->setColor({ 0,0,0 });
+	++pos;
 }
 
 void UISatellite::render()
