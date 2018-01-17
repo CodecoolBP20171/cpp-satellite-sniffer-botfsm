@@ -3,6 +3,7 @@
 #include "Resources.h"
 #include "Globals.h"
 #include <list>
+#include <SDL2_gfxPrimitives.h>
 
 int UISatellite::pos{ 1 };
 
@@ -107,15 +108,17 @@ void UISatellite::renderTrajectory()
 void UISatellite::renderPoint(const CoordGeodetic& coord, std::shared_ptr<Sprite>& point)
 {
 	auto mapSize(Resources::getInstance()->getMapDimensions());
-	auto pointSize(point->getDimensions());
+	auto pointSize(10);
 
 	SDL_Rect pointRect = {
-		static_cast<int>(round(coord.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize.w / 2)),
-		static_cast<int>(round(coord.latitude / (MathConstants::PI) * mapSize.h - pointSize.h / 2)),
-		pointSize.w,
-		pointSize.h
+		static_cast<int>(round(coord.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize / 2)),
+		static_cast<int>(round(coord.latitude / (MathConstants::PI) * mapSize.h - pointSize / 2)),
+		pointSize,
+		pointSize
 	};
-	point->render(&pointRect);
+	filledCircleRGBA(Resources::getInstance()->getRenderer(),
+					 pointRect.x, pointRect.y, pointSize, 255, 0, 0, 255);
+	//point->render(&pointRect);
 }
 
 double UISatellite::getDistance(const CoordGeodetic & a, const CoordGeodetic & b)
