@@ -30,7 +30,6 @@ namespace FontFiles {
 
 namespace TextureFiles {
 	const std::string MAP = "map_s.png";
-	const std::string PATH = "trajectory_s.png";
 	const std::string STATION = "station_s.png";
 	const std::string TELESCOPE = "telescope_s.png";
 	const std::string GPS = "gps_s.png";
