@@ -75,7 +75,7 @@ void Program::unload()
 
 void Program::updatePositions()
 {
-	if (timePassed > lastCalculationTime + 1000) {
+	if (timePassed > lastCalculationTime + calculationTimeStep) {
 		for (auto& sat : sats) {
 			sat.updatePosition();
 		}

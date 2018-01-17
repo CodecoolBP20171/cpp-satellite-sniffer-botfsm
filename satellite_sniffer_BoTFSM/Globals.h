@@ -60,3 +60,17 @@ namespace UIRects {
 						Dimensions::MAP_WIDTH,
 						Dimensions::MAP_HEIGHT };
 }
+
+namespace TrajectoryLimits {
+	const int MAX_POINTS = 100;
+	const double MAX_DISTANCE = 0.4;
+	const double DISTANCE_GAP = 0.05;
+	const int RENDER_DISTANCE_GAP = 100;
+}
+
+namespace TrajectoryRender {
+	const Uint8 LINE_WEIGHT = 8;
+	/* SDL2_gfx is fcked we need ABGR: 0xAABBGGRR */
+	const Uint32 FORWARD_COLOR = 0xDD19FCF4;
+	const Uint32 BACKWARD_COLOR = 0xDD0A0066;
+}

@@ -84,10 +84,7 @@
     <ClInclude Include="Map.h">
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
-    <ClInclude Include="SDL_PointOperators.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BezierCurve.h">
+    <ClInclude Include="Trajectory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,7 +137,7 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
-    <ClCompile Include="BezierCurve.cpp">
+    <ClCompile Include="Trajectory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

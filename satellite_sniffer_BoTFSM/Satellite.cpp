@@ -18,7 +18,9 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	type(type),
 	tle(Satellite::loadTle(name, noradId)),
 	sgp4(tle),
-	_shown(true) {
+	_shown(true),
+	forwardTrajectory(*this, Trajectory::FORWARD),
+	backTrajectory(*this, Trajectory::BACK) {
 	updatePosition();
 }
 
@@ -37,13 +39,6 @@ void Satellite::calculate(std::tm& time) {
 	satpos = eci.ToGeodetic();
 }
 
-void Satellite::calculate() {
-	DateTime tm(DateTime::Now(true));
-	Eci eci(sgp4.FindPosition(tm));
-	satpos = eci.ToGeodetic();
-}
-
-
 CoordGeodetic Satellite::getPositionAtTime(std::time_t& time) {
 	std::tm stime;
 	gmtime_s(&stime, &time);
@@ -61,17 +56,38 @@ CoordGeodetic & Satellite::getPosition()
 	return satpos;
 }
 
-void Satellite::updatePosition(std::time_t time) {
-	if (!_shown) return;
-	if (time == 0) calculate();
-	else {
-		std::tm stime;
-		gmtime_s(&stime, &time);
-		calculate(stime);
-	}
+Trajectory & Satellite::getForwardTrajectory()
+{
+	return forwardTrajectory;
+}
+
+Trajectory & Satellite::getBackTrajectory()
+{
+	return backTrajectory;
+}
+
+void Satellite::transformOrigo()
+{
 	satpos.longitude += MathConstants::PI;
 	satpos.latitude -= MathConstants::PI / 2;
 	satpos.latitude = -satpos.latitude;
+}
+
+void Satellite::updatePosition()
+{
+	std::time_t time;
+	std::time(&time);
+	updatePosition(time);
+}
+
+void Satellite::updatePosition(std::time_t time) {
+	if (!_shown) return;
+	std::tm stime;
+	gmtime_s(&stime, &time);
+	calculate(stime);
+	forwardTrajectory.calculate(time);
+	backTrajectory.calculate(time);
+	transformOrigo();
 }
 
 
