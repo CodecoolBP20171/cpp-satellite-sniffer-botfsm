@@ -21,6 +21,7 @@ private:
 	PState state;
 	bool quit;
 	bool loaded;
+	bool firstFrame;
 	Uint32 timePassed;
 	Uint32 timestep;
 	Uint32 lastCalculationTime;

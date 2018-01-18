@@ -16,17 +16,15 @@ public:
 	void calculate(std::time_t time);
 	void render();
 
-
-
 private:
 	bool isTextureValid;
-	SDL_Point topLeft, bottomRight;
+	SDL_Rect rect;
 	std::unique_ptr<Sprite> texture;
 	Satellite& sat;
 	Direction direction;
 	std::vector<CoordGeodetic> points;
 	double getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
-	void findCorners();
+	void updateRect();
 	void renderNewTexture();
 	void renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2);
 };

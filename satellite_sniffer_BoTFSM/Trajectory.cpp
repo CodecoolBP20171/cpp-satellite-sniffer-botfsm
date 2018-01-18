@@ -34,16 +34,13 @@ void Trajectory::calculate(std::time_t time)
 
 void Trajectory::render()
 {
-	int width = bottomRight.x - topLeft.x + 2*TrajectoryRender::LINE_WEIGHT;
-	int height = bottomRight.y - topLeft.y + 2*TrajectoryRender::LINE_WEIGHT;
 	if (!isTextureValid) {
-		findCorners();
-
-		texture.reset(new Sprite(width, height));
+		updateRect();
+		texture.reset(new Sprite(rect.w, rect.h));
 		renderNewTexture();
 		isTextureValid = true;
 	}
-	SDL_Rect rect = { topLeft.x - TrajectoryRender::LINE_WEIGHT, topLeft.y - TrajectoryRender::LINE_WEIGHT, width, height };
+
 	texture->render(&rect);
 }
 
@@ -79,10 +76,10 @@ void Trajectory::renderNewTexture()
 
 void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2)
 {
-	x1 -= topLeft.x - TrajectoryRender::LINE_WEIGHT;
-	x2 -= topLeft.x - TrajectoryRender::LINE_WEIGHT;
-	y1 -= topLeft.y - TrajectoryRender::LINE_WEIGHT;
-	y2 -= topLeft.y - TrajectoryRender::LINE_WEIGHT;
+	x1 -= rect.x - TrajectoryRender::LINE_WEIGHT;
+	x2 -= rect.x - TrajectoryRender::LINE_WEIGHT;
+	y1 -= rect.y - TrajectoryRender::LINE_WEIGHT;
+	y2 -= rect.y - TrajectoryRender::LINE_WEIGHT;
 	auto color(FORWARD == direction ? TrajectoryRender::FORWARD_COLOR : TrajectoryRender::BACKWARD_COLOR);
 	thickLineColor(Resources::getInstance()->getRenderer(), x1, y1, x2, y2,
 				   TrajectoryRender::LINE_WEIGHT, color);
@@ -97,7 +94,7 @@ double Trajectory::getDistance(const CoordGeodetic & a, const CoordGeodetic & b)
 	return sqrt(pow(latDelta, 2) + pow(longDelta, 2));
 }
 
-void Trajectory::findCorners()
+void Trajectory::updateRect()
 {
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	int minX{ mapSize.w }, maxX{ 0 }, minY{ mapSize.h }, maxY{0};
@@ -109,8 +106,8 @@ void Trajectory::findCorners()
 		if (pX > maxX) maxX = pX;
 		if (pY > maxY) maxY = pY;
 	}
-	topLeft.x = minX;
-	topLeft.y = minY;
-	bottomRight.x = maxX;
-	bottomRight.y = maxY;
+	rect.x = minX;
+	rect.y = minY;
+	rect.w = maxX - rect.x + 2 * TrajectoryRender::LINE_WEIGHT;
+	rect.h = maxY - rect.y + 2 * TrajectoryRender::LINE_WEIGHT;
 }

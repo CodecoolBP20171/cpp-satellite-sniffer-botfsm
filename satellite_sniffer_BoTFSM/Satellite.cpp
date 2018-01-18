@@ -21,7 +21,7 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type)
 	_shown(true),
 	forwardTrajectory(*this, Trajectory::FORWARD),
 	backTrajectory(*this, Trajectory::BACK) {
-	updatePosition();
+	//updatePosition();
 }
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {

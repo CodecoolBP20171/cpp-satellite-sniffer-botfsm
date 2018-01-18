@@ -18,7 +18,8 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
-	state(PState::MAIN_SCREEN)
+	state(PState::MAIN_SCREEN),
+	firstFrame(true)
 {}
 
 
@@ -53,8 +54,11 @@ void Program::run()
 	while (!quit) {
 		timePassed = SDL_GetTicks();
 		quit = handleEvents();
+		if (firstFrame) {
+			for (auto& sat : sats) sat.updatePosition();
+			firstFrame = false;
+		}else updatePositions();
 
-		updatePositions();
 		render();
 
 		/* wait for next frame */
