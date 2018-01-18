@@ -10,6 +10,8 @@ Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
 	rect.x += Dimensions::MENU_BUTTON_SPACING;
 	rect.y += Dimensions::MENU_BUTTON_VERTICAL_SPACING;
 	menuButtons.emplace_back(new Button(rect, state, ButtonName::SATELLITES));
+	rect.x += UIRects::MENU.w - Dimensions::MENU_BUTTON_WIDTH - 2 * Dimensions::MENU_BUTTON_SPACING;
+	menuButtons.emplace_back(new Button(rect, state, ButtonName::EXIT));
 }
 
 bool Menu::isClicked(const int x, const int y, PState & state)

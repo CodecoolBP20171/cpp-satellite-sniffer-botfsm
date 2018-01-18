@@ -49,6 +49,7 @@ void Resources::loadTextures() {
 
 	buttons.emplace(ButtonName::SATELLITES, sptr<Sprite>(new Sprite(TextureFiles::SAT_BUTTON)));
 	buttons.emplace(ButtonName::OK, sptr<Sprite>(new Sprite(TextureFiles::OK_BUTTON)));
+	buttons.emplace(ButtonName::EXIT, sptr<Sprite>(new Sprite(TextureFiles::EXIT_BUTTON)));
 
 	sats.emplace(SatelliteType::STATION, sptr<Sprite>(new Sprite(TextureFiles::STATION)));
 	sats.emplace(SatelliteType::TELESCOPE, sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));
