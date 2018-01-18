@@ -37,6 +37,11 @@ namespace TextureFiles {
 	const std::string OK_BUTTON = "ok_button_active_s.png";
 }
 
+namespace DataFiles {
+	const std::string DATA_DIR = "satellites";
+	const std::string LIST_FILE = "satellites.dat";
+}
+
 namespace SatelliteType {
 	const std::string STATION = "STATION";
 	const std::string TELESCOPE = "TELESCOPE";

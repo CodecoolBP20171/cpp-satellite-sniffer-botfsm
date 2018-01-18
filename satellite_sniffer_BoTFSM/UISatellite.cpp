@@ -69,6 +69,11 @@ void UISatellite::popupRender()
 	popupText->render(&rect);
 }
 
+std::string UISatellite::toString()
+{
+	return sat.toString();
+}
+
 void UISatellite::renderTrajectory()
 {
 	trajectoryForward.render();
