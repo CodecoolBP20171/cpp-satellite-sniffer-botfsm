@@ -17,7 +17,7 @@ Program::Program() :
 	timePassed(0),
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
-	calculationTimeStep(1000), // 1 sec
+	calculationTimeStep(5000), // 1 sec
 	state(PState::MAIN_SCREEN)
 {}
 

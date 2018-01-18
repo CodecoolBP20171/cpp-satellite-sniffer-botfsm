@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include <SDl.h>
 #include <CoordGeodetic.h>
+#include "Sprite.h"
 class Satellite;
 class Trajectory
 {
@@ -14,12 +16,18 @@ public:
 	void calculate(std::time_t time);
 	void render();
 
-	void renderSegment(const Sint16 &x1, const Sint16 &y1, const Sint16 &x2, const Sint16 &y2);
+
 
 private:
+	bool isTextureValid;
+	SDL_Point topLeft, bottomRight;
+	std::unique_ptr<Sprite> texture;
 	Satellite& sat;
 	Direction direction;
 	std::vector<CoordGeodetic> points;
-	double Trajectory::getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
+	double getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
+	void findCorners();
+	void renderNewTexture();
+	void renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2);
 };
 

@@ -85,7 +85,7 @@
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
     <ClInclude Include="Trajectory.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
     <ClCompile Include="Trajectory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Renderable</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
