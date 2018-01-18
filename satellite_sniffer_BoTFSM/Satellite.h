@@ -11,7 +11,7 @@
 class Satellite {
 public:
 	static Tle loadTle(const std::string& name, const std::string& noradId);
-	Satellite(std::string name, std::string noradId, std::string type);
+	Satellite(std::string name, std::string noradId, std::string type, bool visible = true);
 	void transformOrigo();
 	void updatePosition();
 	void updatePosition(std::time_t time);
@@ -26,6 +26,7 @@ public:
 	bool& isShown();
 	std::string& getName();
 	std::string& getType();
+	std::string toString();
 private:
 	Tle tle;
 	SGP4 sgp4;
@@ -34,6 +35,5 @@ private:
 	Trajectory forwardTrajectory, backTrajectory;
 	bool _shown;
 	void calculate(std::tm& time);
-	void calculate();
 };
 

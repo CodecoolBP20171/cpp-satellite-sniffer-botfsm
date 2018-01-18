@@ -14,6 +14,7 @@ public:
 	void render() override;
 	bool isClicked(const int x, const int y, PState& state) override;
 	void popupRender();
+	std::string toString();
 private:
 	static int pos;
 	Satellite & sat;

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <ctime>
 #include <string>
 #include "Satellite.h"
@@ -12,20 +13,20 @@
 #include <SGP4.h>
 #include <CoordGeodetic.h>
 
-Satellite::Satellite(std::string name, std::string noradId, std::string type)
+Satellite::Satellite(std::string name, std::string noradId, std::string type, bool visible)
 	: name(name),
 	noradId(noradId),
 	type(type),
 	tle(Satellite::loadTle(name, noradId)),
 	sgp4(tle),
-	_shown(true),
+	_shown(visible),
 	forwardTrajectory(*this, Trajectory::FORWARD),
 	backTrajectory(*this, Trajectory::BACK) {
 	//updatePosition();
 }
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
-	std::ifstream file("satellites/" + noradId + ".dat");
+	std::ifstream file(DataFiles::DATA_DIR + "/" + noradId + ".dat");
 	std::string tle1, tle2;
 	std::getline(file, tle1);
 	std::getline(file, tle2);
@@ -119,4 +120,11 @@ std::string & Satellite::getName()
 std::string & Satellite::getType()
 {
 	return type;
+}
+
+std::string Satellite::toString()
+{
+	std::stringstream line;
+	line << name << ';' << noradId << ';' << type << ';' << (_shown ? '1' : '0') << '\n';
+	return line.str();
 }
