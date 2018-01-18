@@ -19,6 +19,7 @@ public:
 private:
 	bool isTextureValid;
 	SDL_Rect rect;
+	int offSetX, offSetY;
 	std::unique_ptr<Sprite> texture;
 	Satellite& sat;
 	Direction direction;

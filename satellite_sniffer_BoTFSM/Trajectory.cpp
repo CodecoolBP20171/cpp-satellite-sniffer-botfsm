@@ -76,10 +76,10 @@ void Trajectory::renderNewTexture()
 
 void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2)
 {
-	x1 -= rect.x - TrajectoryRender::LINE_WEIGHT;
-	x2 -= rect.x - TrajectoryRender::LINE_WEIGHT;
-	y1 -= rect.y - TrajectoryRender::LINE_WEIGHT;
-	y2 -= rect.y - TrajectoryRender::LINE_WEIGHT;
+	x1 -= rect.x - offSetX;
+	x2 -= rect.x - offSetX;
+	y1 -= rect.y - offSetY;
+	y2 -= rect.y - offSetY;
 	auto color(FORWARD == direction ? TrajectoryRender::FORWARD_COLOR : TrajectoryRender::BACKWARD_COLOR);
 	thickLineColor(Resources::getInstance()->getRenderer(), x1, y1, x2, y2,
 				   TrajectoryRender::LINE_WEIGHT, color);
@@ -106,8 +106,24 @@ void Trajectory::updateRect()
 		if (pX > maxX) maxX = pX;
 		if (pY > maxY) maxY = pY;
 	}
-	rect.x = minX;
-	rect.y = minY;
+	rect.x = minX - TrajectoryRender::LINE_WEIGHT;
+	rect.y = minY - TrajectoryRender::LINE_WEIGHT;
 	rect.w = maxX - rect.x + 2 * TrajectoryRender::LINE_WEIGHT;
 	rect.h = maxY - rect.y + 2 * TrajectoryRender::LINE_WEIGHT;
+	offSetX = TrajectoryRender::LINE_WEIGHT;
+	offSetY = TrajectoryRender::LINE_WEIGHT;
+	if (rect.x < 2 * TrajectoryRender::LINE_WEIGHT) {
+		offSetX = rect.x;
+		rect.x = 0;
+	}
+	if (rect.y < 2 * TrajectoryRender::LINE_WEIGHT) {
+		offSetY = rect.y;
+		rect.y = 0;
+	}
+	if (rect.w > mapSize.w - 2 * TrajectoryRender::LINE_WEIGHT) {
+		rect.w = mapSize.w;
+	}
+	if (rect.h > mapSize.h - 2 * TrajectoryRender::LINE_WEIGHT) {
+		rect.h = mapSize.h;
+	}
 }
