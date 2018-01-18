@@ -15,6 +15,9 @@ bool Button::isClicked(const int x, const int y, PState & state)
 		if (name == ButtonName::SATELLITES) {
 			state = PState::MENU_SCREEN;
 		}
+		else if (name == ButtonName::EXIT) {
+			state = PState::QUIT;
+		}
 		return true;
 	}
 	return false;

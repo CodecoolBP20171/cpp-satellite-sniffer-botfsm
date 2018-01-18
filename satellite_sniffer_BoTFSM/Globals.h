@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <SDL.h>
 
 namespace MathConstants {
 	const double PI = acos(-1);
@@ -29,12 +30,17 @@ namespace FontFiles {
 
 namespace TextureFiles {
 	const std::string MAP = "map_s.png";
-	const std::string PATH = "trajectory_s.png";
 	const std::string STATION = "station_s.png";
 	const std::string TELESCOPE = "telescope_s.png";
 	const std::string GPS = "gps_s.png";
 	const std::string SAT_BUTTON = "satellite_button_active_s.png";
 	const std::string OK_BUTTON = "ok_button_active_s.png";
+	const std::string EXIT_BUTTON = "exit_button_active_s.png";
+}
+
+namespace DataFiles {
+	const std::string DATA_DIR = "satellites";
+	const std::string LIST_FILE = "satellites.dat";
 }
 
 namespace SatelliteType {
@@ -46,4 +52,31 @@ namespace SatelliteType {
 namespace ButtonName {
 	const std::string SATELLITES = "SATELLITES";
 	const std::string OK = "OK";
+	const std::string EXIT = "EXIT";
+}
+
+namespace UIRects {
+	const SDL_Rect MENU{ 0, 0, Dimensions::WINDOW_WIDTH, Dimensions::MENU_HEIGHT };
+	const SDL_Rect POPUP{ Dimensions::POPUP_OFFSET_X,
+						Dimensions::POPUP_OFFSET_Y,
+						Dimensions::POPUP_WIDTH,
+						Dimensions::POPUP_HEIGHT };
+	const SDL_Rect MAP{ 0,
+						Dimensions::MENU_HEIGHT,
+						Dimensions::MAP_WIDTH,
+						Dimensions::MAP_HEIGHT };
+}
+
+namespace TrajectoryLimits {
+	const int MAX_POINTS = 100;
+	const double MAX_DISTANCE = 0.4;
+	const double DISTANCE_GAP = 0.05;
+	const int RENDER_DISTANCE_GAP = 100;
+}
+
+namespace TrajectoryRender {
+	const Uint8 LINE_WEIGHT = 8;
+	/* SDL2_gfx is fcked we need ABGR: 0xAABBGGRR */
+	const Uint32 FORWARD_COLOR = 0xDD19FCF4;
+	const Uint32 BACKWARD_COLOR = 0xDD0A0066;
 }

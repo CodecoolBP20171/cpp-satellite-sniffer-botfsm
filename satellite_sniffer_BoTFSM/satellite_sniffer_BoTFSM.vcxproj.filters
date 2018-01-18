@@ -81,6 +81,12 @@
     <ClInclude Include="Popup.h">
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Trajectory.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="UISatellite.cpp">
       <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Trajectory.cpp">
+      <Filter>Source Files\Renderable</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

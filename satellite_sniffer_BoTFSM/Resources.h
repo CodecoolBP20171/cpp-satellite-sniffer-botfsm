@@ -22,11 +22,11 @@ public:
 	static void releaseResources();
 	TTF_Font* getFont();
 	sptr<Sprite>& getMap();
+	sptr<Sprite>& getCleanMap();
 	void clearMap();
 	SDL_Rect getMapDimensions();
 	sptr<Sprite>& getSat(std::string& type);
 	sptr<Sprite>& getButton(const std::string& name);
-	sptr<Sprite>& getPoint();
 
 	SDL_Renderer* getRenderer();
 	void resetRenderer();
@@ -39,7 +39,6 @@ private:
 
 	sptr<Sprite> map;
 	sptr<Sprite> cleanMap;
-	sptr<Sprite> point;
 	std::map<std::string, sptr<Sprite>> buttons;
 	std::map<std::string, sptr<Sprite>> sats;
 

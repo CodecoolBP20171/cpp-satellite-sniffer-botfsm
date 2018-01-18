@@ -2,6 +2,7 @@
 #include "Popup.h"
 #include "Globals.h"
 #include "Resources.h"
+#include "SatelliteLoader.h"
 
 Popup::Popup(SDL_Rect rect, PState state, std::list<UISatellite>& satList) : 
 	UIElement(rect, state),
@@ -19,6 +20,7 @@ bool Popup::isClicked(const int x, const int y, PState & state)
 {
 	if (UIElement::isClicked(x, y, state)) {
 		if (button->isClicked(x, y, state)) {
+			SatelliteLoader::saveSatelliteList(sats);
 			state = PState::MAIN_SCREEN;
 		} else {
 			for (auto& sat : sats) {
