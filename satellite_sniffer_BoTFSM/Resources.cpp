@@ -46,7 +46,6 @@ sptr<Resources>& Resources::getInstance() {
 void Resources::loadTextures() {
 	cleanMap = sptr<Sprite>(new Sprite(TextureFiles::MAP));
 	map = sptr<Sprite>(new Sprite(cleanMap));
-	point = sptr<Sprite>(new Sprite(TextureFiles::PATH));
 
 	buttons.emplace(ButtonName::SATELLITES, sptr<Sprite>(new Sprite(TextureFiles::SAT_BUTTON)));
 	buttons.emplace(ButtonName::OK, sptr<Sprite>(new Sprite(TextureFiles::OK_BUTTON)));
@@ -103,15 +102,10 @@ sptr<Sprite>& Resources::getButton(const std::string & name)
 	return buttons[name];
 }
 
-sptr<Sprite>& Resources::getPoint() {
-	return point;
-}
-
 void Resources::release() {
 	ttffont.reset();
 	map.reset();
 	cleanMap.reset();
-	point.reset();
 	for (auto& sat : sats) {
 		sat.second.reset();
 	}

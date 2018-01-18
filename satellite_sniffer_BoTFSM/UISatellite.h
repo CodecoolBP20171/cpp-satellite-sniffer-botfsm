@@ -5,6 +5,7 @@
 #include "ScreenText.h"
 #include "UIElement.h"
 #include "Satellite.h"
+#include "Trajectory.h"
 
 class UISatellite : UIElement
 {
@@ -17,11 +18,10 @@ private:
 	static int pos;
 	Satellite & sat;
 	std::shared_ptr<Sprite> texture;
-	std::shared_ptr<Sprite> trajectoryForward;
-	std::shared_ptr<Sprite> trajectoryBackward;
 	std::unique_ptr<ScreenText> text;
 	std::unique_ptr<ScreenText> popupText;
+	Trajectory& trajectoryForward;
+	Trajectory& trajectoryBackward;
 	void renderTrajectory();
-	void renderPoint(std::time_t& now, std::shared_ptr<Sprite>& point);
 };
 

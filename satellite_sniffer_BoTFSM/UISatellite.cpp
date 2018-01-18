@@ -2,24 +2,26 @@
 #include "UISatellite.h"
 #include "Resources.h"
 #include "Globals.h"
+#include <list>
+#include <SDL2_gfxPrimitives.h>
 
-int UISatellite::pos{ 1 };
+int UISatellite::pos{ 0 };
 
 UISatellite::UISatellite(Satellite& sat)
 	: UIElement({ 0,0,0,0 }, PState::MAIN_SCREEN),
 	sat(sat),
 	texture(Resources::getInstance()->getSat(sat.getType())),
-	trajectoryForward(Resources::getInstance()->getPoint()),
-	trajectoryBackward(Resources::getInstance()->getPoint()),
+	trajectoryForward(sat.getForwardTrajectory()),
+	trajectoryBackward(sat.getBackTrajectory()),
 	text(new ScreenText(sat.getName())),
 	popupText(new ScreenText(sat.getName()))
 {
 	rect = popupText->getDimensions();
 	double oldH(rect.h);
 	rect.h = Dimensions::POPUP_HEIGHT / 10;
-	rect.w *= rect.h / oldH;
+	rect.w = static_cast<int>(rect.w * (rect.h / oldH));
 	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
-	if (pos > 10) {
+	if (pos >= 10) {
 		rect.x += Dimensions::POPUP_WIDTH / 2;
 	}
 	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos % 10);
@@ -60,7 +62,8 @@ void UISatellite::popupRender()
 {
 	if (sat.isShown()) {
 		popupText->setColor({ 15, 200, 15 });
-	} else {
+	}
+	else {
 		popupText->setColor({ 100, 100, 100 });
 	}
 	popupText->render(&rect);
@@ -68,31 +71,6 @@ void UISatellite::popupRender()
 
 void UISatellite::renderTrajectory()
 {
-	std::time_t forward;
-	std::time(&forward);
-	auto back(forward);
-	auto delta(sat.getDelta());
-
-	for (int i = 0; i < 8; ++i) {
-		forward += delta;
-		back -= delta;
-		renderPoint(forward, trajectoryForward);
-		renderPoint(back, trajectoryBackward);
-	}
+	trajectoryForward.render();
+	trajectoryBackward.render();
 }
-
-void UISatellite::renderPoint(std::time_t & now, std::shared_ptr<Sprite>& point)
-{
-	auto mapSize(Resources::getInstance()->getMapDimensions());
-	auto pos(sat.getPositionAtTime(now));
-	auto pointSize(point->getDimensions());
-
-	SDL_Rect pointRect = {
-		static_cast<int>(round(pos.longitude / (MathConstants::PI * 2) * mapSize.w - pointSize.w / 2)),
-		static_cast<int>(round(pos.latitude / (MathConstants::PI) * mapSize.h - pointSize.h / 2)),
-		pointSize.w,
-		pointSize.h
-	};
-	point->render(&pointRect);
-}
-
