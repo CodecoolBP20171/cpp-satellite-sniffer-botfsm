@@ -113,6 +113,9 @@ bool Program::handleEvents()
 				}
 			}
 		}
+		if (PState::QUIT == state) {
+			return true;
+		}
 	}
 	return false;
 }

@@ -35,6 +35,7 @@ namespace TextureFiles {
 	const std::string GPS = "gps_s.png";
 	const std::string SAT_BUTTON = "satellite_button_active_s.png";
 	const std::string OK_BUTTON = "ok_button_active_s.png";
+	const std::string EXIT_BUTTON = "exit_button_active_s.png";
 }
 
 namespace SatelliteType {
@@ -46,6 +47,7 @@ namespace SatelliteType {
 namespace ButtonName {
 	const std::string SATELLITES = "SATELLITES";
 	const std::string OK = "OK";
+	const std::string EXIT = "EXIT";
 }
 
 namespace UIRects {
