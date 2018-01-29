@@ -2,6 +2,7 @@
 #include "UISatellite.h"
 #include "Resources.h"
 #include "Globals.h"
+#include "Config.h"
 #include <list>
 #include <SDL2_gfxPrimitives.h>
 
@@ -18,13 +19,13 @@ UISatellite::UISatellite(Satellite& sat)
 {
 	rect = popupText->getDimensions();
 	double oldH(rect.h);
-	rect.h = Dimensions::POPUP_HEIGHT / 10;
+	rect.h = Config::getIntOption("Dimensions", "POPUP_HEIGHT") / 10;
 	rect.w = static_cast<int>(rect.w * (rect.h / oldH));
-	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
+	rect.x = Config::getIntOption("Dimensions", "POPUP_OFFSET_X") + Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
 	if (pos >= 10) {
-		rect.x += Dimensions::POPUP_WIDTH / 2;
+		rect.x += Config::getIntOption("Dimensions", "POPUP_WIDTH") / 2;
 	}
-	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos % 10);
+	rect.y = Config::getIntOption("Dimensions", "POPUP_OFFSET_Y") + rect.h * (pos % 10);
 	text->setColor({ 0,0,0 });
 	++pos;
 }

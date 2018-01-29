@@ -8,6 +8,7 @@
 #include "Satellite.h"
 #include "Resources.h"
 #include "Globals.h"
+#include "Config.h"
 #include "Resources.h"
 
 #include <SGP4.h>
@@ -22,11 +23,11 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type, bo
 	_shown(visible),
 	forwardTrajectory(*this, Trajectory::FORWARD),
 	backTrajectory(*this, Trajectory::BACK) {
-	//updatePosition();
+	updatePosition();
 }
 
 Tle Satellite::loadTle(const std::string & name, const std::string & noradId) {
-	std::ifstream file(DataFiles::DATA_DIR + "/" + noradId + ".dat");
+	std::ifstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" + noradId + ".dat");
 	std::string tle1, tle2;
 	std::getline(file, tle1);
 	std::getline(file, tle2);
