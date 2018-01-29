@@ -3,7 +3,7 @@
 #include "Program.h"
 #include "Popup.h"
 #include "Resources.h"
-#include "SatelliteLoader.h"
+#include "Satellites.h"
 #include "Menu.h"
 #include "Map.h"
 
@@ -37,14 +37,11 @@ void Program::init()
 
 	// init resources
 	Resources::getInstance();
-	SatelliteLoader::loadSatellites(sats);
-	for (auto& sat : sats) {
-		UISats.emplace_back(sat);
-	}
+	Satellites::getInstance();
 
-	UIElements.emplace_back(new Map(UIRects::MAP, PState::MAIN_SCREEN, UISats));
+	UIElements.emplace_back(new Map(UIRects::MAP, PState::MAIN_SCREEN));
 	UIElements.emplace_back(new Menu(UIRects::MENU, PState::MAIN_SCREEN));
-	UIElements.emplace_back(new Popup(UIRects::POPUP, PState::MENU_SCREEN, UISats));
+	UIElements.emplace_back(new Popup(UIRects::POPUP, PState::MENU_SCREEN));
 	loaded = true;
 }
 
@@ -55,7 +52,7 @@ void Program::run()
 		timePassed = SDL_GetTicks();
 		quit = handleEvents();
 		if (firstFrame) {
-			for (auto& sat : sats) sat.updatePosition();
+			Satellites::getInstance()->updatePosition();
 			firstFrame = false;
 		}else updatePositions();
 
@@ -80,9 +77,7 @@ void Program::unload()
 void Program::updatePositions()
 {
 	if (timePassed > lastCalculationTime + calculationTimeStep) {
-		for (auto& sat : sats) {
-			sat.updatePosition();
-		}
+		Satellites::getInstance()->updatePosition();
 		lastCalculationTime = timePassed;
 	}
 }

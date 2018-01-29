@@ -2,8 +2,6 @@
 #include <list>
 #include <memory>
 
-#include "Satellite.h"
-#include "UISatellite.h"
 #include "UIElement.h"
 #include "ProgramState.h"
 
@@ -15,8 +13,6 @@ public:
 	void run();
 	void unload();
 private:
-	std::list<Satellite> sats;
-	std::list<UISatellite> UISats;
 	std::list<std::unique_ptr<UIElement>> UIElements;
 	PState state;
 	bool quit;

@@ -2,9 +2,8 @@
 #include "Map.h"
 #include "Resources.h"
 
-Map::Map(SDL_Rect rect, PState state, std::list<UISatellite>& UISats)
+Map::Map(SDL_Rect rect, PState state)
 	: UIElement(rect, state),
-	UISats(UISats),
 	map(Resources::getInstance()->getMap()),
 	cleanMap(Resources::getInstance()->getCleanMap())
 {}
@@ -18,9 +17,7 @@ void Map::render()
 	map->setAsRenderTarget();
 	cleanMap->render(nullptr);
 
-	for (auto& sat : UISats) {
-		sat.render();
-	}
+	Satellites::getInstance()->renderUISatellits();
 
 	// setting renderer to Window
 	Resources::getInstance()->resetRenderer();
