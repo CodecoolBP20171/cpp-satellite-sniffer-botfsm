@@ -74,7 +74,7 @@ void Satellites::loadSatellites()
 void Satellites::saveSatelliteList()
 {
 	std::ofstream file(DataFiles::DATA_DIR + "/" + DataFiles::LIST_FILE, std::ios_base::trunc);
-	for (auto& sat : UISats) {
+	for (auto& sat : sats) {
 		file << sat.toString();
 	}
 	file.close();

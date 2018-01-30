@@ -18,8 +18,7 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
-	state(PState::MAIN_SCREEN),
-	firstFrame(true)
+	state(PState::MAIN_SCREEN)
 {}
 
 
@@ -51,10 +50,7 @@ void Program::run()
 	while (!quit) {
 		timePassed = SDL_GetTicks();
 		quit = handleEvents();
-		if (firstFrame) {
-			Satellites::getInstance()->updatePosition();
-			firstFrame = false;
-		}else updatePositions();
+		updatePositions();
 
 		render();
 

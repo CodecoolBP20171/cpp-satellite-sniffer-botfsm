@@ -10,7 +10,6 @@ class Satellites
 {
 public:
 	static sptr<Satellites>& getInstance();
-	std::list<Satellite>& getSatellites();
 	std::list<UISatellite>& getUISatellites();
 	void renderUISatellits();
 	void renderPopupSatellits();
