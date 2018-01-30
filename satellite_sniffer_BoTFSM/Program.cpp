@@ -10,6 +10,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_syswm.h>
+#include <imgui.h>
+#include <imgui_impl_dx9.h>
 
 Program::Program() :
 	quit(false),
@@ -41,6 +44,16 @@ void Program::init()
 	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN));
 	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::MAIN_SCREEN));
 	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::MENU_SCREEN));
+
+	// init imgui
+
+	SDL_SysWMinfo info;
+	SDL_VERSION(&info.version);
+	SDL_GetWindowWMInfo(Resources::getInstance()->getWindow(), &info);
+
+	ImGui_ImplDX9_Init(info.info.win.window, SDL_RenderGetD3D9Device(Resources::getInstance()->getRenderer()));
+	ImGui::StyleColorsDark();
+
 	loaded = true;
 }
 
@@ -63,6 +76,7 @@ void Program::run()
 
 void Program::unload()
 {
+	ImGui_ImplDX9_Shutdown();
 	Resources::releaseResources();
 	TTF_Quit();
 	IMG_Quit();
@@ -86,6 +100,12 @@ void Program::render()
 			elem->render();
 		}
 	}
+
+	ImGui_ImplDX9SDL_NewFrame(Resources::getInstance()->getWindow());
+	static bool popen = true;
+	ImGui::ShowDemoWindow(&popen);
+	ImGui::Render();
+
 	SDL_RenderPresent(Resources::getInstance()->getRenderer());
 }
 
@@ -94,6 +114,7 @@ bool Program::handleEvents()
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0) {
+		ImGui_Sdl_ProcessEvent(&e);
 		if (e.type == SDL_QUIT) {
 			return true;
 		}
