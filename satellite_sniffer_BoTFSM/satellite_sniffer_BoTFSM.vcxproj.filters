@@ -39,9 +39,6 @@
     <ClInclude Include="GeoCoordinate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SatelliteLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,6 +84,9 @@
     <ClInclude Include="Trajectory.h">
       <Filter>Header Files\Renderable</Filter>
     </ClInclude>
+    <ClInclude Include="Satellites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -99,9 +99,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeoCoordinate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SatelliteLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
@@ -139,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="Trajectory.cpp">
       <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Satellites.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
