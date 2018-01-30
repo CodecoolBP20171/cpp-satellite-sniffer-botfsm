@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "SatelliteLoader.h"
-#include "Globals.h"
+#include "Config.h"
 #include <fstream>
 #include <sstream>
 #include <string>
 
 void SatelliteLoader::loadSatellites(std::list<Satellite>& sats)
 {
-	std::ifstream file(DataFiles::DATA_DIR + "/" + DataFiles::LIST_FILE);
+	std::ifstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" + Config::getStringOption("DataFiles", "LIST_FILE"));
 	std::string line;
 	while (std::getline(file, line)) {
 		std::stringstream sat(line);
@@ -24,7 +24,7 @@ void SatelliteLoader::loadSatellites(std::list<Satellite>& sats)
 
 void SatelliteLoader::saveSatelliteList(std::list<UISatellite>& sats)
 {
-	std::ofstream file(DataFiles::DATA_DIR + DataFiles::LIST_FILE, std::ios_base::trunc);
+	std::ofstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" + Config::getStringOption("DataFiles", "LIST_FILE"), std::ios_base::trunc);
 	for (auto& sat : sats) {
 		file << sat.toString();
 	}

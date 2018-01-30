@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Button.h"
 #include "Resources.h"
-#include "Globals.h"
+#include "Config.h"
 
 Button::Button(SDL_Rect rect, PState state, const std::string& name)
 	: UIElement(rect, state),
@@ -12,10 +12,10 @@ Button::Button(SDL_Rect rect, PState state, const std::string& name)
 bool Button::isClicked(const int x, const int y, PState & state)
 {
 	if (UIElement::isClicked(x, y, state)) {
-		if (name == ButtonName::SATELLITES) {
+		if (name == Config::getStringOption("ButtonName", "SATELLITES")) {
 			state = PState::MENU_SCREEN;
 		}
-		else if (name == ButtonName::EXIT) {
+		else if (name == Config::getStringOption("ButtonName", "EXIT")) {
 			state = PState::QUIT;
 		}
 		return true;

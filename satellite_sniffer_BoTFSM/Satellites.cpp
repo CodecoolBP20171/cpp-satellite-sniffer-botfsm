@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Satellites.h"
-#include "Globals.h"
+#include "Config.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -56,7 +56,7 @@ void Satellites::renderPopupSatellits()
 
 void Satellites::loadSatellites()
 {
-	std::ifstream file(DataFiles::DATA_DIR + "/" + DataFiles::LIST_FILE);
+	std::ifstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" + Config::getStringOption("DataFiles", "LIST_FILE"));
 	std::string line;
 	while (std::getline(file, line)) {
 		std::stringstream sat(line);
@@ -73,7 +73,7 @@ void Satellites::loadSatellites()
 
 void Satellites::saveSatelliteList()
 {
-	std::ofstream file(DataFiles::DATA_DIR + "/" + DataFiles::LIST_FILE, std::ios_base::trunc);
+	std::ofstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" + Config::getStringOption("DataFiles", "LIST_FILE"), std::ios_base::trunc);
 	for (auto& sat : sats) {
 		file << sat.toString();
 	}

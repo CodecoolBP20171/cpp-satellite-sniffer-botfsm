@@ -1,17 +1,16 @@
 #include "stdafx.h"
 #include "Menu.h"
-#include "Globals.h"
-
+#include "Config.h"
 
 Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
 {
-	rect.h = Dimensions::MENU_BUTTON_HEIGHT;
-	rect.w = Dimensions::MENU_BUTTON_WIDTH;
-	rect.x += Dimensions::MENU_BUTTON_SPACING;
-	rect.y += Dimensions::MENU_BUTTON_VERTICAL_SPACING;
-	menuButtons.emplace_back(new Button(rect, state, ButtonName::SATELLITES));
-	rect.x += UIRects::MENU.w - Dimensions::MENU_BUTTON_WIDTH - 2 * Dimensions::MENU_BUTTON_SPACING;
-	menuButtons.emplace_back(new Button(rect, state, ButtonName::EXIT));
+	rect.h = Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT");
+	rect.w = Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH");
+	rect.x += Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
+	rect.y += Config::getIntOption("Dimensions", "MENU_BUTTON_VERTICAL_SPACING");
+	menuButtons.emplace_back(new Button(rect, state, Config::getStringOption("ButtonName", "SATELLITES")));
+	rect.x += Config::getRect("MENU").w - Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") - 2 * Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
+	menuButtons.emplace_back(new Button(rect, state, Config::getStringOption("ButtonName", "EXIT")));
 }
 
 bool Menu::isClicked(const int x, const int y, PState & state)
