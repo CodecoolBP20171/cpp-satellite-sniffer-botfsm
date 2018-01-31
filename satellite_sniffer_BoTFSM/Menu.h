@@ -10,7 +10,7 @@ class Menu : public UIElement
 public:
 	Menu(SDL_Rect rect, PState state);
 	bool isClicked(const int x, const int y, PState& state) override;
-	void render() override;
+	void render(PState* state = nullptr) override;
 private:
 	std::list<std::shared_ptr<Button>> menuButtons;
 };

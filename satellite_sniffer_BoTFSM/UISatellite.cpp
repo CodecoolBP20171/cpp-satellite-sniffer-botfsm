@@ -9,7 +9,7 @@
 int UISatellite::pos{ 0 };
 
 UISatellite::UISatellite(Satellite& sat)
-	: UIElement({ 0,0,0,0 }, PState::MAIN_SCREEN),
+	: UIElement({ 0,0,0,0 }, PState::RUNNING),
 	sat(sat),
 	texture(Resources::getInstance()->getSat(sat.getType())),
 	trajectoryForward(sat.getForwardTrajectory()),
@@ -30,7 +30,7 @@ UISatellite::UISatellite(Satellite& sat)
 	++pos;
 }
 
-void UISatellite::render()
+void UISatellite::render(PState* state)
 {
 	if (!sat.isShown()) return;
 	renderTrajectory();

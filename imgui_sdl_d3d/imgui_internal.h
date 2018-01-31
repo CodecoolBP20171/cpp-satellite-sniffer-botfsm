@@ -333,10 +333,10 @@ struct IMGUI_API ImGuiMenuColumns
     float       CalcExtraSpace(float avail_w);
 };
 
-// Internal state of the currently focused/edited text input box
+// Internal pstate of the currently focused/edited text input box
 struct IMGUI_API ImGuiTextEditState
 {
-    ImGuiID             Id;                         // widget id owning the text state
+    ImGuiID             Id;                         // widget id owning the text pstate
     ImVector<ImWchar>   Text;                       // edit buffer, we need to persist but can't guarantee the persistence of the user-provided buffer. so we copy into own buffer.
     ImVector<char>      InitialText;                // backup of end-user buffer at the time of focus (in UTF-8, unaltered)
     ImVector<char>      TempTextBuffer;
@@ -496,7 +496,7 @@ struct ImGuiNextWindowData
     }
 };
 
-// Main state for ImGui
+// Main pstate for ImGui
 struct ImGuiContext
 {
     bool                    Initialized;
@@ -563,7 +563,7 @@ struct ImGuiContext
     ImVector<unsigned char> DragDropPayloadBufHeap;             // We don't expose the ImVector<> directly
     unsigned char           DragDropPayloadBufLocal[8];
 
-    // Widget state
+    // Widget pstate
     ImGuiTextEditState      InputTextState;
     ImFont                  InputTextPasswordFont;
     ImGuiID                 ScalarAsInputTextId;                // Temporary text input when CTRL+clicking on a slider, etc.

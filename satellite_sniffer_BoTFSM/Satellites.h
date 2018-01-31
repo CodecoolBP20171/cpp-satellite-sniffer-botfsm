@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <list>
+#include <vector>
 #include "Satellite.h"
 #include "UISatellite.h"
 
@@ -15,12 +16,11 @@ public:
 	void renderPopupSatellits();
 	void saveSatelliteList();
 	void updatePosition();
-	~Satellites();
 private:
 	static sptr<Satellites> instance;
 	void loadSatellites();
 	Satellites();
-	std::list<Satellite> sats;
+	std::vector<Satellite> sats;
 	std::list<UISatellite> UISats;
 };
 

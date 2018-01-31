@@ -62,7 +62,7 @@ void ImGui_ImplDX9_RenderDrawLists(ImDrawData* draw_data)
             return;
     }
 
-    // Backup the DX9 state
+    // Backup the DX9 pstate
     IDirect3DStateBlock9* d3d9_state_block = NULL;
     if (g_pd3dDevice->CreateStateBlock(D3DSBT_ALL, &d3d9_state_block) < 0)
         return;
@@ -107,7 +107,7 @@ void ImGui_ImplDX9_RenderDrawLists(ImDrawData* draw_data)
     vp.MaxZ = 1.0f;
     g_pd3dDevice->SetViewport(&vp);
 
-    // Setup render state: fixed-pipeline, alpha-blending, no face culling, no depth testing
+    // Setup render pstate: fixed-pipeline, alpha-blending, no face culling, no depth testing
     g_pd3dDevice->SetPixelShader(NULL);
     g_pd3dDevice->SetVertexShader(NULL);
     g_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -170,7 +170,7 @@ void ImGui_ImplDX9_RenderDrawLists(ImDrawData* draw_data)
         vtx_offset += cmd_list->VtxBuffer.Size;
     }
 
-    // Restore the DX9 state
+    // Restore the DX9 pstate
     d3d9_state_block->Apply();
     d3d9_state_block->Release();
 }

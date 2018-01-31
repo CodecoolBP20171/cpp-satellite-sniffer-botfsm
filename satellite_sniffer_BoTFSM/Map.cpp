@@ -8,7 +8,7 @@ Map::Map(SDL_Rect rect, PState state)
 	cleanMap(Resources::getInstance()->getCleanMap())
 {}
 
-void Map::render()
+void Map::render(PState* state)
 {
 	// Keeping the map shown under the popup menu
 	SDL_RenderClear(Resources::getInstance()->getRenderer());

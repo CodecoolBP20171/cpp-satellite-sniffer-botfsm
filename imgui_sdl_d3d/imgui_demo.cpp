@@ -428,12 +428,12 @@ void ImGui::ShowDemoWindow(bool* p_open)
                 if (align_label_with_current_x_position)
                     ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
 
-                static int selection_mask = (1 << 2); // Dumb representation of what may be user-side selection state. You may carry selection state inside or outside your objects in whatever format you see fit.
+                static int selection_mask = (1 << 2); // Dumb representation of what may be user-side selection pstate. You may carry selection pstate inside or outside your objects in whatever format you see fit.
                 int node_clicked = -1;                // Temporary storage of what node we have clicked to process selection at the end of the loop. May be a pointer to your own node type, etc.
                 ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize()*3); // Increase spacing to differentiate leaves from expanded contents.
                 for (int i = 0; i < 6; i++)
                 {
-                    // Disable the default open on single-click behavior and pass in Selected flag according to our selection state.
+                    // Disable the default open on single-click behavior and pass in Selected flag according to our selection pstate.
                     ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
                     if (i < 3)
                     {
@@ -458,7 +458,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
                 }
                 if (node_clicked != -1)
                 {
-                    // Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+                    // Update selection pstate. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
                     if (ImGui::GetIO().KeyCtrl)
                         selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
                     else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
@@ -610,7 +610,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
         if (ImGui::TreeNode("Selectables"))
         {
             // Selectable() has 2 overloads:
-            // - The one taking "bool selected" as a read-only selection information. When Selectable() has been clicked is returns true and you can alter selection state accordingly.
+            // - The one taking "bool selected" as a read-only selection information. When Selectable() has been clicked is returns true and you can alter selection pstate accordingly.
             // - The one taking "bool* p_selected" as a read-write selection information (convenient in some cases)
             // The earlier is more flexible, as in real application your selection may be stored in a different manner (in flags within objects, as an external list, etc).
             if (ImGui::TreeNode("Basic"))

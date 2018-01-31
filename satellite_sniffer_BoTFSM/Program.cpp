@@ -21,7 +21,7 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
-	state(PState::MAIN_SCREEN)
+	state(PState::RUNNING)
 {}
 
 
@@ -41,9 +41,9 @@ void Program::init()
 	Resources::getInstance();
 	Satellites::getInstance();
 
-	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN));
-	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::MAIN_SCREEN));
-	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::MENU_SCREEN));
+	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::RUNNING));
+	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::RUNNING));
+	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED));
 
 	// init imgui
 
@@ -86,7 +86,7 @@ void Program::unload()
 
 void Program::updatePositions()
 {
-	if (timePassed > lastCalculationTime + calculationTimeStep) {
+	if (state != PState::PAUSED && timePassed > lastCalculationTime + calculationTimeStep) {
 		Satellites::getInstance()->updatePosition();
 		lastCalculationTime = timePassed;
 	}
@@ -94,18 +94,17 @@ void Program::updatePositions()
 
 void Program::render()
 {
+	ImGui_ImplDX9SDL_NewFrame(Resources::getInstance()->getWindow());
 	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
 	for (auto& elem : UIElements) {
 		if (elem->isActive(state)) {
-			elem->render();
+			elem->render(&state);
 		}
 	}
 
-	ImGui_ImplDX9SDL_NewFrame(Resources::getInstance()->getWindow());
-	static bool popen = true;
-	ImGui::ShowDemoWindow(&popen);
+	//ImGui::ShowMetricsWindow();
+	//ImGui::ShowDemoWindow();
 	ImGui::Render();
-
 	SDL_RenderPresent(Resources::getInstance()->getRenderer());
 }
 
@@ -118,10 +117,13 @@ bool Program::handleEvents()
 		if (e.type == SDL_QUIT) {
 			return true;
 		}
-		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
-			for (auto& elem : UIElements) {
-				if (elem->isActive(state) && elem->isClicked(e.button.x, e.button.y, state)) {
-					break;
+		auto& io = ImGui::GetIO();
+		if (!io.WantCaptureMouse) {
+			if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+				for (auto& elem : UIElements) {
+					if (elem->isActive(state) && elem->isClicked(e.button.x, e.button.y, state)) {
+						break;
+					}
 				}
 			}
 		}

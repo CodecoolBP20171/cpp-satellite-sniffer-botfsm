@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GeoCoordinate.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="GeoCoordinate.h" />
     <ClInclude Include="Globals.h" />

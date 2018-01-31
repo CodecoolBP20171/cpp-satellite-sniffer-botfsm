@@ -46,7 +46,7 @@
  - Easy to hack and improve
  - Minimize screen real-estate usage
  - Minimize setup and maintenance
- - Minimize state storage on user side
+ - Minimize pstate storage on user side
  - Portable, minimize dependencies, run on target (consoles, phones, etc.)
  - Efficient runtime and memory consumption (NB- we do allocate when "growing" content e.g. creating a window, opening a tree node 
    for the first time, etc. but a typical frame won't allocate anything)
@@ -85,7 +85,7 @@
 
  - Read the FAQ below this section!
  - Your code creates the UI, if your code doesn't run the UI is gone! == very dynamic UI, no construction/destructions steps, less data retention
-   on your side, no state duplication, less sync, less bugs.
+   on your side, no pstate duplication, less sync, less bugs.
  - Call and read ImGui::ShowDemoWindow() for demo code demonstrating most features.
  - You can learn about immediate-mode gui principles at http://www.johno.se/book/imgui.html or watch http://mollyrocket.com/861
 
@@ -118,7 +118,7 @@
     - Call ImGui::Render() as late as you can to end the frame and finalize render data. it will call your io.RenderDrawListFn handler.
        (Even if you don't render, call Render() and ignore the callback, or call EndFrame() instead. Otherwhise some features will break)
  - All rendering information are stored into command-lists until ImGui::Render() is called.
- - Dear ImGui never touches or knows about your GPU state. the only function that knows about GPU is the RenderDrawListFn handler that you provide.
+ - Dear ImGui never touches or knows about your GPU pstate. the only function that knows about GPU is the RenderDrawListFn handler that you provide.
  - Effectively it means you can create widgets at any time in your code, regardless of considerations of being in "update" vs "render" phases 
    of your own application.
  - Refer to the examples applications in the examples/ folder for instruction on how to setup your code.
@@ -166,7 +166,7 @@
 
     void void MyRenderFunction(ImDrawData* draw_data)
     {
-       // TODO: Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled
+       // TODO: Setup render pstate: alpha-blending enabled, no face culling, no depth testing, scissor enabled
        // TODO: Setup viewport, orthographic projection matrix
        // TODO: Setup shader: vertex { float2 pos, float2 uv, u32 color }, fragment shader sample color from 1 texture, multiply by vertex color.
        for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -317,7 +317,7 @@
  - 2015/05/31 (1.40) - renamed GetWindowCollapsed() to IsWindowCollapsed() for consistency. Kept inline redirection function (will obsolete).
  - 2015/05/31 (1.40) - renamed IsRectClipped() to IsRectVisible() for consistency. Note that return value is opposite! Kept inline redirection function (will obsolete).
  - 2015/05/27 (1.40) - removed the third 'repeat_if_held' parameter from Button() - sorry! it was rarely used and inconsistent. Use PushButtonRepeat(true) / PopButtonRepeat() to enable repeat on desired buttons.
- - 2015/05/11 (1.40) - changed BeginPopup() API, takes a string identifier instead of a bool. ImGui needs to manage the open/closed state of popups. Call OpenPopup() to actually set the "open" state of a popup. BeginPopup() returns true if the popup is opened.
+ - 2015/05/11 (1.40) - changed BeginPopup() API, takes a string identifier instead of a bool. ImGui needs to manage the open/closed pstate of popups. Call OpenPopup() to actually set the "open" pstate of a popup. BeginPopup() returns true if the popup is opened.
  - 2015/05/03 (1.40) - removed style.AutoFitPadding, using style.WindowPadding makes more sense (the default values were already the same).
  - 2015/04/13 (1.38) - renamed IsClipped() to IsRectClipped(). Kept inline redirection function until 1.50.
  - 2015/04/09 (1.38) - renamed ImDrawList::AddArc() to ImDrawList::AddArcFast() for compatibility with future API
@@ -398,7 +398,7 @@
 
    - Elements that are typically not clickable, such as Text() items don't need an ID.
 
-   - Interactive widgets require state to be carried over multiple frames (most typically Dear ImGui often needs to remember what is 
+   - Interactive widgets require pstate to be carried over multiple frames (most typically Dear ImGui often needs to remember what is 
      the "active" widget). to do so they need a unique ID. unique ID are typically derived from a string label, an integer index or a pointer.
 
        Button("OK");          // Label = "OK",     ID = hash of "OK"
@@ -482,11 +482,11 @@
          TreePop();
        }
 
-   - When working with trees, ID are used to preserve the open/close state of each tree node.
+   - When working with trees, ID are used to preserve the open/close pstate of each tree node.
      Depending on your use cases you may want to use strings, indices or pointers as ID.
       e.g. when displaying a single object that may change over time (dynamic 1-1 relationship), using a static string as ID will preserve your
-       node open/closed state when the targeted object change.
-      e.g. when displaying a list of objects, using indices or pointers as ID will preserve the node open/closed state differently. 
+       node open/closed pstate when the targeted object change.
+      e.g. when displaying a list of objects, using indices or pointers as ID will preserve the node open/closed pstate differently. 
        experiment and see what makes more sense!
 
  Q: How can I tell when Dear ImGui wants my mouse/keyboard inputs VS when I can pass them to my application?
@@ -831,7 +831,7 @@ ImGuiIO::ImGuiIO()
 
 // Pass in translated ASCII characters for text input.
 // - with glfw you can get those from the callback set in glfwSetCharCallback()
-// - on Windows you can get those using ToAscii+keyboard state, or via the WM_CHAR message
+// - on Windows you can get those using ToAscii+keyboard pstate, or via the WM_CHAR message
 void ImGuiIO::AddInputCharacter(ImWchar c)
 {
     const int n = ImStrlenW(InputCharacters);
@@ -2205,8 +2205,8 @@ const char* ImGui::GetVersion()
     return IMGUI_VERSION;
 }
 
-// Internal state access - if you want to share ImGui state between modules (e.g. DLL) or allocate it yourself
-// Note that we still point to some static data and members (such as GFontAtlas), so the state instance you end up using will point to the static data within its module
+// Internal pstate access - if you want to share ImGui pstate between modules (e.g. DLL) or allocate it yourself
+// Note that we still point to some static data and members (such as GFontAtlas), so the pstate instance you end up using will point to the static data within its module
 ImGuiContext* ImGui::GetCurrentContext()
 {
     return GImGui;
@@ -2341,12 +2341,12 @@ void ImGui::NewFrame()
     g.DragDropAcceptIdCurr = 0;
     g.DragDropAcceptIdCurrRectSurface = FLT_MAX;
 
-    // Update keyboard input state
+    // Update keyboard input pstate
     memcpy(g.IO.KeysDownDurationPrev, g.IO.KeysDownDuration, sizeof(g.IO.KeysDownDuration));
     for (int i = 0; i < IM_ARRAYSIZE(g.IO.KeysDown); i++)
         g.IO.KeysDownDuration[i] = g.IO.KeysDown[i] ? (g.IO.KeysDownDuration[i] < 0.0f ? 0.0f : g.IO.KeysDownDuration[i] + g.IO.DeltaTime) : -1.0f;
 
-    // Update mouse input state
+    // Update mouse input pstate
     // If mouse just appeared or disappeared (usually denoted by -FLT_MAX component, but in reality we test for -256000.0f) we cancel out movement in MouseDelta
     if (IsMousePosValid(&g.IO.MousePos) && IsMousePosValid(&g.IO.MousePosPrev))
         g.IO.MouseDelta = g.IO.MousePos - g.IO.MousePosPrev;
@@ -3237,7 +3237,7 @@ void ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, cons
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
 
-    // Perform CPU side clipping for single clipped element to avoid using scissor state
+    // Perform CPU side clipping for single clipped element to avoid using scissor pstate
     ImVec2 pos = pos_min;
     const ImVec2 text_size = text_size_if_known ? *text_size_if_known : CalcTextSize(text, text_display_end, false, 0.0f);
 
@@ -3291,7 +3291,7 @@ void ImGui::RenderFrameBorder(ImVec2 p_min, ImVec2 p_max, float rounding)
     }
 }
 
-// Render a triangle to denote expanded/collapsed state
+// Render a triangle to denote expanded/collapsed pstate
 void ImGui::RenderTriangle(ImVec2 p_min, ImGuiDir dir, float scale)
 {
     ImGuiContext& g = *GImGui;
@@ -3737,7 +3737,7 @@ void ImGui::EndTooltip()
     End();
 }
 
-// Mark popup as open (toggle toward open state).
+// Mark popup as open (toggle toward open pstate).
 // Popups are closed when user click outside, or activate a pressable item, or CloseCurrentPopup() is called within a BeginPopup()/EndPopup() block.
 // Popup identifiers are relative to the current ID-stack (so OpenPopup and BeginPopup needs to be at the same level).
 // One open popup per level of the popup hierarchy (NB: when assigning we reset the Window member of ImGuiPopupRef to NULL)
@@ -3765,7 +3765,7 @@ void ImGui::OpenPopupEx(ImGuiID id)
         g.OpenPopupStack.resize(current_stack_size + 1);
 
         // Gently handle the user mistakenly calling OpenPopup() every frame. It is a programming mistake! However, if we were to run the regular code path, the ui
-        // would become completely unusable because the popup will always be in hidden-while-calculating-size state _while_ claiming focus. Which would be a very confusing
+        // would become completely unusable because the popup will always be in hidden-while-calculating-size pstate _while_ claiming focus. Which would be a very confusing
         // situation for the programmer. Instead, we silently allow the popup to proceed, it will keep reappearing and the programming error will be more obvious to understand. 
         if (g.OpenPopupStack[current_stack_size].PopupId == id && g.OpenPopupStack[current_stack_size].OpenFrameCount == g.FrameCount - 1)
             g.OpenPopupStack[current_stack_size].OpenFrameCount = popup_ref.OpenFrameCount;
@@ -6687,7 +6687,7 @@ bool ImGui::TreeNodeBehaviorIsOpen(ImGuiID id, ImGuiTreeNodeFlags flags)
         }
         else
         {
-            // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node state are not saved persistently.
+            // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node pstate are not saved persistently.
             const int stored_value = storage->GetInt(id, -1);
             if (stored_value == -1)
             {
@@ -8789,7 +8789,7 @@ bool ImGui::InputTextEx(const char* label, char* buf, int buf_size, const ImVec2
             // Apply new value immediately - copy modified buffer back
             // Note that as soon as the input box is active, the in-widget value gets priority over any underlying modification of the input buffer
             // FIXME: We actually always render 'buf' when calling DrawList->AddText, making the comment above incorrect.
-            // FIXME-OPT: CPU waste to do this every time the widget is active, should mark dirty state from the stb_textedit callbacks.
+            // FIXME-OPT: CPU waste to do this every time the widget is active, should mark dirty pstate from the stb_textedit callbacks.
             if (is_editable)
             {
                 edit_state.TempTextBuffer.resize(edit_state.Text.Size * 4);
@@ -11076,7 +11076,7 @@ void ImGui::BeginColumns(const char* str_id, int columns_count, ImGuiColumnsFlag
     columns->Flags = flags;
     window->DC.ColumnsSet = columns;
 
-    // Set state for first column
+    // Set pstate for first column
     const float content_region_width = (window->SizeContentsExplicit.x != 0.0f) ? (window->SizeContentsExplicit.x) : (window->Size.x -window->ScrollbarSizes.x);
     columns->MinX = window->DC.IndentX - g.Style.ItemSpacing.x; // Lock our horizontal range
     //column->MaxX = content_region_width - window->Scroll.x - ((window->Flags & ImGuiWindowFlags_NoScrollbar) ? 0 : g.Style.ScrollbarSize);// - window->WindowPadding().x;
@@ -11775,7 +11775,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
             }
         };
 
-        // Access private state, we are going to display the draw lists from last frame
+        // Access private pstate, we are going to display the draw lists from last frame
         ImGuiContext& g = *GImGui;
         Funcs::NodeWindows(g.Windows, "Windows");
         if (ImGui::TreeNode("DrawList", "Active DrawLists (%d)", g.DrawDataBuilder.Layers[0].Size))

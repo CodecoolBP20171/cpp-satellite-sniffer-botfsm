@@ -17,6 +17,6 @@ IMGUI_API void        ImGui_ImplDX9SDL_NewFrame(SDL_Window* window);
 // event handler implementation from the sdl examples
 IMGUI_API bool        ImGui_Sdl_ProcessEvent(SDL_Event* event);
 
-// Use if you want to reset your rendering device without losing ImGui state.
+// Use if you want to reset your rendering device without losing ImGui pstate.
 IMGUI_API void        ImGui_ImplDX9_InvalidateDeviceObjects();
 IMGUI_API bool        ImGui_ImplDX9_CreateDeviceObjects();

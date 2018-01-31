@@ -13,7 +13,7 @@ bool Button::isClicked(const int x, const int y, PState & state)
 {
 	if (UIElement::isClicked(x, y, state)) {
 		if (name == Config::getStringOption("ButtonName", "SATELLITES")) {
-			state = PState::MENU_SCREEN;
+			state = PState::PAUSED;
 		}
 		else if (name == Config::getStringOption("ButtonName", "EXIT")) {
 			state = PState::QUIT;
@@ -23,7 +23,7 @@ bool Button::isClicked(const int x, const int y, PState & state)
 	return false;
 }
 
-void Button::render()
+void Button::render(PState* state)
 {
 	sprite->render(&rect);
 }

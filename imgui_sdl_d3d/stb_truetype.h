@@ -1603,7 +1603,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
             start_off = !(flags & 1);
             if (start_off) {
                // if we start off with an off-curve point, then when we need to find a point on the curve
-               // where we can start, and we need to save some state for when we wraparound.
+               // where we can start, and we need to save some pstate for when we wraparound.
                scx = x;
                scy = y;
                if (!(vertices[off+i+1].type & 1)) {

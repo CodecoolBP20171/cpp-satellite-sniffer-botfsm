@@ -11,7 +11,7 @@ class UISatellite : UIElement
 {
 public:
 	UISatellite(Satellite& sat);
-	void render() override;
+	void render(PState* state = nullptr) override;
 	bool isClicked(const int x, const int y, PState& state) override;
 	void popupRender();
 private:

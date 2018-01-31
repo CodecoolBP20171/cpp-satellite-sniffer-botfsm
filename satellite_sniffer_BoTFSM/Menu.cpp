@@ -1,17 +1,10 @@
 #include "stdafx.h"
 #include "Menu.h"
 #include "Config.h"
+#include <imgui.h>
 
 Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
-{
-	rect.h = Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT");
-	rect.w = Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH");
-	rect.x += Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
-	rect.y += Config::getIntOption("Dimensions", "MENU_BUTTON_VERTICAL_SPACING");
-	menuButtons.emplace_back(new Button(rect, state, Config::getStringOption("ButtonName", "SATELLITES")));
-	rect.x += Config::getRect("MENU").w - Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") - 2 * Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
-	menuButtons.emplace_back(new Button(rect, state, Config::getStringOption("ButtonName", "EXIT")));
-}
+{}
 
 bool Menu::isClicked(const int x, const int y, PState & state)
 {
@@ -26,10 +19,22 @@ bool Menu::isClicked(const int x, const int y, PState & state)
 	return false;
 }
 
-void Menu::render()
+void Menu::render(PState* state)
 {
-	for (auto& button : menuButtons) {
-		button->render();
+	auto& menuDim = Config::getRect("MENU");
+	ImGui::SetNextWindowPos(ImVec2(menuDim.x, menuDim.y), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(menuDim.w, menuDim.h), ImGuiCond_Once);
+	ImGui::SetNextWindowBgAlpha(0.0f);
+	if (ImGui::Begin("menu##menubar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+		if (ImGui::Button("SATELLITES##menu_sats", ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH"), Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT")))) {
+			*state = PState::PAUSED;
+		}
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - (Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH")) - Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING"));
+
+		if (ImGui::Button("QUIT##menu_quit", ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH"), Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT")))) {
+			*state = PState::QUIT;
+		}
+		ImGui::End();
 	}
 }
 
