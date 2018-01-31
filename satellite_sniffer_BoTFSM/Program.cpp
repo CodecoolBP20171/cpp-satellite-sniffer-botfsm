@@ -93,13 +93,14 @@ void Program::render()
 bool Program::handleEvents()
 {
 	SDL_Event e;
+	int x, y;
 	while (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
 			return true;
 		}
-		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+		if (e.type == SDL_MOUSEBUTTONUP) {
 			for (auto& elem : UIElements) {
-				if (elem->isActive(state) && elem->isClicked(e.button.x, e.button.y, state)) {
+				if (elem->isActive(state) && elem->isClicked(e.button, state)) {
 					break;
 				}
 			}

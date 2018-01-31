@@ -9,7 +9,7 @@ class Popup : public UIElement
 {
 public:
 	Popup(SDL_Rect rect, PState state);
-	bool isClicked(const int x, const int y, PState& state) override;
+	bool isClicked(const SDL_MouseButtonEvent e, PState& state) override;
 	void render() override;
 private:
 	std::unique_ptr<Button> button;

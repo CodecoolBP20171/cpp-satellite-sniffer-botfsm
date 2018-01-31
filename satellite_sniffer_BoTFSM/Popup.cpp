@@ -15,15 +15,15 @@ Popup::Popup(SDL_Rect rect, PState state) :
 	button.reset(new Button(buttonRect, state, Config::getStringOption("ButtonName", "OK")));
 }
 
-bool Popup::isClicked(const int x, const int y, PState & state)
+bool Popup::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
-		if (button->isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
+		if (button->isClicked(e, state)) {
 			Satellites::getInstance()->saveSatelliteList();
 			state = PState::MAIN_SCREEN;
 		} else {
 			for (auto& sat : Satellites::getInstance()->getUISatellites()) {
-				if (sat.isClicked(x, y, state)) {
+				if (sat.isClicked(e, state)) {
 					break;
 				}
 			}

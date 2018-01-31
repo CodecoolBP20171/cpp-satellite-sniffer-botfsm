@@ -11,8 +11,9 @@ class UISatellite : UIElement
 {
 public:
 	UISatellite(Satellite& sat);
-	void render() override;
-	bool isClicked(const int x, const int y, PState& state) override;
+	void render() override {};
+	void render(int zoom);
+	bool isClicked(const SDL_MouseButtonEvent e, PState& state) override;
 	void popupRender();
 private:
 	static int pos;
