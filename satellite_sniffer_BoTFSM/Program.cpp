@@ -18,6 +18,7 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
+	zoom(0),
 	state(PState::MAIN_SCREEN)
 {}
 
@@ -38,7 +39,7 @@ void Program::init()
 	Resources::getInstance();
 	Satellites::getInstance();
 
-	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN));
+	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN, zoom));
 	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::MAIN_SCREEN));
 	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::MENU_SCREEN));
 	loaded = true;

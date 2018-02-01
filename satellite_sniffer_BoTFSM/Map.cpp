@@ -3,12 +3,13 @@
 #include "Resources.h"
 #include "Config.h"
 #include "Globals.h"
+#include <iostream> // for debugging
 
-Map::Map(SDL_Rect rect, PState state)
+Map::Map(SDL_Rect rect, PState state, int& zoom)
 	: UIElement(rect, state),
 	map(Resources::getInstance()->getMap()),
 	cleanMap(Resources::getInstance()->getCleanMap()),
-	zoom{0}
+	zoom(zoom)
 {
 	source = map->getDimensions();
 }
@@ -34,25 +35,57 @@ bool Map::isClicked(const SDL_MouseButtonEvent e, PState & state)
 	if (UIElement::isClicked(e, state)) {
 		if (e.button == SDL_BUTTON_LEFT) {
 			if (zoom < 3) {
-				//TODO: clamping at border
 				zoom++;
+				std::cout << "In Before Source: " << source.x << " " << source.y << "\n";
 				mouseX = e.x * source.w / rect.w + source.x;
 				mouseY = (e.y - Config::getIntOption("Dimensions", "MENU_HEIGHT")) * source.h / rect.h + source.y;
 				source.w = (map->getDimensions().w / std::pow(2, zoom));
 				source.h = (map->getDimensions().h / std::pow(2, zoom));
-				source.x = mouseX - source.w / 2;
-				source.y = mouseY - source.h / 2;
+				
+				if (mouseX - source.w / 2 < 0) {
+					source.x = 0;
+				}
+				else if (mouseX + source.w / 2 > map->getDimensions().w) {
+					source.x = mouseX - source.w / 2 - (mouseX + source.w / 2 - map->getDimensions().w);
+				}
+				else {
+					source.x = mouseX - source.w / 2;
+				}
+				if (mouseY - source.h / 2 < 0) {
+					source.y = 0;
+				}
+				else if (mouseY + source.h / 2 > map->getDimensions().h) {
+					source.y = mouseY - source.h / 2 - (mouseY + source.h / 2 - map->getDimensions().h);
+				}
+				else {
+					source.y = mouseY - source.h / 2;
+				}
+				std::cout << "In After Source: " << source.x << " " << source.y << "\n";
 			}
 
 		}
 		if (e.button == SDL_BUTTON_RIGHT) {
 			if (zoom > 0) {
-				//TODO: recalculat for clamping at border
+				std::cout << "Out Before Source: " << source.x << " " << source.y << "\n";
+				
 				zoom--;
-				source.x = source.x - source.w / 2;
-				source.y = source.y - source.h / 2;
+				int oldW = source.w;
+				int oldH = source.w;
 				source.w = (map->getDimensions().w / std::pow(2, zoom));
 				source.h = (map->getDimensions().h / std::pow(2, zoom));
+				if (source.x - oldW /2 <= 0) {
+					source.x = 0;
+				}
+				else {
+					source.x = source.x - oldW / 2;
+				}
+				if (source.y - oldH / 2 <= 0) {
+					source.y = 0;
+				}
+				else {
+					source.y = source.y - oldH / 2;
+				}
+				std::cout << "Out After Source: " << source.x << " " << source.y << "\n";
 			}
 		}
 
