@@ -16,7 +16,8 @@ private:
 	std::shared_ptr<Sprite> map;
 	std::shared_ptr<Sprite> cleanMap;
 	SDL_Rect source;
-	int mouseX, mouseY;
 	int& zoom;
+	void zoomOut();
+	void zoomIn(const SDL_MouseButtonEvent &e);
 };
 

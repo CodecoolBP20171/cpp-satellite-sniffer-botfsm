@@ -18,7 +18,7 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
-	zoom(0),
+	zoom(Config::getIntOption("ZoomLevel", "MIN")),
 	state(PState::MAIN_SCREEN)
 {}
 

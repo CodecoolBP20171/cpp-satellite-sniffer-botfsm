@@ -3,7 +3,6 @@
 #include "Resources.h"
 #include "Config.h"
 #include "Globals.h"
-#include <iostream> // for debugging
 
 Map::Map(SDL_Rect rect, PState state, int& zoom)
 	: UIElement(rect, state),
@@ -33,64 +32,72 @@ void Map::render()
 bool Map::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
 	if (UIElement::isClicked(e, state)) {
-		if (e.button == SDL_BUTTON_LEFT) {
-			if (zoom < 3) {
-				zoom++;
-				std::cout << "In Before Source: " << source.x << " " << source.y << "\n";
-				mouseX = e.x * source.w / rect.w + source.x;
-				mouseY = (e.y - Config::getIntOption("Dimensions", "MENU_HEIGHT")) * source.h / rect.h + source.y;
-				source.w = (map->getDimensions().w / std::pow(2, zoom));
-				source.h = (map->getDimensions().h / std::pow(2, zoom));
-				
-				if (mouseX - source.w / 2 < 0) {
-					source.x = 0;
-				}
-				else if (mouseX + source.w / 2 > map->getDimensions().w) {
-					source.x = mouseX - source.w / 2 - (mouseX + source.w / 2 - map->getDimensions().w);
-				}
-				else {
-					source.x = mouseX - source.w / 2;
-				}
-				if (mouseY - source.h / 2 < 0) {
-					source.y = 0;
-				}
-				else if (mouseY + source.h / 2 > map->getDimensions().h) {
-					source.y = mouseY - source.h / 2 - (mouseY + source.h / 2 - map->getDimensions().h);
-				}
-				else {
-					source.y = mouseY - source.h / 2;
-				}
-				std::cout << "In After Source: " << source.x << " " << source.y << "\n";
-			}
-
+		if (e.button == SDL_BUTTON_LEFT 
+			&& zoom < Config::getIntOption("ZoomLevel", "MAX")) 
+		{
+			zoomIn(e);
 		}
-		if (e.button == SDL_BUTTON_RIGHT) {
-			if (zoom > 0) {
-				std::cout << "Out Before Source: " << source.x << " " << source.y << "\n";
-				
-				zoom--;
-				int oldW = source.w;
-				int oldH = source.w;
-				source.w = (map->getDimensions().w / std::pow(2, zoom));
-				source.h = (map->getDimensions().h / std::pow(2, zoom));
-				if (source.x - oldW /2 <= 0) {
-					source.x = 0;
-				}
-				else {
-					source.x = source.x - oldW / 2;
-				}
-				if (source.y - oldH / 2 <= 0) {
-					source.y = 0;
-				}
-				else {
-					source.y = source.y - oldH / 2;
-				}
-				std::cout << "Out After Source: " << source.x << " " << source.y << "\n";
-			}
+		if (e.button == SDL_BUTTON_RIGHT 
+			&& zoom > Config::getIntOption("ZoomLevel", "MIN")) 
+		{
+			zoomOut();
 		}
-
 		return true;
 	}
 	return false;
 }
 
+void Map::zoomIn(const SDL_MouseButtonEvent &e)
+{
+	zoom++;
+	source.x = e.x * source.w / rect.w + source.x;
+	source.y = (e.y - Config::getIntOption("Dimensions", "MENU_HEIGHT")) * source.h / rect.h + source.y;
+	source.w = (map->getDimensions().w / std::pow(2, zoom));
+	source.h = (map->getDimensions().h / std::pow(2, zoom));
+
+	if (source.x - source.w / 2 < 0) {
+		source.x = 0;
+	}
+	else if (source.x + source.w / 2 > map->getDimensions().w) {
+		source.x = map->getDimensions().w - source.w;
+	}
+	else {
+		source.x -= source.w / 2;
+	}
+	if (source.y - source.h / 2 < 0) {
+		source.y = 0;
+	}
+	else if (source.y + source.h / 2 > map->getDimensions().h) {
+		source.y = map->getDimensions().h - source.h;
+	}
+	else {
+		source.y -= source.h / 2;
+	}
+}
+
+void Map::zoomOut()
+{
+	zoom--;
+	int oldW = source.w;
+	int oldH = source.h;
+	source.w = (map->getDimensions().w / std::pow(2, zoom));
+	source.h = (map->getDimensions().h / std::pow(2, zoom));
+	if (source.x - oldW / 2 <= 0) {
+		source.x = 0;
+	}
+	else if (source.x - oldW / 2 + source.w >  map->getDimensions().w) {
+		source.x = map->getDimensions().w - source.w;
+	}
+	else {
+		source.x -= oldW / 2;
+	}
+	if (source.y - oldH / 2 <= 0) {
+		source.y = 0;
+	}
+	else if (source.y - oldH / 2 + source.h >  map->getDimensions().h) {
+		source.y = map->getDimensions().h - source.h;
+	}
+	else {
+		source.y -= oldH / 2;
+	}
+}
