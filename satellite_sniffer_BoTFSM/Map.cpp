@@ -54,25 +54,9 @@ void Map::zoomIn(const SDL_MouseButtonEvent &e)
 	source.y = (e.y - Config::getIntOption("Dimensions", "MENU_HEIGHT")) * source.h / rect.h + source.y;
 	source.w = (map->getDimensions().w / std::pow(2, zoom));
 	source.h = (map->getDimensions().h / std::pow(2, zoom));
-
-	if (source.x - source.w / 2 < 0) {
-		source.x = 0;
-	}
-	else if (source.x + source.w / 2 > map->getDimensions().w) {
-		source.x = map->getDimensions().w - source.w;
-	}
-	else {
-		source.x -= source.w / 2;
-	}
-	if (source.y - source.h / 2 < 0) {
-		source.y = 0;
-	}
-	else if (source.y + source.h / 2 > map->getDimensions().h) {
-		source.y = map->getDimensions().h - source.h;
-	}
-	else {
-		source.y -= source.h / 2;
-	}
+	source.x -= source.w / 2;
+	source.y -= source.h / 2;
+	clampToBorder();
 }
 
 void Map::zoomOut()
@@ -82,22 +66,23 @@ void Map::zoomOut()
 	int oldH = source.h;
 	source.w = (map->getDimensions().w / std::pow(2, zoom));
 	source.h = (map->getDimensions().h / std::pow(2, zoom));
-	if (source.x - oldW / 2 <= 0) {
+	source.x -= oldW / 2;
+	source.y -= oldH / 2;
+	clampToBorder();
+}
+
+void Map::clampToBorder()
+{
+	if (source.x <= 0) {
 		source.x = 0;
 	}
-	else if (source.x - oldW / 2 + source.w >  map->getDimensions().w) {
+	else if (source.x + source.w > map->getDimensions().w) {
 		source.x = map->getDimensions().w - source.w;
 	}
-	else {
-		source.x -= oldW / 2;
-	}
-	if (source.y - oldH / 2 <= 0) {
+	if (source.y <= 0) {
 		source.y = 0;
 	}
-	else if (source.y - oldH / 2 + source.h >  map->getDimensions().h) {
+	else if (source.y + source.h >  map->getDimensions().h) {
 		source.y = map->getDimensions().h - source.h;
-	}
-	else {
-		source.y -= oldH / 2;
 	}
 }

@@ -18,6 +18,7 @@ private:
 	SDL_Rect source;
 	int& zoom;
 	void zoomOut();
+	void clampToBorder();
 	void zoomIn(const SDL_MouseButtonEvent &e);
 };
 
