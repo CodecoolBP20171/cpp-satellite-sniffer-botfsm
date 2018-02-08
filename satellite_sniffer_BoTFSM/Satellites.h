@@ -11,7 +11,7 @@ class Satellites
 public:
 	static sptr<Satellites>& getInstance();
 	std::list<UISatellite>& getUISatellites();
-	void renderUISatellits();
+	void renderUISatellits(int zoom);
 	void renderPopupSatellits();
 	void saveSatelliteList();
 	void updatePosition();

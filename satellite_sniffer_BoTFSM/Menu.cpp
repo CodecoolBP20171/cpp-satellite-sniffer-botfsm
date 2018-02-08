@@ -13,11 +13,11 @@ Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
 	menuButtons.emplace_back(new Button(rect, state, Config::getStringOption("ButtonName", "EXIT")));
 }
 
-bool Menu::isClicked(const int x, const int y, PState & state)
+bool Menu::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		for (auto& button : menuButtons) {
-			if (button->isClicked(x, y, state)) {
+			if (button->isClicked(e, state)) {
 				break;
 			}
 		}

@@ -30,29 +30,32 @@ UISatellite::UISatellite(Satellite& sat)
 	++pos;
 }
 
-void UISatellite::render()
+void UISatellite::render(int zoom)
 {
 	if (!sat.isShown()) return;
-	renderTrajectory();
+	renderTrajectory(zoom);
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto satSize(texture->getDimensions());
 	auto satpos(sat.getPosition());
+	zoom = std::pow(2, zoom);
 	SDL_Rect satRect = {
-		static_cast<int>(round(satpos.longitude / (MathConstants::PI * 2) * mapSize.w - satSize.w / 2)),
-		static_cast<int>(round(satpos.latitude / (MathConstants::PI) * mapSize.h - satSize.h / 2)),
-		satSize.w,
-		satSize.h
+		static_cast<int>(round(satpos.longitude / (MathConstants::PI * 2) * mapSize.w - satSize.w / (2 * zoom))),
+		static_cast<int>(round(satpos.latitude / (MathConstants::PI) * mapSize.h - satSize.h / (2 * zoom))),
+		satSize.w / zoom,
+		satSize.h / zoom
 	};
 	texture->render(&satRect);
 	auto textPos(text->getDimensions());
-	textPos.x = satRect.x + satSize.w;
+	textPos.x = satRect.x + satSize.w / zoom;
 	textPos.y = satRect.y;
+	textPos.w /= zoom;
+	textPos.h /= zoom;
 	text->render(&textPos);
 }
 
-bool UISatellite::isClicked(const int x, const int y, PState & state)
+bool UISatellite::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		sat.toggleShown();
 		return true;
 	}
@@ -71,8 +74,8 @@ void UISatellite::popupRender()
 }
 
 
-void UISatellite::renderTrajectory()
+void UISatellite::renderTrajectory(int zoom)
 {
-	trajectoryForward.render();
-	trajectoryBackward.render();
+	trajectoryForward.render(zoom);
+	trajectoryBackward.render(zoom);
 }

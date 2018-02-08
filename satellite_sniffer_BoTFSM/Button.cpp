@@ -9,9 +9,9 @@ Button::Button(SDL_Rect rect, PState state, const std::string& name)
 	sprite(Resources::getInstance()->getButton(name))
 {}
 
-bool Button::isClicked(const int x, const int y, PState & state)
+bool Button::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		if (name == Config::getStringOption("ButtonName", "SATELLITES")) {
 			state = PState::MENU_SCREEN;
 		}

@@ -18,6 +18,7 @@ Program::Program() :
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
 	calculationTimeStep(5000), // 1 sec
+	zoom(Config::getIntOption("ZoomLevel", "MIN")),
 	state(PState::MAIN_SCREEN)
 {}
 
@@ -38,7 +39,7 @@ void Program::init()
 	Resources::getInstance();
 	Satellites::getInstance();
 
-	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN));
+	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::MAIN_SCREEN, zoom));
 	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::MAIN_SCREEN));
 	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::MENU_SCREEN));
 	loaded = true;
@@ -97,9 +98,9 @@ bool Program::handleEvents()
 		if (e.type == SDL_QUIT) {
 			return true;
 		}
-		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+		if (e.type == SDL_MOUSEBUTTONUP) {
 			for (auto& elem : UIElements) {
-				if (elem->isActive(state) && elem->isClicked(e.button.x, e.button.y, state)) {
+				if (elem->isActive(state) && elem->isClicked(e.button, state)) {
 					break;
 				}
 			}

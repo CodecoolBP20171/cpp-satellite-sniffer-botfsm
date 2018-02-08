@@ -10,6 +10,7 @@ Trajectory::Trajectory(Satellite & sat, Direction direction) :
 	sat(sat),
 	direction(direction),
 	isTextureValid(false),
+	lastZoom(0),
 	texture(nullptr)
 {
 }
@@ -33,19 +34,19 @@ void Trajectory::calculate(std::time_t time)
 	isTextureValid = false;
 }
 
-void Trajectory::render()
+void Trajectory::render(int zoom)
 {
-	if (!isTextureValid) {
-		updateRect();
+	if (!isTextureValid || lastZoom != zoom) {
+		updateRect(zoom);
 		texture.reset(new Sprite(rect.w, rect.h));
-		renderNewTexture();
+		renderNewTexture(zoom);
 		isTextureValid = true;
+		lastZoom = zoom;
 	}
-
 	texture->render(&rect);
 }
 
-void Trajectory::renderNewTexture()
+void Trajectory::renderNewTexture(int zoom)
 {
 	texture->setAsRenderTarget();
 	auto mapSize(Resources::getInstance()->getMapDimensions());
@@ -58,32 +59,32 @@ void Trajectory::renderNewTexture()
 			if (x1 > x2) {
 				auto oldX2(x2);
 				x2 = mapSize.w;
-				renderSegment(x1, y1, x2, y2);
+				renderSegment(x1, y1, x2, y2, zoom);
 				x2 = oldX2;
 				x1 = 0;
 			}
 			else {
 				auto oldX2(x2);
 				x2 = 0;
-				renderSegment(x1, y1, x2, y2);
+				renderSegment(x1, y1, x2, y2, zoom);
 				x2 = oldX2;
 				x1 = mapSize.w;
 			}
 		}
-		renderSegment(x1, y1, x2, y2);
+		renderSegment(x1, y1, x2, y2, zoom);
 	}
 	Resources::getInstance()->getMap()->setAsRenderTarget();
 }
 
-void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2)
+void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, int zoom)
 {
-	x1 -= rect.x - offSetX;
-	x2 -= rect.x - offSetX;
-	y1 -= rect.y - offSetY;
-	y2 -= rect.y - offSetY;
+	x1 -= rect.x;
+	x2 -= rect.x;
+	y1 -= rect.y;
+	y2 -= rect.y;
 	Uint32 color(FORWARD == direction ? Config::getColorOption("TrajectoryRender", "FORWARD_COLOR") : Config::getColorOption("TrajectoryRender", "BACKWARD_COLOR"));
 	thickLineColor(Resources::getInstance()->getRenderer(), x1, y1, x2, y2,
-				   Config::getIntOption("TrajectoryRender", "LINE_WEIGHT"), color);
+				   Config::getIntOption("TrajectoryRender", "LINE_WEIGHT") / std::pow(2, zoom), color);
 }
 
 double Trajectory::getDistance(const CoordGeodetic & a, const CoordGeodetic & b)
@@ -96,7 +97,7 @@ double Trajectory::getDistance(const CoordGeodetic & a, const CoordGeodetic & b)
 	return sqrt(pow(latDelta, 2) + pow(longDelta, 2));
 }
 
-void Trajectory::updateRect()
+void Trajectory::updateRect(int zoom)
 {
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	int minX{ mapSize.w }, maxX{ 0 }, minY{ mapSize.h }, maxY{0};
@@ -108,19 +109,15 @@ void Trajectory::updateRect()
 		if (pX > maxX) maxX = pX;
 		if (pY > maxY) maxY = pY;
 	}
-	int lineWeight = Config::getIntOption("TrajectoryRender", "LINE_WEIGHT");
+	int lineWeight = Config::getIntOption("TrajectoryRender", "LINE_WEIGHT") / std::pow(2, zoom);
 	rect.x = minX - lineWeight;
 	rect.y = minY - lineWeight;
 	rect.w = maxX - rect.x + 2 * lineWeight;
 	rect.h = maxY - rect.y + 2 * lineWeight;
-	offSetX = lineWeight;
-	offSetY = lineWeight;
 	if (rect.x < 2 * lineWeight) {
-		offSetX = rect.x;
 		rect.x = 0;
 	}
 	if (rect.y < 2 * lineWeight) {
-		offSetY = rect.y;
 		rect.y = 0;
 	}
 	if (rect.w > mapSize.w - 2 * lineWeight) {

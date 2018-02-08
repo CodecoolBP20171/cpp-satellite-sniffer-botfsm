@@ -14,19 +14,19 @@ public:
 	};
 	Trajectory(Satellite& sat, Direction direction);
 	void calculate(std::time_t time);
-	void render();
+	void render(int zoom);
 
 private:
 	bool isTextureValid;
 	SDL_Rect rect;
-	int offSetX, offSetY;
 	std::unique_ptr<Sprite> texture;
 	Satellite& sat;
 	Direction direction;
 	std::vector<CoordGeodetic> points;
 	double getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
-	void updateRect();
-	void renderNewTexture();
-	void renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2);
+	void updateRect(int zoom);
+	void renderNewTexture(int zoom);
+	void renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, int zoom);
+	int lastZoom;
 };
 

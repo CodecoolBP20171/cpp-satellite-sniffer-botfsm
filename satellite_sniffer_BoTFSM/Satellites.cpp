@@ -40,10 +40,10 @@ std::list<UISatellite>& Satellites::getUISatellites()
 	return UISats;
 }
 
-void Satellites::renderUISatellits()
+void Satellites::renderUISatellits(int zoom)
 {
 	for (auto& sat : UISats) {
-		sat.render();
+		sat.render(zoom);
 	}
 }
 
