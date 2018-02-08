@@ -78,10 +78,10 @@ void Trajectory::renderNewTexture(int zoom)
 
 void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, int zoom)
 {
-	x1 -= rect.x - offSetX;
-	x2 -= rect.x - offSetX;
-	y1 -= rect.y - offSetY;
-	y2 -= rect.y - offSetY;
+	x1 -= rect.x;
+	x2 -= rect.x;
+	y1 -= rect.y;
+	y2 -= rect.y;
 	Uint32 color(FORWARD == direction ? Config::getColorOption("TrajectoryRender", "FORWARD_COLOR") : Config::getColorOption("TrajectoryRender", "BACKWARD_COLOR"));
 	thickLineColor(Resources::getInstance()->getRenderer(), x1, y1, x2, y2,
 				   Config::getIntOption("TrajectoryRender", "LINE_WEIGHT") / std::pow(2, zoom), color);
@@ -114,14 +114,10 @@ void Trajectory::updateRect(int zoom)
 	rect.y = minY - lineWeight;
 	rect.w = maxX - rect.x + 2 * lineWeight;
 	rect.h = maxY - rect.y + 2 * lineWeight;
-	offSetX = lineWeight;
-	offSetY = lineWeight;
 	if (rect.x < 2 * lineWeight) {
-		offSetX = rect.x;
 		rect.x = 0;
 	}
 	if (rect.y < 2 * lineWeight) {
-		offSetY = rect.y;
 		rect.y = 0;
 	}
 	if (rect.w > mapSize.w - 2 * lineWeight) {
