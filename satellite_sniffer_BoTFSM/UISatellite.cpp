@@ -30,7 +30,7 @@ UISatellite::UISatellite(Satellite& sat)
 	++pos;
 }
 
-void UISatellite::render(PState* state)
+void UISatellite::render()
 {
 	if (!sat.isShown()) return;
 	renderTrajectory();

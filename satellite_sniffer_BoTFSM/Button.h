@@ -9,7 +9,7 @@ class Button : public UIElement
 public:
 	Button(SDL_Rect rect, PState state, const std::string& name);
 	bool isClicked(const int x, const int y, PState& state) override;
-	void render(PState* state = nullptr) override;
+	void render() override;
 private:
 	std::shared_ptr<Sprite> sprite;
 	std::string name;

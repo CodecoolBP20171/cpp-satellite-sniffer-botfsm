@@ -8,7 +8,7 @@ public:
 	UIElement(SDL_Rect rect, PState state);
 	virtual ~UIElement();
 	virtual bool isClicked(const int x, const int y, PState& state);
-	virtual void render(PState* state = nullptr) = 0;
+	virtual void render() = 0;
 	bool isActive(const PState& state) const;
 protected:
 	SDL_Rect rect;

@@ -20,7 +20,7 @@ Program::Program() :
 	timePassed(0),
 	timestep(16), // frame time length 1000 / 60
 	lastCalculationTime(0),
-	calculationTimeStep(5000), // 1 sec
+	calculationTimeStep(5000), // 5 sec
 	state(PState::RUNNING)
 {}
 
@@ -42,8 +42,8 @@ void Program::init()
 	Satellites::getInstance();
 
 	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::RUNNING));
-	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::RUNNING));
-	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED));
+	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::RUNNING, state));
+	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED, state));
 
 	// init imgui
 
@@ -98,7 +98,7 @@ void Program::render()
 	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
 	for (auto& elem : UIElements) {
 		if (elem->isActive(state)) {
-			elem->render(&state);
+			elem->render();
 		}
 	}
 

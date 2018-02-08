@@ -23,7 +23,7 @@ bool Button::isClicked(const int x, const int y, PState & state)
 	return false;
 }
 
-void Button::render(PState* state)
+void Button::render()
 {
 	sprite->render(&rect);
 }
