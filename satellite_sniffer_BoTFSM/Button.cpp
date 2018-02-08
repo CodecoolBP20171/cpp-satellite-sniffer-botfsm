@@ -13,7 +13,7 @@ bool Button::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
 	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		if (name == Config::getStringOption("ButtonName", "SATELLITES")) {
-			state = PState::MENU_SCREEN;
+			state = PState::PAUSED;
 		}
 		else if (name == Config::getStringOption("ButtonName", "EXIT")) {
 			state = PState::QUIT;

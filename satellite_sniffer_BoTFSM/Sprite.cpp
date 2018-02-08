@@ -28,3 +28,7 @@ Sprite::Sprite(const int width, const int height)
 void Sprite::setAsRenderTarget() {
 	SDL_SetRenderTarget(Resources::getInstance()->getRenderer(), texture);
 }
+
+Sprite::~Sprite()
+{
+}

@@ -22,8 +22,10 @@ public:
 
 	~Satellite();
 	void toggleShown();
-	int getDelta(std::time_t& time);
-	bool& isShown();
+	time_t getDelta(std::time_t& time);
+	bool isShown();
+	void show();
+	void hide();
 	std::string& getName();
 	std::string& getType();
 	std::string toString();

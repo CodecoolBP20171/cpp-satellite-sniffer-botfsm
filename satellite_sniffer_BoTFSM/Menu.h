@@ -8,10 +8,11 @@
 class Menu : public UIElement
 {
 public:
-	Menu(SDL_Rect rect, PState state);
+	Menu(SDL_Rect rect, PState state, PState& programState);
 	bool isClicked(const SDL_MouseButtonEvent e, PState& state) override;
 	void render() override;
 private:
 	std::list<std::shared_ptr<Button>> menuButtons;
+	PState& state;
 };
 

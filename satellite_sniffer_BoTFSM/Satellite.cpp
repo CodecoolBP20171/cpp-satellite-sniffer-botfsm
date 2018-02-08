@@ -21,8 +21,8 @@ Satellite::Satellite(std::string name, std::string noradId, std::string type, bo
 	tle(Satellite::loadTle(name, noradId)),
 	sgp4(tle),
 	_shown(visible),
-	forwardTrajectory(*this, Trajectory::FORWARD),
-	backTrajectory(*this, Trajectory::BACK) {
+	forwardTrajectory(Trajectory::FORWARD),
+	backTrajectory(Trajectory::BACK) {
 	updatePosition();
 }
 
@@ -87,11 +87,10 @@ void Satellite::updatePosition(std::time_t time) {
 	std::tm stime;
 	gmtime_s(&stime, &time);
 	calculate(stime);
-	forwardTrajectory.calculate(time);
-	backTrajectory.calculate(time);
+	forwardTrajectory.calculate(time, *this);
+	backTrajectory.calculate(time, *this);
 	transformOrigo();
 }
-
 
 Satellite::~Satellite() {}
 
@@ -100,17 +99,30 @@ void Satellite::toggleShown()
 	_shown = !_shown;
 }
 
-int Satellite::getDelta(std::time_t& time)
+time_t Satellite::getDelta(std::time_t& time)
 {
 	OrbitalElements oe(tle);
 	auto pos(getPositionAtTime(time));
 	auto rate(pos.altitude / oe.RecoveredSemiMajorAxis());
-	return static_cast<int>(round(rate / 24));
+	return static_cast<time_t>(round(rate / 24));
 }
 
-bool & Satellite::isShown()
+bool Satellite::isShown()
 {
 	return _shown;
+}
+
+void Satellite::show()
+{
+	if (!_shown) {
+		_shown = true;
+		updatePosition();
+	}
+}
+
+void Satellite::hide()
+{
+	_shown = false;
 }
 
 std::string & Satellite::getName()

@@ -57,6 +57,11 @@ void Resources::loadTextures() {
 }
 
 
+SDL_Window * Resources::getWindow()
+{
+	return window.get();
+}
+
 SDL_Renderer* Resources::getRenderer() {
 	return renderer.get();
 }

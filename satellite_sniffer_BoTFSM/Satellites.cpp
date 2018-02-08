@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <imgui.h>
 
 std::shared_ptr<Satellites> Satellites::instance = nullptr;
 
@@ -14,7 +15,6 @@ Satellites::Satellites()
 		UISats.emplace_back(sat);
 	}
 }
-
 
 std::shared_ptr<Satellites>& Satellites::getInstance()
 {
@@ -31,10 +31,6 @@ void Satellites::updatePosition()
 	}
 }
 
-Satellites::~Satellites()
-{
-}
-
 std::list<UISatellite>& Satellites::getUISatellites()
 {
 	return UISats;
@@ -49,9 +45,24 @@ void Satellites::renderUISatellits(int zoom)
 
 void Satellites::renderPopupSatellits()
 {
-	for (auto& sat : UISats) {
-		sat.popupRender();
+	static int height = sats.size() / 3 + 1;
+	bool *shown = new bool[sats.size()];
+	for (int i = 0; i < sats.size(); ++i) shown[i] = sats[i].isShown();
+	int cnt = 0;
+	for (int i = 0; i < sats.size(); ++i) {
+		if (ImGui::Selectable(sats[i].getName().c_str(), &shown[i])) {}
+		cnt++;
+		if (cnt == height) {
+			cnt = 0;
+			ImGui::NextColumn();
+		}
 	}
+	ImGui::NextColumn();
+	for (int i = 0; i < sats.size(); ++i) {
+		if (shown[i]) sats[i].show();
+		else sats[i].hide();
+	}
+	delete[] shown;
 }
 
 void Satellites::loadSatellites()

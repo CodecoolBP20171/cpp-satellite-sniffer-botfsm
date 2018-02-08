@@ -6,16 +6,14 @@
 #include "Resources.h"
 #include <SDL2_gfxPrimitives.h>
 
-Trajectory::Trajectory(Satellite & sat, Direction direction) :
-	sat(sat),
+Trajectory::Trajectory(Direction direction) :
 	direction(direction),
 	isTextureValid(false),
-	lastZoom(0),
-	texture(nullptr)
+	lastZoom(0)
 {
 }
 
-void Trajectory::calculate(std::time_t time)
+void Trajectory::calculate(std::time_t time, Satellite& sat)
 {
 	points.clear();
 
@@ -38,17 +36,17 @@ void Trajectory::render(int zoom)
 {
 	if (!isTextureValid || lastZoom != zoom) {
 		updateRect(zoom);
-		texture.reset(new Sprite(rect.w, rect.h));
+		texture.resize(rect.w, rect.h);
 		renderNewTexture(zoom);
 		isTextureValid = true;
 		lastZoom = zoom;
 	}
-	texture->render(&rect);
+	texture.render(&rect);
 }
 
 void Trajectory::renderNewTexture(int zoom)
 {
-	texture->setAsRenderTarget();
+	texture.setAsRenderTarget();
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	for (int i = 1; i < points.size(); ++i) {
 		Sint16 x1(static_cast<Sint16>(round(points[i - 1].longitude / (MathConstants::PI * 2) * mapSize.w)));
