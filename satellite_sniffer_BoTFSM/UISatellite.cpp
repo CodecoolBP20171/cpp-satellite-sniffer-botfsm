@@ -33,7 +33,7 @@ UISatellite::UISatellite(Satellite& sat)
 void UISatellite::render(int zoom)
 {
 	if (!sat.isShown()) return;
-	renderTrajectory();
+	renderTrajectory(zoom);
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto satSize(texture->getDimensions());
 	auto satpos(sat.getPosition());
@@ -46,8 +46,10 @@ void UISatellite::render(int zoom)
 	};
 	texture->render(&satRect);
 	auto textPos(text->getDimensions());
-	textPos.x = satRect.x + satSize.w;
+	textPos.x = satRect.x + satSize.w / zoom;
 	textPos.y = satRect.y;
+	textPos.w /= zoom;
+	textPos.h /= zoom;
 	text->render(&textPos);
 }
 
@@ -72,8 +74,8 @@ void UISatellite::popupRender()
 }
 
 
-void UISatellite::renderTrajectory()
+void UISatellite::renderTrajectory(int zoom)
 {
-	trajectoryForward.render();
-	trajectoryBackward.render();
+	trajectoryForward.render(zoom);
+	trajectoryBackward.render(zoom);
 }

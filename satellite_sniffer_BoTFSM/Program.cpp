@@ -94,7 +94,6 @@ void Program::render()
 bool Program::handleEvents()
 {
 	SDL_Event e;
-	int x, y;
 	while (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
 			return true;

@@ -62,12 +62,10 @@ void Map::zoomIn(const SDL_MouseButtonEvent &e)
 void Map::zoomOut()
 {
 	zoom--;
-	int oldW = source.w;
-	int oldH = source.h;
+	source.x -= source.w / 2;
+	source.y -= source.h / 2;
 	source.w = (map->getDimensions().w / std::pow(2, zoom));
 	source.h = (map->getDimensions().h / std::pow(2, zoom));
-	source.x -= oldW / 2;
-	source.y -= oldH / 2;
 	clampToBorder();
 }
 

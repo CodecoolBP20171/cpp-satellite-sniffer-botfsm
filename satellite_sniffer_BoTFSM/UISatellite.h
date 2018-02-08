@@ -23,6 +23,6 @@ private:
 	std::unique_ptr<ScreenText> popupText;
 	Trajectory& trajectoryForward;
 	Trajectory& trajectoryBackward;
-	void renderTrajectory();
+	void renderTrajectory(int zoom);
 };
 
