@@ -10,7 +10,7 @@ struct IDirect3DDevice9;
 struct SDL_Window;
 typedef union SDL_Event SDL_Event;
 
-IMGUI_API bool        ImGui_ImplDX9_Init(void* hwnd, IDirect3DDevice9* device);
+IMGUI_API bool        ImGui_ImplDX9_Init(SDL_Window* window);
 IMGUI_API void        ImGui_ImplDX9_Shutdown();
 // newframe implementation from the sdl examples for proper input handling
 IMGUI_API void        ImGui_ImplDX9SDL_NewFrame(SDL_Window* window);

@@ -9,6 +9,7 @@
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 // DirectX
 #include <d3d9.h>
@@ -175,10 +176,14 @@ void ImGui_ImplDX9_RenderDrawLists(ImDrawData* draw_data)
     d3d9_state_block->Release();
 }
 
-bool    ImGui_ImplDX9_Init(void* hwnd, IDirect3DDevice9* device)
+bool    ImGui_ImplDX9_Init(SDL_Window* window)
 {
-    g_hWnd = (HWND)hwnd;
-    g_pd3dDevice = device;
+	SDL_SysWMinfo info;
+	SDL_VERSION(&info.version);
+	SDL_GetWindowWMInfo(window, &info);
+	
+    g_hWnd = info.info.win.window;
+    g_pd3dDevice = SDL_RenderGetD3D9Device(SDL_GetRenderer(window));
 
     if (!QueryPerformanceFrequency((LARGE_INTEGER *)&g_TicksPerSecond))
         return false;

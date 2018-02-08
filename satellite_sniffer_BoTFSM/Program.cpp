@@ -10,7 +10,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include <SDL_syswm.h>
 #include <imgui.h>
 #include <imgui_impl_dx9.h>
 
@@ -46,12 +45,7 @@ void Program::init()
 	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED, state));
 
 	// init imgui
-
-	SDL_SysWMinfo info;
-	SDL_VERSION(&info.version);
-	SDL_GetWindowWMInfo(Resources::getInstance()->getWindow(), &info);
-
-	ImGui_ImplDX9_Init(info.info.win.window, SDL_RenderGetD3D9Device(Resources::getInstance()->getRenderer()));
+	ImGui_ImplDX9_Init(Resources::getInstance()->getWindow());
 	ImGui::StyleColorsDark();
 
 	loaded = true;
