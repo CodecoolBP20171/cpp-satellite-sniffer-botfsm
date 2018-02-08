@@ -2,7 +2,7 @@
 
 enum class PState
 {
-	MAIN_SCREEN,
-	MENU_SCREEN,
+	RUNNING,
+	PAUSED,
 	QUIT
 };

@@ -28,6 +28,7 @@ public:
 	sptr<Sprite>& getSat(std::string& type);
 	sptr<Sprite>& getButton(const std::string& name);
 
+	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
 	void resetRenderer();
 private:

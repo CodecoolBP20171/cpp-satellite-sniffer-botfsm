@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "Globals.h"
 #include "Resources.h"
 #include "LoadError.hpp"
+#include "Config.h"
 #include <iostream>
 
 
 sptr<Resources> Resources::instance = nullptr;
 Resources::Resources() {
 	std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		Dimensions::WINDOW_WIDTH,
-		Dimensions::WINDOW_HEIGHT,
-		SDL_WINDOW_SHOWN));
+																  SDL_WINDOWPOS_CENTERED,
+																  SDL_WINDOWPOS_CENTERED,
+																  Config::getIntOption("Dimensions", "WINDOW_WIDTH"),
+																  Config::getIntOption("Dimensions", "WINDOW_HEIGHT"),
+																  SDL_WINDOW_SHOWN));
 	if (!win) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 		throw LoadError();
@@ -20,14 +20,14 @@ Resources::Resources() {
 	win.swap(window);
 
 	std::unique_ptr<SDL_Renderer, sdl_deleter> ren(SDL_CreateRenderer(window.get(), -1,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+																	  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
 	if (!ren) {
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 		throw LoadError();
 	}
 	ren.swap(renderer);
 
-	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont(FontFiles::MAP_TEXT.c_str(), Dimensions::MAP_TEXT_SIZE));
+	std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont(Config::getStringOption("FontFiles", "MAP_TEXT").c_str(), Config::getIntOption("Dimensions", "MAP_TEXT_SIZE")));
 	if (!fon) {
 		std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
 		throw LoadError();
@@ -44,18 +44,23 @@ sptr<Resources>& Resources::getInstance() {
 }
 
 void Resources::loadTextures() {
-	cleanMap = sptr<Sprite>(new Sprite(TextureFiles::MAP));
+	cleanMap = sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "MAP")));
 	map = sptr<Sprite>(new Sprite(cleanMap));
 
-	buttons.emplace(ButtonName::SATELLITES, sptr<Sprite>(new Sprite(TextureFiles::SAT_BUTTON)));
-	buttons.emplace(ButtonName::OK, sptr<Sprite>(new Sprite(TextureFiles::OK_BUTTON)));
-	buttons.emplace(ButtonName::EXIT, sptr<Sprite>(new Sprite(TextureFiles::EXIT_BUTTON)));
+	buttons.emplace(Config::getStringOption("ButtonName", "SATELLITES"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "SAT_BUTTON"))));
+	buttons.emplace(Config::getStringOption("ButtonName", "OK"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "OK_BUTTON"))));
+	buttons.emplace(Config::getStringOption("ButtonName", "EXIT"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "EXIT_BUTTON"))));
 
-	sats.emplace(SatelliteType::STATION, sptr<Sprite>(new Sprite(TextureFiles::STATION)));
-	sats.emplace(SatelliteType::TELESCOPE, sptr<Sprite>(new Sprite(TextureFiles::TELESCOPE)));
-	sats.emplace(SatelliteType::GPS, sptr<Sprite>(new Sprite(TextureFiles::GPS)));
+	sats.emplace(Config::getStringOption("SatelliteType", "STATION"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "STATION"))));
+	sats.emplace(Config::getStringOption("SatelliteType", "TELESCOPE"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "TELESCOPE"))));
+	sats.emplace(Config::getStringOption("SatelliteType", "GPS"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "GPS"))));
 }
 
+
+SDL_Window * Resources::getWindow()
+{
+	return window.get();
+}
 
 SDL_Renderer* Resources::getRenderer() {
 	return renderer.get();

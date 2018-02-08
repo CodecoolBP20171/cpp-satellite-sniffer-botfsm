@@ -1,24 +1,19 @@
 #include "stdafx.h"
 #include "Menu.h"
-#include "Globals.h"
+#include "Config.h"
+#include <imgui.h>
+#include <iostream>
 
+Menu::Menu(SDL_Rect rect, PState state, PState& programState) :
+	UIElement(rect, state),
+	state(programState)
+{}
 
-Menu::Menu(SDL_Rect rect, PState state) : UIElement(rect, state)
+bool Menu::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	rect.h = Dimensions::MENU_BUTTON_HEIGHT;
-	rect.w = Dimensions::MENU_BUTTON_WIDTH;
-	rect.x += Dimensions::MENU_BUTTON_SPACING;
-	rect.y += Dimensions::MENU_BUTTON_VERTICAL_SPACING;
-	menuButtons.emplace_back(new Button(rect, state, ButtonName::SATELLITES));
-	rect.x += UIRects::MENU.w - Dimensions::MENU_BUTTON_WIDTH - 2 * Dimensions::MENU_BUTTON_SPACING;
-	menuButtons.emplace_back(new Button(rect, state, ButtonName::EXIT));
-}
-
-bool Menu::isClicked(const int x, const int y, PState & state)
-{
-	if (UIElement::isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		for (auto& button : menuButtons) {
-			if (button->isClicked(x, y, state)) {
+			if (button->isClicked(e, state)) {
 				break;
 			}
 		}
@@ -29,8 +24,19 @@ bool Menu::isClicked(const int x, const int y, PState & state)
 
 void Menu::render()
 {
-	for (auto& button : menuButtons) {
-		button->render();
+	auto& menuDim = Config::getRect("MENU");
+	ImGui::SetNextWindowPos(ImVec2(menuDim.x, menuDim.y), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(menuDim.w, menuDim.h), ImGuiCond_Once);
+	ImGui::SetNextWindowBgAlpha(0.0f);
+	if (ImGui::Begin("menu##menubar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+		if (ImGui::Button("SATELLITES##menu_sats", ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH"), Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT")))) {
+			state = PState::PAUSED;
+		}
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - (Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH")) - Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING"));
+
+		if (ImGui::Button("QUIT##menu_quit", ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH"), Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT")))) {
+			state = PState::QUIT;
+		}
+		ImGui::End();
 	}
 }
-

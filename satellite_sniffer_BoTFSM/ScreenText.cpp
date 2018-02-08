@@ -11,6 +11,10 @@ ScreenText::ScreenText(std::string& text) {
 	SDL_FreeSurface(textSurface);
 }
 
+ScreenText::~ScreenText()
+{
+}
+
 void ScreenText::setAsRenderTarget() {
 	std::cerr << "Illegal operation: text cannot be set as render target." << std::endl;
 }

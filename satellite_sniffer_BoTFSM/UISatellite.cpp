@@ -2,13 +2,14 @@
 #include "UISatellite.h"
 #include "Resources.h"
 #include "Globals.h"
+#include "Config.h"
 #include <list>
 #include <SDL2_gfxPrimitives.h>
 
 int UISatellite::pos{ 0 };
 
 UISatellite::UISatellite(Satellite& sat)
-	: UIElement({ 0,0,0,0 }, PState::MAIN_SCREEN),
+	: UIElement({ 0,0,0,0 }, PState::RUNNING),
 	sat(sat),
 	texture(Resources::getInstance()->getSat(sat.getType())),
 	trajectoryForward(sat.getForwardTrajectory()),
@@ -18,40 +19,43 @@ UISatellite::UISatellite(Satellite& sat)
 {
 	rect = popupText->getDimensions();
 	double oldH(rect.h);
-	rect.h = Dimensions::POPUP_HEIGHT / 10;
+	rect.h = Config::getIntOption("Dimensions", "POPUP_HEIGHT") / 10;
 	rect.w = static_cast<int>(rect.w * (rect.h / oldH));
-	rect.x = Dimensions::POPUP_OFFSET_X + Dimensions::MENU_BUTTON_SPACING;
+	rect.x = Config::getIntOption("Dimensions", "POPUP_OFFSET_X") + Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
 	if (pos >= 10) {
-		rect.x += Dimensions::POPUP_WIDTH / 2;
+		rect.x += Config::getIntOption("Dimensions", "POPUP_WIDTH") / 2;
 	}
-	rect.y = Dimensions::POPUP_OFFSET_Y + rect.h * (pos % 10);
+	rect.y = Config::getIntOption("Dimensions", "POPUP_OFFSET_Y") + rect.h * (pos % 10);
 	text->setColor({ 0,0,0 });
 	++pos;
 }
 
-void UISatellite::render()
+void UISatellite::render(int zoom)
 {
 	if (!sat.isShown()) return;
-	renderTrajectory();
+	renderTrajectory(zoom);
 	auto mapSize(Resources::getInstance()->getMapDimensions());
 	auto satSize(texture->getDimensions());
 	auto satpos(sat.getPosition());
+	zoom = std::pow(2, zoom);
 	SDL_Rect satRect = {
-		static_cast<int>(round(satpos.longitude / (MathConstants::PI * 2) * mapSize.w - satSize.w / 2)),
-		static_cast<int>(round(satpos.latitude / (MathConstants::PI) * mapSize.h - satSize.h / 2)),
-		satSize.w,
-		satSize.h
+		static_cast<int>(round(satpos.longitude / (MathConstants::PI * 2) * mapSize.w - satSize.w / (2 * zoom))),
+		static_cast<int>(round(satpos.latitude / (MathConstants::PI) * mapSize.h - satSize.h / (2 * zoom))),
+		satSize.w / zoom,
+		satSize.h / zoom
 	};
 	texture->render(&satRect);
 	auto textPos(text->getDimensions());
-	textPos.x = satRect.x + satSize.w;
+	textPos.x = satRect.x + satSize.w / zoom;
 	textPos.y = satRect.y;
+	textPos.w /= zoom;
+	textPos.h /= zoom;
 	text->render(&textPos);
 }
 
-bool UISatellite::isClicked(const int x, const int y, PState & state)
+bool UISatellite::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
+	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
 		sat.toggleShown();
 		return true;
 	}
@@ -69,13 +73,9 @@ void UISatellite::popupRender()
 	popupText->render(&rect);
 }
 
-std::string UISatellite::toString()
-{
-	return sat.toString();
-}
 
-void UISatellite::renderTrajectory()
+void UISatellite::renderTrajectory(int zoom)
 {
-	trajectoryForward.render();
-	trajectoryBackward.render();
+	trajectoryForward.render(zoom);
+	trajectoryBackward.render(zoom);
 }

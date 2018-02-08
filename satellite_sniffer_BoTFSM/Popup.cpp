@@ -1,48 +1,38 @@
 #include "stdafx.h"
 #include "Popup.h"
-#include "Globals.h"
 #include "Resources.h"
-#include "SatelliteLoader.h"
+#include "Satellites.h"
+#include "Config.h"
+#include "Globals.h"
+#include <imgui.h>
 
-Popup::Popup(SDL_Rect rect, PState state, std::list<UISatellite>& satList) : 
+Popup::Popup(SDL_Rect rect, PState state, PState& programState) :
 	UIElement(rect, state),
-	sats(satList)
-{
-	SDL_Rect buttonRect(rect);
-	buttonRect.h = Dimensions::MENU_BUTTON_HEIGHT / 2;
-	buttonRect.w = Dimensions::MENU_BUTTON_WIDTH / 2;
-	buttonRect.x += Dimensions::POPUP_WIDTH - buttonRect.w - Dimensions::MENU_BUTTON_SPACING;
-	buttonRect.y += Dimensions::POPUP_HEIGHT - buttonRect.h - Dimensions::MENU_BUTTON_SPACING;
-	button.reset(new Button(buttonRect, state, ButtonName::OK));
-}
+	state(programState)
+{}
 
-bool Popup::isClicked(const int x, const int y, PState & state)
+bool Popup::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (UIElement::isClicked(x, y, state)) {
-		if (button->isClicked(x, y, state)) {
-			SatelliteLoader::saveSatelliteList(sats);
-			state = PState::MAIN_SCREEN;
-		} else {
-			for (auto& sat : sats) {
-				if (sat.isClicked(x, y, state)) {
-					break;
-				}
-			}
-		}
-		return true;
-	}
 	return false;
 }
 
 void Popup::render()
 {
-	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
-	SDL_RenderFillRect(Resources::getInstance()->getRenderer(), &rect);
-	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 255, 255, 255, 255);
-	SDL_RenderDrawRect(Resources::getInstance()->getRenderer(), &rect);
-	for (auto& sat : sats) {
-		sat.popupRender();
-	}
-	button->render();
-}
+	ImGui::SetNextWindowPos(ImVec2(Config::getIntOption("Dimensions", "POPUP_OFFSET_X"), Config::getIntOption("Dimensions", "POPUP_OFFSET_Y")), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(Config::getIntOption("Dimensions", "POPUP_WIDTH"), Config::getIntOption("Dimensions", "POPUP_HEIGHT")), ImGuiCond_Once);
+	if (ImGui::Begin("Choose which satellites to show.", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize)) {
+		ImGui::Columns(3, NULL, false);
+		Satellites::getInstance()->renderPopupSatellits();
+		ImGui::Columns(1);
 
+		ImGui::Dummy(ImVec2(0, Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING")));
+		ImGui::Dummy(ImVec2(0, 0));
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - (Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") / 2) - Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING"));
+
+		if (ImGui::Button("OK##popup_ok", ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") / 2, Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT") / 2))) {
+			Satellites::getInstance()->saveSatelliteList();
+			state = PState::RUNNING;
+		}
+		ImGui::End();
+	}
+}
