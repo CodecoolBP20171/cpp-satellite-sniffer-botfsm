@@ -2,7 +2,7 @@ from spacetrack import SpaceTrackClient
 
 
 def main():
-	st = SpaceTrackClient('username', 'pw')
+	st = SpaceTrackClient('user', 'pw')
 	ids = [25544, 20580, 27540, 28485, 31135,\
 		  33053, 37820, 41765, 40889, 40890,\
 		  41175, 41174, 41550, 41549, 41859,\
@@ -19,8 +19,8 @@ def main():
 	for id, line in satDic.items():
 		with open('satellites/' + str(id) + '.dat', 'w') as fp:
 			if not len(line) < 2:
-				fp.write(line[-1] + "\n")
 				fp.write(line[-2] + "\n")
+				fp.write(line[-1] + "\n")
 			else:
 				fp.write("\n")
 			
