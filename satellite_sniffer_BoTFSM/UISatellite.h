@@ -14,7 +14,6 @@ public:
 	void render() override {};
 	void render(int zoom);
 	bool isClicked(const SDL_MouseButtonEvent e, PState& state) override;
-	void popupRender();
 private:
 	static int pos;
 	Satellite & sat;

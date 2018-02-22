@@ -2,7 +2,6 @@
 #include <memory>
 #include <list>
 #include "UIElement.h"
-#include "Button.h"
 #include "Sprite.h"
 
 class Menu : public UIElement
@@ -12,7 +11,6 @@ public:
 	bool isClicked(const SDL_MouseButtonEvent e, PState& state) override;
 	void render() override;
 private:
-	std::list<std::shared_ptr<Button>> menuButtons;
 	PState& state;
 };
 

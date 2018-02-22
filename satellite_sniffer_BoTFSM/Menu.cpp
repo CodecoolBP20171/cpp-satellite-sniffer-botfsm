@@ -11,14 +11,6 @@ Menu::Menu(SDL_Rect rect, PState state, PState& programState) :
 
 bool Menu::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
-		for (auto& button : menuButtons) {
-			if (button->isClicked(e, state)) {
-				break;
-			}
-		}
-		return true;
-	}
 	return false;
 }
 

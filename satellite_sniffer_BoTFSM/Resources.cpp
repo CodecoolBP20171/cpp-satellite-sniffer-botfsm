@@ -47,10 +47,6 @@ void Resources::loadTextures() {
 	cleanMap = sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "MAP")));
 	map = sptr<Sprite>(new Sprite(cleanMap));
 
-	buttons.emplace(Config::getStringOption("ButtonName", "SATELLITES"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "SAT_BUTTON"))));
-	buttons.emplace(Config::getStringOption("ButtonName", "OK"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "OK_BUTTON"))));
-	buttons.emplace(Config::getStringOption("ButtonName", "EXIT"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "EXIT_BUTTON"))));
-
 	sats.emplace(Config::getStringOption("SatelliteType", "STATION"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "STATION"))));
 	sats.emplace(Config::getStringOption("SatelliteType", "TELESCOPE"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "TELESCOPE"))));
 	sats.emplace(Config::getStringOption("SatelliteType", "GPS"), sptr<Sprite>(new Sprite(Config::getStringOption("TextureFiles", "GPS"))));
@@ -89,12 +85,6 @@ sptr<Sprite>& Resources::getCleanMap() {
 	return cleanMap;
 }
 
-void Resources::clearMap() {
-	map->setAsRenderTarget();
-	cleanMap->render(nullptr);
-	resetRenderer();
-}
-
 SDL_Rect Resources::getMapDimensions() {
 	return map->getDimensions();
 }
@@ -103,20 +93,12 @@ sptr<Sprite>& Resources::getSat(std::string& type) {
 	return sats[type];
 }
 
-sptr<Sprite>& Resources::getButton(const std::string & name)
-{
-	return buttons[name];
-}
-
 void Resources::release() {
 	ttffont.reset();
 	map.reset();
 	cleanMap.reset();
 	for (auto& sat : sats) {
 		sat.second.reset();
-	}
-	for (auto& button : buttons) {
-		button.second.reset();
 	}
 	renderer.reset();
 	window.reset();

@@ -31,11 +31,6 @@ void Satellites::updatePosition()
 	}
 }
 
-std::list<UISatellite>& Satellites::getUISatellites()
-{
-	return UISats;
-}
-
 void Satellites::renderUISatellits(int zoom)
 {
 	for (auto& sat : UISats) {

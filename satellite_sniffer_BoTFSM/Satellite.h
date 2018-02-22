@@ -1,7 +1,6 @@
 #pragma once
 #include <ctime>
 #include <vector>
-#include "GeoCoordinate.h"
 #include "Sprite.h"
 #include "ScreenText.h"
 #include "Trajectory.h"
