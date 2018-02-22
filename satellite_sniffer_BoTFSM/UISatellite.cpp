@@ -55,24 +55,8 @@ void UISatellite::render(int zoom)
 
 bool UISatellite::isClicked(const SDL_MouseButtonEvent e, PState & state)
 {
-	if (e.button == SDL_BUTTON_LEFT && UIElement::isClicked(e, state)) {
-		sat.toggleShown();
-		return true;
-	}
 	return false;
 }
-
-void UISatellite::popupRender()
-{
-	if (sat.isShown()) {
-		popupText->setColor({ 15, 200, 15 });
-	}
-	else {
-		popupText->setColor({ 100, 100, 100 });
-	}
-	popupText->render(&rect);
-}
-
 
 void UISatellite::renderTrajectory(int zoom)
 {

@@ -3,7 +3,6 @@
 #include <list>
 
 #include "UIElement.h"
-#include "Button.h"
 
 class Popup : public UIElement
 {
@@ -13,6 +12,5 @@ public:
 	void render() override;
 private:
 	PState & state;
-	std::unique_ptr<Button> button;
 };
 

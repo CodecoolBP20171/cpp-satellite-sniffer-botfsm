@@ -36,9 +36,6 @@
     <ClInclude Include="Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeoCoordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -64,9 +61,6 @@
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files\Renderable\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
       <Filter>Header Files\Renderable\UI</Filter>
     </ClInclude>
     <ClInclude Include="ProgramState.h">
@@ -104,9 +98,6 @@
     <ClCompile Include="Resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeoCoordinate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -126,9 +117,6 @@
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
-      <Filter>Source Files\Renderable\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Button.cpp">
       <Filter>Source Files\Renderable\UI</Filter>
     </ClCompile>
     <ClCompile Include="Popup.cpp">

@@ -17,14 +17,6 @@ Sprite::Sprite(const std::shared_ptr<Sprite>& other) {
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 }
 
-Sprite::Sprite(const int width, const int height)
-{
-	this->height = height;
-	this->width = width;
-	texture = SDL_CreateTexture(Resources::getInstance()->getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-}
-
 void Sprite::setAsRenderTarget() {
 	SDL_SetRenderTarget(Resources::getInstance()->getRenderer(), texture);
 }
