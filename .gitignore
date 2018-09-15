@@ -336,3 +336,8 @@ __pycache__/
 *.iobj
 
 *.ipdb
+
+
+# include libs and dlls in libs folder
+!libs/*.dll
+!libs/*.lib

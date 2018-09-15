@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)imgui_sdl_d3d\;$(SolutionDir)cpp-iniparser\;$(SolutionDir)libs\SDL2_gfx-1.0.3\include;$(SolutionDir)libsgp4\;$(SolutionDir)libs\SDL2-2.0.7\include;$(SolutionDir)libs\SDL2_ttf-2.0.14\include;$(SolutionDir)libs\SDL2_image-2.0.2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_d</TargetName>
     <OutDir>$(SolutionDir)out\</OutDir>
   </PropertyGroup>
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)out\</OutDir>
-    <IncludePath>$(SolutionDir)imgui_sdl_d3d\;$(SolutionDir)cpp-iniparser\;$(SolutionDir)libs\SDL2_gfx-1.0.3\include;$(SolutionDir)libsgp4\;$(SolutionDir)libs\SDL2-2.0.7\include;$(SolutionDir)libs\SDL2_ttf-2.0.14\include;$(SolutionDir)libs\SDL2_image-2.0.2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -107,12 +107,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)libs\includes;$(SolutionDir)libsgp4\include;$(SolutionDir)imgui_sdl_d3d\include;$(SolutionDir)cpp-iniparser\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libs\imgui-sdl-d3d;$(SolutionDir)libs\cpp-iniparser;$(SolutionDir)libs\SDL2_gfx-1.0.3\lib\x64;$(SolutionDir)libs\libsgp4;$(SolutionDir)libs\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)libs\SDL2_image-2.0.2\lib\x64;$(SolutionDir)libs\SDL2-2.0.7\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_gfx.lib;libsgp4.lib;cpp-iniparser.lib;imgui_sdl_d3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)userlibs\;$(SolutionDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,6 +142,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)libs\includes;$(SolutionDir)libsgp4\include;$(SolutionDir)imgui_sdl_d3d\include;$(SolutionDir)cpp-iniparser\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,52 +150,63 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_gfx.lib;libsgp4.lib;cpp-iniparser.lib;imgui_sdl_d3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)libs\imgui-sdl-d3d;$(SolutionDir)libs\cpp-iniparser;$(SolutionDir)libs\SDL2_gfx-1.0.3\lib\x64;$(SolutionDir)libs\libsgp4;$(SolutionDir)libs\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)libs\SDL2_image-2.0.2\lib\x64;$(SolutionDir)libs\SDL2-2.0.7\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)userlibs\;$(SolutionDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Canvas.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Popup.cpp" />
-    <ClCompile Include="Program.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Resources.cpp" />
-    <ClCompile Include="Satellite.cpp" />
-    <ClCompile Include="Satellites.cpp" />
-    <ClCompile Include="ScreenText.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\Canvas.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Popup.cpp" />
+    <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\Resources.cpp" />
+    <ClCompile Include="src\Satellite.cpp" />
+    <ClCompile Include="src\Satellites.cpp" />
+    <ClCompile Include="src\ScreenText.cpp" />
+    <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Trajectory.cpp" />
-    <ClCompile Include="UIElement.cpp" />
-    <ClCompile Include="UISatellite.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Trajectory.cpp" />
+    <ClCompile Include="src\UIElement.cpp" />
+    <ClCompile Include="src\UISatellite.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Canvas.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="LoadError.hpp" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="Popup.h" />
-    <ClInclude Include="Program.h" />
-    <ClInclude Include="ProgramState.h" />
-    <ClInclude Include="Resources.h" />
-    <ClInclude Include="Satellite.h" />
-    <ClInclude Include="Satellites.h" />
-    <ClInclude Include="ScreenText.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Trajectory.h" />
-    <ClInclude Include="UIElement.h" />
-    <ClInclude Include="UISatellite.h" />
+    <ClInclude Include="include\Canvas.h" />
+    <ClInclude Include="include\Config.h" />
+    <ClInclude Include="include\Globals.h" />
+    <ClInclude Include="include\LoadError.hpp" />
+    <ClInclude Include="include\Map.h" />
+    <ClInclude Include="include\Menu.h" />
+    <ClInclude Include="include\Popup.h" />
+    <ClInclude Include="include\Program.h" />
+    <ClInclude Include="include\ProgramState.h" />
+    <ClInclude Include="include\Resources.h" />
+    <ClInclude Include="include\Satellite.h" />
+    <ClInclude Include="include\Satellites.h" />
+    <ClInclude Include="include\ScreenText.h" />
+    <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="include\Texture.h" />
+    <ClInclude Include="include\Trajectory.h" />
+    <ClInclude Include="include\UIElement.h" />
+    <ClInclude Include="include\UISatellite.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cpp-iniparser\cpp-iniparser.vcxproj">
+      <Project>{b9f1c8ab-8edb-49ce-872a-170ea6e072f8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\imgui_sdl_d3d\imgui_sdl_d3d.vcxproj">
+      <Project>{58d416c3-6cca-44bb-94b6-1956256e92d0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\libsgp4\libsgp4.vcxproj">
+      <Project>{542c04bd-e800-4c50-89c3-cd8a5f3ea048}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

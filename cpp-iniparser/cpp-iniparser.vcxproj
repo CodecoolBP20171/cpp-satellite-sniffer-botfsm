@@ -18,6 +18,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\INIConfig.cpp" />
+    <ClCompile Include="src\INIParser.cpp" />
+    <ClCompile Include="src\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\DuplicateOptionException.h" />
+    <ClInclude Include="include\DuplicateSectionException.h" />
+    <ClInclude Include="include\INIConfig.h" />
+    <ClInclude Include="include\INIParser.h" />
+    <ClInclude Include="include\INIReaderException.h" />
+    <ClInclude Include="include\INIWriterException.h" />
+    <ClInclude Include="include\InvalidOptionException.h" />
+    <ClInclude Include="include\InvalidSectionException.h" />
+    <ClInclude Include="include\Utilities.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{B9F1C8AB-8EDB-49CE-872A-170EA6E072F8}</ProjectGuid>
@@ -42,14 +58,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,10 +86,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)libs\cpp-iniparser</OutDir>
+    <OutDir>$(SolutionDir)userlibs\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)libs\cpp-iniparser</OutDir>
+    <OutDir>$(SolutionDir)userlibs\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -83,6 +99,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -103,6 +120,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,22 +137,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="DuplicateOptionException.h" />
-    <ClInclude Include="DuplicateSectionException.h" />
-    <ClInclude Include="INIConfig.h" />
-    <ClInclude Include="INIParser.h" />
-    <ClInclude Include="INIReaderException.h" />
-    <ClInclude Include="INIWriterException.h" />
-    <ClInclude Include="InvalidOptionException.h" />
-    <ClInclude Include="InvalidSectionException.h" />
-    <ClInclude Include="Utilities.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="INIConfig.cpp" />
-    <ClCompile Include="INIParser.cpp" />
-    <ClCompile Include="Utilities.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
