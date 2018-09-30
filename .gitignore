@@ -61,6 +61,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+out/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -336,3 +337,8 @@ __pycache__/
 *.iobj
 
 *.ipdb
+
+
+# include libs and dlls in libs folder
+!libs/*.dll
+!libs/*.lib
