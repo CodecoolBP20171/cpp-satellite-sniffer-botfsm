@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include <SDl.h>
+#include <SDL.h>
 #include <CoordGeodetic.h>
 #include "Canvas.h"
 class Satellite;

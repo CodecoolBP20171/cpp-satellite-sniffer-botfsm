@@ -101,7 +101,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)libs\includes;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>sdl2.lib;sdl2main.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -144,7 +144,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>sdl2.lib;sdl2main.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
