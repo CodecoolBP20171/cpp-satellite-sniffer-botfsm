@@ -148,7 +148,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)libs\includes;$(SolutionDir)libsgp4\include;$(SolutionDir)imgui_sdl_d3d\include;$(SolutionDir)cpp-iniparser\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
