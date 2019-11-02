@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Renderable">
+      <UniqueIdentifier>{57270c75-267c-459f-95f5-d2f49d4b3e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderable">
+      <UniqueIdentifier>{060542dd-474c-40f4-9d35-6ad843d653f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Renderable\UI">
+      <UniqueIdentifier>{eea31571-93c8-4b2b-ac56-da0d84af4fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderable\UI">
+      <UniqueIdentifier>{51c291d6-6d82-4407-a113-8c403327b9f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Canvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LoadError.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProgramState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Satellites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Map.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Popup.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIElement.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UISatellite.h">
+      <Filter>Header Files\Renderable\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Satellite.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ScreenText.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprite.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Texture.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Trajectory.h">
+      <Filter>Header Files\Renderable</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Satellites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UISatellite.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIElement.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Popup.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Map.cpp">
+      <Filter>Source Files\Renderable\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Satellite.cpp">
+      <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScreenText.cpp">
+      <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Trajectory.cpp">
+      <Filter>Source Files\Renderable</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
