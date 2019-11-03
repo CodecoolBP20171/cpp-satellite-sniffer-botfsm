@@ -11,120 +11,148 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <imgui.h>
-#include <imgui_impl_dx9.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_sdl.h>
+
+#include <GL/GL.h>
 
 Program::Program() :
-	quit(false),
-	loaded(false),
-	timePassed(0),
-	timestep(16), // frame time length 1000 / 60
-	lastCalculationTime(0),
-	calculationTimeStep(5000), // 5 sec
-	zoom(Config::getIntOption("ZoomLevel", "MIN")),
-	state(PState::RUNNING)
+    quit(false),
+    loaded(false),
+    timePassed(0),
+    timestep(16), // frame time length 1000 / 60
+    lastCalculationTime(0),
+    calculationTimeStep(5000), // 5 sec
+    zoom(Config::getIntOption("ZoomLevel", "MIN")),
+    state(PState::RUNNING)
 {}
 
 
 Program::~Program()
 {
-	if (loaded) unload();
+    if (loaded) unload();
 }
 
 void Program::init()
 {
-	// init SDL
-	SDL_Init(SDL_INIT_VIDEO);
-	IMG_Init(IMG_INIT_PNG);
-	TTF_Init();
+    // init SDL
+    SDL_Init(SDL_INIT_VIDEO);
+    IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
-	// init resources
-	Resources::getInstance();
-	Satellites::getInstance();
+    // Create window with graphics context
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-	UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::RUNNING, zoom));
-	UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::RUNNING, state));
-	UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED, state));
+    // init resources
+    Resources::getInstance();
+    Satellites::getInstance();
 
-	// init imgui
-	ImGui_ImplDX9_Init(Resources::getInstance()->getWindow());
-	ImGui::StyleColorsDark();
+    UIElements.emplace_back(new Map(Config::getRect("MAP"), PState::RUNNING, zoom));
+    UIElements.emplace_back(new Menu(Config::getRect("MENU"), PState::RUNNING, state));
+    UIElements.emplace_back(new Popup(Config::getRect("POPUP"), PState::PAUSED, state));
 
-	loaded = true;
+    IMGUI_CHECKVERSION();
+    ig_context = ImGui::CreateContext();
+    io = &ImGui::GetIO();
+    // Enable Keyboard
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    // Enable Gamepad Controls
+    // Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplSDL2_InitForOpenGL(Resources::getInstance()->getWindow(), Resources::getInstance()->getGLContext());
+    ImGui_ImplOpenGL3_Init(/*glsl_version=*/"#version 130");
+
+    loaded = true;
 }
 
 void Program::run()
 {
-	if (!loaded) init();
-	while (!quit) {
-		timePassed = SDL_GetTicks();
-		quit = handleEvents();
-		updatePositions();
+    if (!loaded) init();
+    while (!quit) {
+        timePassed = SDL_GetTicks();
+        quit = handleEvents();
+        updatePositions();
 
-		render();
+        render();
 
-		/* wait for next frame */
-		while (timePassed + timestep > SDL_GetTicks()) {
-			SDL_Delay(0);
-		}
-	}
+        /* wait for next frame */
+        while (timePassed + timestep > SDL_GetTicks()) {
+            SDL_Delay(0);
+        }
+    }
 }
 
 void Program::unload()
 {
-	ImGui_ImplDX9_Shutdown();
-	Resources::releaseResources();
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
-	loaded = false;
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext(ig_context);
+    Resources::releaseResources();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+    loaded = false;
 }
 
 void Program::updatePositions()
 {
-	if (state != PState::PAUSED && timePassed > lastCalculationTime + calculationTimeStep) {
-		Satellites::getInstance()->updatePosition();
-		lastCalculationTime = timePassed;
-	}
+    if (state != PState::PAUSED && timePassed > lastCalculationTime + calculationTimeStep) {
+        Satellites::getInstance()->updatePosition();
+        lastCalculationTime = timePassed;
+    }
 }
 
 void Program::render()
 {
-	ImGui_ImplDX9SDL_NewFrame(Resources::getInstance()->getWindow());
-	SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
-	for (auto& elem : UIElements) {
-		if (elem->isActive(state)) {
-			elem->render();
-		}
-	}
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Resources::getInstance()->getWindow());
+    ImGui::NewFrame();
 
-	//ImGui::ShowMetricsWindow();
-	//ImGui::ShowDemoWindow();
-	ImGui::Render();
-	SDL_RenderPresent(Resources::getInstance()->getRenderer());
+    SDL_GL_MakeCurrent(Resources::getInstance()->getWindow(), Resources::getInstance()->getGLContext());
+    SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
+    for (auto& elem : UIElements) {
+        if (elem->isActive(state)) {
+            elem->render();
+        }
+    }
+
+    //ImGui::ShowMetricsWindow();
+    //ImGui::ShowDemoWindow();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    SDL_RenderPresent(Resources::getInstance()->getRenderer());
 }
 
 
 bool Program::handleEvents()
 {
-	SDL_Event e;
-	while (SDL_PollEvent(&e) != 0) {
-		ImGui_Sdl_ProcessEvent(&e);
-		if (e.type == SDL_QUIT) {
-			return true;
-		}
-		auto& io = ImGui::GetIO();
-		if (!io.WantCaptureMouse) {
-			if (e.type == SDL_MOUSEBUTTONUP) {
-				for (auto& elem : UIElements) {
-				if (elem->isActive(state) && elem->isClicked(e.button, state)) {
-						break;
-					}
-				}
-			}
-		}
-		if (PState::QUIT == state) {
-			return true;
-		}
-	}
-	return false;
+    SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) {
+        ImGui_ImplSDL2_ProcessEvent(&e);
+        if (e.type == SDL_QUIT) {
+            return true;
+        }
+        auto& io = ImGui::GetIO();
+        if (!io.WantCaptureMouse) {
+            if (e.type == SDL_MOUSEBUTTONUP) {
+                for (auto& elem : UIElements) {
+                    if (elem->isActive(state) && elem->isClicked(e.button, state)) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (PState::QUIT == state) {
+            return true;
+        }
+    }
+    return false;
 }
