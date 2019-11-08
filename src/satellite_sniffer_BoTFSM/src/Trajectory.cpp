@@ -19,6 +19,10 @@ void Trajectory::calculate(std::time_t time, Satellite& sat)
 
 	int cntr(0);
 	double fullDistance(0.0);
+    static const double MAX_DISTANCE =
+        Config::getRealOption("TrajectoryLimits", "MAX_DISTANCE");
+    static const int MAX_POINTS =
+        Config::getIntOption("TrajectoryLimits", "MAX_POINTS");
 
 	do {
 		points.emplace_back(sat.getPositionAtTime(time));
@@ -26,8 +30,8 @@ void Trajectory::calculate(std::time_t time, Satellite& sat)
 		if (points.size() >= 2) fullDistance += getDistance(points[cntr], points[cntr - 1]);
 		cntr++;
 	} while (points.size() < 2 ||
-		(fullDistance < Config::getRealOption("TrajectoryLimits", "MAX_DISTANCE") &&
-		 cntr < Config::getIntOption("TrajectoryLimits", "MAX_POINTS")));
+		(fullDistance < MAX_DISTANCE &&
+		 cntr < MAX_POINTS));
 
 	isTextureValid = false;
 }
