@@ -14,7 +14,7 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
 
-#include <GL/GL.h>
+#include <GL/gl.h>
 
 Program::Program() :
     quit(false),
