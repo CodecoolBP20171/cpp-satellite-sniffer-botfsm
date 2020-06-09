@@ -14,6 +14,8 @@
 #include <CoordGeodetic.h>
 #include <SGP4.h>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 Satellite::Satellite(std::string name, std::string noradId, std::string type,
                      bool visible)
     : name(name), noradId(noradId), type(type),
@@ -40,7 +42,7 @@ void Satellite::calculate(std::tm &time) {
 }
 
 CoordGeodetic Satellite::getPositionAtTime(std::time_t &time) {
-  auto *stime = gmtime(&time);
+  auto *stime = std::gmtime(&time);
   DateTime tm(stime->tm_year + 1900, stime->tm_mon + 1, stime->tm_mday,
               stime->tm_hour, stime->tm_min, stime->tm_sec);
   Eci eci(sgp4.FindPosition(tm));
@@ -74,7 +76,7 @@ void Satellite::updatePosition(std::time_t time) {
     return;
   auto *tmptime = gmtime(&time);
   std::tm stime;
-  std::memcpy(tmptime, &stime, sizeof(std::tm));
+  std::memcpy(&stime, tmptime, sizeof(std::tm));
   calculate(stime);
   forwardTrajectory.calculate(time, *this);
   backTrajectory.calculate(time, *this);
