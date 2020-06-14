@@ -32,6 +32,7 @@ target_include_directories(sniffer PRIVATE
 )
 
 target_link_libraries(sniffer PRIVATE
+  ${OPENGL_LIBRARIES}
   ${GLEW_LIBRARIES}
   ${SDL2_LIBRARIES}
   ${SDL2_IMAGE_LIBRARIES}
