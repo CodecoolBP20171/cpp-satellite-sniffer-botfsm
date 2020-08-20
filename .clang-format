@@ -1,0 +1,21 @@
+Language: Cpp
+BasedOnStyle: LLVM
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 120
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:        '"pch.h"'
+    Priority:     -10
+  - Regex:        '".*\.(h|hpp|hh)"'
+    Priority:     1
+  - Regex:        '<(dlib/|opencv2/|nlohmann/|spdlog/|GL/|imgui|inference_engine|ie_iextension|ext_list).*\.(h|hpp|hh)>'
+    Priority:     3
+  - Regex:        '<.*\.(h|hpp|hh)>'
+    Priority:     2
+  - Regex:        '<.*>'
+    Priority:     4

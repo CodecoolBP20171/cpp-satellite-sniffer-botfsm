@@ -15,4 +15,4 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_gfx REQUIRED)
 
-add_subdirectory(src)
+add_subdirectory(old_src)

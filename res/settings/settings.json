@@ -1,0 +1,52 @@
+{
+  "Dimensions": {
+    "ORIGO_X": 0,
+    "ORIGO_Y": 0,
+    "MAP_WIDTH": 1024,
+    "MAP_HEIGHT": 512,
+    "MENU_HEIGHT": 100,
+    "MAP_TEXT_SIZE": 128,
+    "MENU_BUTTON_WIDTH": 200,
+    "MENU_BUTTON_HEIGHT": 70,
+    "MENU_BUTTON_SPACING": 15
+  },
+  "FontFiles": {
+    "MAP_TEXT": "monofonto.ttf"
+  },
+  "TextureFiles": {
+    "MAP": "map.png",
+    "STATION": "station.png",
+    "TELESCOPE": "telescope.png",
+    "GPS": "gps.png"
+  },
+  "DataFiles": {
+    "DATA_DIR": "satellites",
+    "LIST_FILE": "satellites.dat"
+  },
+  "SatelliteType": {
+    "STATION": "STATION",
+    "TELESCOPE": "TELESCOPE",
+    "GPS": "GPS"
+  },
+  "ButtonName": {
+    "SATELLITES": "SATELLITES",
+    "OK": "OK",
+    "EXIT": "EXIT"
+  },
+  "TrajectoryLimits": {
+    "MAX_POINTS": 100,
+    "MAX_DISTANCE": 0.4,
+    "DISTANCE_GAP": 0.05,
+    "RENDER_DISTANCE_GAP": 100
+  },
+  "TrajectoryRender": {
+    "LINE_WEIGHT": 16,
+    // SDL2_gfx is fcked we need ABGR: 0xAABBGGRR (something with the indians XD)
+    "FORWARD_COLOR": "0xDD19FCF4",
+    "BACKWARD_COLOR": "0xDD0A0066"
+  },
+  "ZoomLevel": {
+    "MAX": 3,
+    "MIN": 0
+  }
+}
