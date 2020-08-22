@@ -1,0 +1,2 @@
+- collect trajectory points (0-1 normalized positions, 0-1 normalized color)
+- collect normalized icon positions (4 corners, texture atlas position)

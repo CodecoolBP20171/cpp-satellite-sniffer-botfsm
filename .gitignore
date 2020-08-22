@@ -415,4 +415,5 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,cmake,visualstudio,visualstudiocode
 
-build/
+[Bb]uild/
+[Rr]untime/

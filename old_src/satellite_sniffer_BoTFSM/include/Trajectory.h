@@ -22,6 +22,7 @@ private:
 	Canvas texture;
 	Direction direction;
 	std::vector<CoordGeodetic> points;
+	std::vector<float> drawPoints; // coordinate pairs normalized to 0..1
 	double getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
 	void updateRect(int zoom);
 	void renderNewTexture(int zoom);
