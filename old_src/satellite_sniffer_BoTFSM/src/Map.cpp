@@ -6,15 +6,12 @@
 #include "stdafx.h"
 
 Map::Map(SDL_Rect rect, PState state, int &zoom)
-    : UIElement(rect, state), map(Resources::getInstance()->getMap()),
-      cleanMap(Resources::getInstance()->getCleanMap()), zoom(zoom) {
-  source = map->getDimensions();
-}
+    : UIElement(rect, state), source(Resources::getInstance()->mapDimensions), zoom(zoom) {}
 
 void Map::render() {
   auto res = Resources::getInstance();
-  res->zcx = (source.x + .5f * source.w) / res->getMapDimensions().w;
-  res->zcy = (source.y + .5f * source.h) / res->getMapDimensions().h;
+  res->zcx = (source.x + .5f * source.w) / res->mapDimensions.w;
+  res->zcy = (source.y + .5f * source.h) / res->mapDimensions.h;
 
   glViewport(0, 0, rect.w, rect.h);
 
@@ -46,34 +43,37 @@ bool Map::isClicked(const SDL_MouseButtonEvent e, PState &state) {
 }
 
 void Map::zoomIn(const SDL_MouseButtonEvent &e) {
+  auto res = Resources::getInstance();
   zoom++;
   source.x = e.x * source.w / rect.w + source.x;
   source.y = (e.y - Config::getIntOption("Dimensions", "MENU_HEIGHT")) * source.h / rect.h + source.y;
-  source.w = (map->getDimensions().w / std::pow(2, zoom));
-  source.h = (map->getDimensions().h / std::pow(2, zoom));
+  source.w = (res->mapDimensions.w / std::pow(2, zoom));
+  source.h = (res->mapDimensions.h / std::pow(2, zoom));
   source.x -= source.w / 2;
   source.y -= source.h / 2;
   clampToBorder();
 }
 
 void Map::zoomOut() {
+  auto res = Resources::getInstance();
   zoom--;
   source.x -= source.w / 2;
   source.y -= source.h / 2;
-  source.w = (map->getDimensions().w / std::pow(2, zoom));
-  source.h = (map->getDimensions().h / std::pow(2, zoom));
+  source.w = (res->mapDimensions.w / std::pow(2, zoom));
+  source.h = (res->mapDimensions.h / std::pow(2, zoom));
   clampToBorder();
 }
 
 void Map::clampToBorder() {
+  auto res = Resources::getInstance();
   if (source.x <= 0) {
     source.x = 0;
-  } else if (source.x + source.w > map->getDimensions().w) {
-    source.x = map->getDimensions().w - source.w;
+  } else if (source.x + source.w > res->mapDimensions.w) {
+    source.x = res->mapDimensions.w - source.w;
   }
   if (source.y <= 0) {
     source.y = 0;
-  } else if (source.y + source.h > map->getDimensions().h) {
-    source.y = map->getDimensions().h - source.h;
+  } else if (source.y + source.h > res->mapDimensions.h) {
+    source.y = res->mapDimensions.h - source.h;
   }
 }

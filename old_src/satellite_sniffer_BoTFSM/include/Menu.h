@@ -2,7 +2,6 @@
 #include <memory>
 #include <list>
 #include "UIElement.h"
-#include "Sprite.h"
 
 class Menu : public UIElement
 {

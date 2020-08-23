@@ -3,7 +3,6 @@
 #include <memory>
 #include <SDL.h>
 #include <CoordGeodetic.h>
-#include "Canvas.h"
 class Satellite;
 class Trajectory
 {
@@ -19,14 +18,11 @@ public:
 private:
 	bool isTextureValid;
 	SDL_Rect rect;
-	Canvas texture;
 	Direction direction;
 	std::vector<CoordGeodetic> points;
 	std::vector<float> drawPoints; // coordinate pairs normalized to 0..1
 	double getDistance(const CoordGeodetic & a, const CoordGeodetic & b);
-	void updateRect(int zoom);
 	void renderNewTexture(int zoom);
-	void renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, int zoom);
 	int lastZoom;
 };
 

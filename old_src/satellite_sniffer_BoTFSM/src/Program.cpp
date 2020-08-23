@@ -102,9 +102,8 @@ void Program::render() {
   ImGui_ImplSDL2_NewFrame(Resources::getInstance()->getWindow());
   ImGui::NewFrame();
 
-  SDL_GL_MakeCurrent(Resources::getInstance()->getWindow(), Resources::getInstance()->getGLContext());
-  SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
-  SDL_RenderClear(Resources::getInstance()->getRenderer());
+  glClearColor(50 / 255.f, 50 / 255.f, 50 / 255.f, 1.f);
+  glClear(GL_COLOR_BUFFER_BIT);
   for (auto &elem : UIElements) {
     if (elem->isActive(state)) { elem->render(); }
   }
@@ -113,7 +112,7 @@ void Program::render() {
   // ImGui::ShowMetricsWindow();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  SDL_RenderPresent(Resources::getInstance()->getRenderer());
+  SDL_GL_SwapWindow(Resources::getInstance()->getWindow());
 }
 
 bool Program::handleEvents() {

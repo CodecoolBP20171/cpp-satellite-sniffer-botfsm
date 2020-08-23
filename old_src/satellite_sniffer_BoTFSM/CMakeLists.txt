@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.16)
 set(SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 
 set(SNIFFER_SRC
-  ${SRC_DIR}/Canvas.cpp
   ${SRC_DIR}/Config.cpp
   ${SRC_DIR}/Map.cpp
   ${SRC_DIR}/Menu.cpp
@@ -12,9 +11,6 @@ set(SNIFFER_SRC
   ${SRC_DIR}/Resources.cpp
   ${SRC_DIR}/Satellite.cpp
   ${SRC_DIR}/Satellites.cpp
-  ${SRC_DIR}/ScreenText.cpp
-  ${SRC_DIR}/Sprite.cpp
-  ${SRC_DIR}/Texture.cpp
   ${SRC_DIR}/Trajectory.cpp
   ${SRC_DIR}/UIElement.cpp
   ${SRC_DIR}/UISatellite.cpp

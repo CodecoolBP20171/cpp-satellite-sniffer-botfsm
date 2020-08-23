@@ -1,6 +1,5 @@
 #pragma once
 #include "Satellites.h"
-#include "Sprite.h"
 #include "UIElement.h"
 
 #include <list>
@@ -13,8 +12,6 @@ public:
   void render() override;
 
 private:
-  std::shared_ptr<Sprite> map;
-  std::shared_ptr<Sprite> cleanMap;
   SDL_Rect source;
   int &zoom;
   void zoomOut();

@@ -30,17 +30,14 @@ void Trajectory::calculate(std::time_t time, Satellite &sat) {
 
 void Trajectory::render(int zoom) {
   if (!isTextureValid || lastZoom != zoom) {
-    // updateRect(zoom);
-    // texture.resize(rect.w, rect.h);
+    
   }
   renderNewTexture(zoom);
   isTextureValid = true;
   lastZoom = zoom;
-  // texture.render(&rect);
 }
 
 void Trajectory::renderNewTexture(int zoom) {
-  // texture.setAsRenderTarget();
   auto res = Resources::getInstance();
   float lastX = points[0].longitude / (MathConstants::PI * 2);
   res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
@@ -75,48 +72,10 @@ void Trajectory::renderNewTexture(int zoom) {
   res->trajectoryIndexBuf.emplace_back(-1);
 }
 
-void Trajectory::renderSegment(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, int zoom) {
-  x1 -= rect.x;
-  x2 -= rect.x;
-  y1 -= rect.y;
-  y2 -= rect.y;
-  Uint32 color(FORWARD == direction ? Config::getColorOption("TrajectoryRender", "FORWARD_COLOR")
-                                    : Config::getColorOption("TrajectoryRender", "BACKWARD_COLOR"));
-  thickLineColor(Resources::getInstance()->getRenderer(),
-                 x1,
-                 y1,
-                 x2,
-                 y2,
-                 Config::getIntOption("TrajectoryRender", "LINE_WEIGHT") / std::pow(2, zoom),
-                 color);
-}
-
 double Trajectory::getDistance(const CoordGeodetic &a, const CoordGeodetic &b) {
   double latDelta = a.latitude - b.latitude;
   double longDelta = a.longitude - b.longitude;
   double distGap = Config::getRealOption("TrajectoryLimits", "DISTANCE_GAP");
   if (abs(longDelta) > distGap) longDelta = distGap;
   return sqrt(pow(latDelta, 2) + pow(longDelta, 2));
-}
-
-void Trajectory::updateRect(int zoom) {
-  auto mapSize(Resources::getInstance()->getMapDimensions());
-  int minX{mapSize.w}, maxX{0}, minY{mapSize.h}, maxY{0};
-  for (int i = 0; i < points.size(); ++i) {
-    Sint16 pX(static_cast<Sint16>(round(points[i].longitude / (MathConstants::PI * 2) * mapSize.w)));
-    Sint16 pY(static_cast<Sint16>(round(points[i].latitude / (MathConstants::PI)*mapSize.h)));
-    if (pX < minX) minX = pX;
-    if (pY < minY) minY = pY;
-    if (pX > maxX) maxX = pX;
-    if (pY > maxY) maxY = pY;
-  }
-  int lineWeight = Config::getIntOption("TrajectoryRender", "LINE_WEIGHT") / std::pow(2, zoom);
-  rect.x = minX - lineWeight;
-  rect.y = minY - lineWeight;
-  rect.w = maxX - rect.x + 2 * lineWeight;
-  rect.h = maxY - rect.y + 2 * lineWeight;
-  if (rect.x < 2 * lineWeight) { rect.x = 0; }
-  if (rect.y < 2 * lineWeight) { rect.y = 0; }
-  if (rect.w > mapSize.w - 2 * lineWeight) { rect.w = mapSize.w; }
-  if (rect.h > mapSize.h - 2 * lineWeight) { rect.h = mapSize.h; }
 }

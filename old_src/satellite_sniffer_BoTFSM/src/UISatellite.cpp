@@ -9,37 +9,23 @@
 
 #include <list>
 
-int UISatellite::pos{0};
-
 UISatellite::UISatellite(Satellite &sat)
-    : UIElement({0, 0, 0, 0}, PState::RUNNING), sat(sat), texture(Resources::getInstance()->getSat(sat.getType())),
-      trajectoryForward(sat.getForwardTrajectory()), trajectoryBackward(sat.getBackTrajectory()),
-      text(new ScreenText(sat.getName())), popupText(new ScreenText(sat.getName())) {
-  rect = popupText->getDimensions();
-  double oldH(rect.h);
-  rect.h = Config::getIntOption("Dimensions", "POPUP_HEIGHT") / 10;
-  rect.w = static_cast<int>(rect.w * (rect.h / oldH));
-  rect.x =
-      Config::getIntOption("Dimensions", "POPUP_OFFSET_X") + Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING");
-  if (pos >= 10) { rect.x += Config::getIntOption("Dimensions", "POPUP_WIDTH") / 2; }
-  rect.y = Config::getIntOption("Dimensions", "POPUP_OFFSET_Y") + rect.h * (pos % 10);
-  text->setColor({0, 0, 0});
-  ++pos;
-}
+    : UIElement({0, 0, 0, 0}, PState::RUNNING), sat(sat), trajectoryForward(sat.getForwardTrajectory()),
+      trajectoryBackward(sat.getBackTrajectory()) {}
 
 void UISatellite::render(int zoom) {
   if (!sat.isShown()) return;
   renderTrajectory(zoom);
-  auto res = Resources::getInstance();
-  auto mapSize(res->getMapDimensions());
-  auto satSize(texture->getDimensions());
-  auto satpos(sat.getPosition());
+  auto res{Resources::getInstance()};
+  auto mapSize{res->mapDimensions};
+  auto satSize{res->iconDimensions};
+  auto satpos{sat.getPosition()};
   zoom = std::pow(2, zoom);
-  float cx = (satpos.longitude / (MathConstants::PI * 2) * mapSize.w) / mapSize.w;
-  float cy = (satpos.latitude / MathConstants::PI * mapSize.h) / mapSize.h;
-  float hw = satSize.w / (mapSize.w * 2.f * zoom);
-  float hh = satSize.h / (mapSize.h * 2.f * zoom);
-  auto start = res->iconBuffer.size();
+  float cx{static_cast<float>((satpos.longitude / (MathConstants::PI * 2) * mapSize.w) / mapSize.w)};
+  float cy{static_cast<float>((satpos.latitude / MathConstants::PI * mapSize.h) / mapSize.h)};
+  float hw{satSize.w / (mapSize.w * 2.f * zoom)};
+  float hh{satSize.h / (mapSize.h * 2.f * zoom)};
+  auto start{res->iconBuffer.size()};
   // TODO modify texture coords according to sat type
   res->iconBuffer.emplace_back(Resources::texture_vertex{cx - hw, cy + hh, 0.f, .25f});
   res->iconBuffer.emplace_back(Resources::texture_vertex{cx + hw, cy + hh, .25f, .25f});
