@@ -1,6 +1,7 @@
 #include "Satellites.h"
 
 #include "Config.h"
+#include "Resources.h"
 #include "stdafx.h"
 
 #include <LoadError.hpp>
@@ -29,7 +30,74 @@ void Satellites::updatePosition() {
 }
 
 void Satellites::renderUISatellits(int zoom) {
+  auto res = Resources::getInstance();
+  // TODO only do this if traj is recalcuklated or map zoomed
+  res->iconBuffer.clear();
+  res->trajectoryBuffer.clear();
+  res->iconIndexBuf.clear();
+  res->trajectoryIndexBuf.clear();
+
   for (auto &sat : UISats) { sat.render(zoom); }
+
+  // render trajectories
+  glBindBuffer(GL_ARRAY_BUFFER, res->trajectoryVBOId);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Resources::color_vertex) * res->trajectoryBuffer.size(),
+               res->trajectoryBuffer.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->trajectoryIBOId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               sizeof(GLuint) * res->trajectoryIndexBuf.size(),
+               res->trajectoryIndexBuf.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res->trajectoryProgramId);
+
+  // TODO save uniform location
+  glUniform2f(glGetUniformLocation(res->textureProgramId, "zoom_center"), res->zcx, res->zcy);
+  glUniform1f(glGetUniformLocation(res->textureProgramId, "zoom_level"), static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res->trajectoryVAOId);
+  glLineWidth(2.5f);
+  glDrawElements(GL_LINE_STRIP, res->trajectoryIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+
+  // render icons
+
+  glBindBuffer(GL_ARRAY_BUFFER, res->iconVBOId);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Resources::texture_vertex) * res->iconBuffer.size(),
+               res->iconBuffer.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->iconIBOId);
+  glBufferData(
+      GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * res->iconIndexBuf.size(), res->iconIndexBuf.data(), GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res->textureProgramId);
+  glBindTexture(GL_TEXTURE_2D, res->atlasTextureId);
+
+  // TODO save uniform location
+  glUniform1i(glGetUniformLocation(res->textureProgramId, "tex_sampl"), 0);
+  glUniform2f(glGetUniformLocation(res->textureProgramId, "zoom_center"), res->zcx, res->zcy);
+  glUniform1f(glGetUniformLocation(res->textureProgramId, "zoom_level"), static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res->iconVAOId);
+  glDrawElements(GL_TRIANGLES, res->iconIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+
+  GL_CHECK;
 }
 
 void Satellites::renderPopupSatellits() {
