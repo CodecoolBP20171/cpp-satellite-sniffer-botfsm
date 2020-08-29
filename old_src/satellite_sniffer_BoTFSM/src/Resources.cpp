@@ -70,10 +70,10 @@ Resources::Resources() {
     throw LoadError();
   }
 
-  // int glVersion[2] = {-1, -1};
-  // glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
-  // glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
-  // std::cout << "Running OpenGL " << glVersion[0] << "." << glVersion[1] << std::endl;
+   int glVersion[2] = {-1, -1};
+   glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
+   glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
+   std::cout << "Running OpenGL " << glVersion[0] << "." << glVersion[1] << std::endl;
 
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_PRIMITIVE_RESTART);

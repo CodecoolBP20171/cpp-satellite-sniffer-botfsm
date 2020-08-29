@@ -55,8 +55,8 @@ public:
   float zcx{.5f}, zcy{.5f};
   rgb_color trajectoryForwardColor;
   rgb_color trajectoryBackwardColor;
-  SDL_Rect mapDimensions;
-  SDL_Rect iconDimensions;
+  SDL_Rect mapDimensions{0,0,0,0};
+  SDL_Rect iconDimensions{0,0,0,0};
 
 private:
   static sptr<Resources> instance;

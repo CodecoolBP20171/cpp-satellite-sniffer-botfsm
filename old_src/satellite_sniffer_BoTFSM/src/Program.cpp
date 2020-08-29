@@ -113,6 +113,7 @@ void Program::render() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
   SDL_GL_SwapWindow(Resources::getInstance()->getWindow());
+  GL_CHECK;
 }
 
 bool Program::handleEvents() {
