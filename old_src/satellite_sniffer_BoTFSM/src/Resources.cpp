@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace std::literals::string_view_literals;
+
 namespace {
 static GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
   GLuint loadedShader = glCreateShader(_shaderType);
@@ -70,10 +72,10 @@ Resources::Resources() {
     throw LoadError();
   }
 
-   int glVersion[2] = {-1, -1};
-   glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
-   glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
-   std::cout << "Running OpenGL " << glVersion[0] << "." << glVersion[1] << std::endl;
+  int glVersion[2] = {-1, -1};
+  glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
+  glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
+  std::cout << "Running OpenGL " << glVersion[0] << "." << glVersion[1] << std::endl;
 
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_PRIMITIVE_RESTART);
@@ -159,7 +161,11 @@ void Resources::initAtlas() {
   for (int i = 0; i < ARRAY_SIZE; i++) {
     float xMin = N_INV * (i % N), xMax = xMin + N_INV, yMin = N_INV * (i / N), yMax = yMin + N_INV;
     atlasCoords.emplace(
-        std::make_pair<std::string, std::array<float, 8>>(NAMES[i], {xMin, yMax, xMax, yMax, xMin, yMin, xMax, yMin}));
+        std::make_pair<std::string_view, std::array<texture_vertex, 4>>(NAMES[i],
+                                                                        {texture_vertex{0.f, 0.f, xMin, yMax},
+                                                                         texture_vertex{0.f, 0.f, xMax, yMax},
+                                                                         texture_vertex{0.f, 0.f, xMin, yMin},
+                                                                         texture_vertex{0.f, 0.f, xMax, yMin}}));
   }
 }
 
@@ -312,4 +318,7 @@ bool Resources::GLErrors(const char *file, int line) {
   std::cerr << "OPENGL ERROR " << file << ":" << line << "\n"; // USE_COLOR_CODES
   std::cerr << msg << ": " << expl << std::endl;
   return false;
+}
+const std::array<Resources::texture_vertex, 4> &Resources::getIconTextureVertices(const std::string_view &iconName) {
+  return atlasCoords.at(iconName);
 }

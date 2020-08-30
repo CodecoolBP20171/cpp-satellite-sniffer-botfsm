@@ -31,7 +31,7 @@ void Satellites::updatePosition() {
 
 void Satellites::renderUISatellits(int zoom) {
   auto res = Resources::getInstance();
-  // TODO only do this if traj is recalcuklated or map zoomed
+  // TODO only do this if traj is recalculated or map zoomed
   res->iconBuffer.clear();
   res->trajectoryBuffer.clear();
   res->iconIndexBuf.clear();
@@ -57,9 +57,12 @@ void Satellites::renderUISatellits(int zoom) {
 
   glUseProgram(res->trajectoryProgramId);
 
-  // TODO save uniform location
-  glUniform2f(glGetUniformLocation(res->textureProgramId, "zoom_center"), res->zcx, res->zcy);
-  glUniform1f(glGetUniformLocation(res->textureProgramId, "zoom_level"), static_cast<float>(std::pow(2, zoom)));
+  // TODO move this to some other place
+  static auto line_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
+  static auto line_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+
+  glUniform2f(line_zcULoc, res->zcx, res->zcy);
+  glUniform1f(line_zlULoc, static_cast<float>(std::pow(2, zoom)));
 
   glBindVertexArray(res->trajectoryVAOId);
   glLineWidth(2.5f);
@@ -86,10 +89,14 @@ void Satellites::renderUISatellits(int zoom) {
   glUseProgram(res->textureProgramId);
   glBindTexture(GL_TEXTURE_2D, res->atlasTextureId);
 
-  // TODO save uniform location
-  glUniform1i(glGetUniformLocation(res->textureProgramId, "tex_sampl"), 0);
-  glUniform2f(glGetUniformLocation(res->textureProgramId, "zoom_center"), res->zcx, res->zcy);
-  glUniform1f(glGetUniformLocation(res->textureProgramId, "zoom_level"), static_cast<float>(std::pow(2, zoom)));
+  // TODO move this somewhere else
+  static auto icon_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
+  static auto icon_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
+  static auto icon_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+
+  glUniform1i(icon_tsULoc, 0);
+  glUniform2f(icon_zcULoc, res->zcx, res->zcy);
+  glUniform1f(icon_zlULoc, static_cast<float>(std::pow(2, zoom)));
 
   glBindVertexArray(res->iconVAOId);
   glDrawElements(GL_TRIANGLES, res->iconIndexBuf.size(), GL_UNSIGNED_INT, nullptr);

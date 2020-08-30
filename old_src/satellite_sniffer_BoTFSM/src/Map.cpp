@@ -17,10 +17,15 @@ void Map::render() {
 
   glUseProgram(res->textureProgramId);
   glBindTexture(GL_TEXTURE_2D, res->mapTextureId);
-  // TODO save uniform location
-  glUniform1i(glGetUniformLocation(res->textureProgramId, "tex_sampl"), 0);
-  glUniform2f(glGetUniformLocation(res->textureProgramId, "zoom_center"), res->zcx, res->zcy);
-  glUniform1f(glGetUniformLocation(res->textureProgramId, "zoom_level"), static_cast<float>(std::pow(2, zoom)));
+
+  //TODO move this some other place
+  static auto map_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
+  static auto map_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
+  static auto map_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+
+  glUniform1i(map_tsULoc, 0);
+  glUniform2f(map_zcULoc, res->zcx, res->zcy);
+  glUniform1f(map_zlULoc, static_cast<float>(std::pow(2, zoom)));
 
   glBindVertexArray(res->mapVAOId);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

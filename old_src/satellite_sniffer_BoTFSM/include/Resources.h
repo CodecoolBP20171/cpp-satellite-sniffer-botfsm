@@ -7,6 +7,7 @@
 
 #include <map>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 #define GL_CHECK Resources::GLErrors(__FILE__, __LINE__)
@@ -41,6 +42,7 @@ public:
 
   SDL_Window *getWindow();
   SDL_GLContext &getGLContext();
+  const std::array<texture_vertex, 4> &getIconTextureVertices(const std::string_view &iconName);
   GLuint textureProgramId;
   GLuint trajectoryProgramId;
   GLuint mapTextureId;
@@ -55,8 +57,8 @@ public:
   float zcx{.5f}, zcy{.5f};
   rgb_color trajectoryForwardColor;
   rgb_color trajectoryBackwardColor;
-  SDL_Rect mapDimensions{0,0,0,0};
-  SDL_Rect iconDimensions{0,0,0,0};
+  SDL_Rect mapDimensions{0, 0, 0, 0};
+  SDL_Rect iconDimensions{0, 0, 0, 0};
 
 private:
   static sptr<Resources> instance;
@@ -65,7 +67,7 @@ private:
   std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
   SDL_GLContext glContext;
 
-  std::map<std::string, std::array<float, 8>> atlasCoords;
+  std::map<std::string_view, std::array<texture_vertex, 4>> atlasCoords;
 
   void release();
 

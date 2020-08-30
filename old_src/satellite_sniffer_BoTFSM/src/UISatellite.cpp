@@ -26,11 +26,15 @@ void UISatellite::render(int zoom) {
   float hw{satSize.w / (mapSize.w * 2.f * zoom)};
   float hh{satSize.h / (mapSize.h * 2.f * zoom)};
   auto start{res->iconBuffer.size()};
-  // TODO modify texture coords according to sat type
-  res->iconBuffer.emplace_back(Resources::texture_vertex{cx - hw, cy + hh, 0.f, .25f});
-  res->iconBuffer.emplace_back(Resources::texture_vertex{cx + hw, cy + hh, .25f, .25f});
-  res->iconBuffer.emplace_back(Resources::texture_vertex{cx - hw, cy - hh, 0.f, 0.f});
-  res->iconBuffer.emplace_back(Resources::texture_vertex{cx + hw, cy - hh, .25f, 0.f});
+  const auto &textureVertices{res->getIconTextureVertices(sat.getType())};
+  res->iconBuffer.emplace_back(
+      Resources::texture_vertex{cx - hw, cy + hh, textureVertices[0].texx, textureVertices[0].texy});
+  res->iconBuffer.emplace_back(
+      Resources::texture_vertex{cx + hw, cy + hh, textureVertices[1].texx, textureVertices[1].texy});
+  res->iconBuffer.emplace_back(
+      Resources::texture_vertex{cx - hw, cy - hh, textureVertices[2].texx, textureVertices[2].texy});
+  res->iconBuffer.emplace_back(
+      Resources::texture_vertex{cx + hw, cy - hh, textureVertices[3].texx, textureVertices[3].texy});
   res->iconIndexBuf.emplace_back(start + 0);
   res->iconIndexBuf.emplace_back(start + 1);
   res->iconIndexBuf.emplace_back(start + 2);
