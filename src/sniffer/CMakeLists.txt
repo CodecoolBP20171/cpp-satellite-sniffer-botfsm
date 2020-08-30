@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(SNIFFER_SRC
-  Canvas.cpp
   Config.cpp
   Map.cpp
   Menu.cpp
@@ -10,9 +9,6 @@ set(SNIFFER_SRC
   Resources.cpp
   Satellite.cpp
   Satellites.cpp
-  ScreenText.cpp
-  Sprite.cpp
-  Texture.cpp
   Trajectory.cpp
   UIElement.cpp
   UISatellite.cpp

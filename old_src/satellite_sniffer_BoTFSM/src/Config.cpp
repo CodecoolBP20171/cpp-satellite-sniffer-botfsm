@@ -50,14 +50,6 @@ const SDL_Rect & Config::getRect(const std::string & name)
 
 void Config::loadConfig()
 {
-//    std::ifstream confFile("settings.json");
-//    std::string confCont;
-//    confFile.seekg(0,std::ios::end);
-//    confCont.reserve(confFile.tellg());
-//    confFile.seekg(0,std::ios::beg);
-//    confCont.assign(std::istreambuf_iterator<char>(confFile),std::istreambuf_iterator<char>());
-//    mConfig.Parse(confCont.c_str());
-
 	cppiniparser::INIConfig cfg = cppiniparser::INIParser::Read("settings.ini");
 	auto sections = cfg.Sections();
 	for (auto& section : sections) {

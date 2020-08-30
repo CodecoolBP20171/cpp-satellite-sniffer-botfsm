@@ -2,10 +2,11 @@
 
 #include "Config.h"
 #include "LoadError.hpp"
-#include "stdafx.h"
+#include "Resources.h"
 
 #include <imgui.h>
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -13,7 +14,7 @@
 
 std::shared_ptr<Satellites> Satellites::instance = nullptr;
 
-Satellites::Satellites() {
+Satellites::Satellites() : mConf(Config::getInstance()) {
   loadSatellites();
   for (auto &sat : sats) { UISats.emplace_back(sat); }
 }
@@ -28,7 +29,81 @@ void Satellites::updatePosition() {
 }
 
 void Satellites::renderUISatellits(int zoom) {
+  auto res = Resources::getInstance();
+  // TODO only do this if trajectory is recalculated or map zoomed
+  res->iconBuffer.clear();
+  res->trajectoryBuffer.clear();
+  res->iconIndexBuf.clear();
+  res->trajectoryIndexBuf.clear();
+
   for (auto &sat : UISats) { sat.render(zoom); }
+
+  // render trajectories
+  glBindBuffer(GL_ARRAY_BUFFER, res->trajectoryVBOId);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Graphics::color_vertex) * res->trajectoryBuffer.size(),
+               res->trajectoryBuffer.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->trajectoryIBOId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               sizeof(GLuint) * res->trajectoryIndexBuf.size(),
+               res->trajectoryIndexBuf.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res->trajectoryProgramId);
+
+  // TODO move this to some other place
+  static auto line_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
+  static auto line_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+
+  glUniform2f(line_zcULoc, res->zcx, res->zcy);
+  glUniform1f(line_zlULoc, static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res->trajectoryVAOId);
+  glLineWidth(2.5f);
+  glDrawElements(GL_LINE_STRIP, res->trajectoryIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+
+  // render icons
+
+  glBindBuffer(GL_ARRAY_BUFFER, res->iconVBOId);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Graphics::texture_vertex) * res->iconBuffer.size(),
+               res->iconBuffer.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->iconIBOId);
+  glBufferData(
+      GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * res->iconIndexBuf.size(), res->iconIndexBuf.data(), GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res->textureProgramId);
+  glBindTexture(GL_TEXTURE_2D, res->atlasTextureId);
+
+  // TODO move this somewhere else
+  static auto icon_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
+  static auto icon_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
+  static auto icon_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+
+  glUniform1i(icon_tsULoc, 0);
+  glUniform2f(icon_zcULoc, res->zcx, res->zcy);
+  glUniform1f(icon_zlULoc, static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res->iconVAOId);
+  glDrawElements(GL_TRIANGLES, res->iconIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+
+  GL_CHECK;
 }
 
 void Satellites::renderPopupSatellits() {
@@ -46,8 +121,8 @@ void Satellites::renderPopupSatellits() {
 }
 
 void Satellites::loadSatellites() {
-  std::ifstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" +
-                     Config::getStringOption("DataFiles", "LIST_FILE"));
+  std::ifstream file(std::filesystem::path(mConf.getStringValue("/DataFiles/DATA_DIR").data()) /
+                     mConf.getStringValue("/DataFiles/LIST_FILE").data());
   std::string line;
   while (std::getline(file, line)) {
     std::stringstream sat(line);
@@ -57,14 +132,14 @@ void Satellites::loadSatellites() {
     std::getline(sat, noradId, ';');
     std::getline(sat, type, ';');
     sat >> visible;
-    sats.push_back(Satellite{name, noradId, type, static_cast<bool>(visible)});
+    sats.emplace_back(Satellite{name, noradId, type, static_cast<bool>(visible)});
   }
   file.close();
 }
 
 void Satellites::saveSatelliteList() {
-  std::ofstream file(Config::getStringOption("DataFiles", "DATA_DIR") + "/" +
-                         Config::getStringOption("DataFiles", "LIST_FILE"),
+  std::ofstream file(std::filesystem::path(mConf.getStringValue("/DataFiles/DATA_DIR").data()) /
+                         mConf.getStringValue("/DataFiles/LIST_FILE").data(),
                      std::ios_base::trunc);
   for (auto &sat : sats) { file << sat.toString(); }
   file.close();

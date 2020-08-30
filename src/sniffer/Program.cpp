@@ -6,7 +6,6 @@
 #include "Popup.h"
 #include "Resources.h"
 #include "Satellites.h"
-#include "stdafx.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -18,9 +17,10 @@
 #include <imgui_impl_sdl.h>
 
 Program::Program()
-    : quit(false), loaded(false), timePassed(0), timestep(1000 / 30), // frame time length 1000 / 60
-      lastCalculationTime(0), calculationTimeStep(5000),              // 5 sec
-      zoom(Config::getIntOption("ZoomLevel", "MIN")), state(PState::RUNNING) {}
+    : mConf(Config::getInstance()), quit(false), loaded(false), timePassed(0),
+      timestep(1000 / 30),                               // frame time length 1000 / 60
+      lastCalculationTime(0), calculationTimeStep(5000), // 5 sec
+      zoom(mConf.getIntValue("/ZoomLevel/MIN")), state(PState::RUNNING) {}
 
 Program::~Program() {
   if (loaded) unload();
@@ -45,9 +45,9 @@ void Program::init() {
   Resources::getInstance();
   Satellites::getInstance();
 
-  UIElements.emplace_back(std::make_unique<Map>(Config::getRect("MAP"), PState::RUNNING, zoom));
-  UIElements.emplace_back(std::make_unique<Menu>(Config::getRect("MENU"), PState::RUNNING, state));
-  UIElements.emplace_back(std::make_unique<Popup>(Config::getRect("POPUP"), PState::PAUSED, state));
+  UIElements.emplace_back(std::make_unique<Map>(mConf.getRect("MAP"), PState::RUNNING, zoom));
+  UIElements.emplace_back(std::make_unique<Menu>(mConf.getRect("MENU"), PState::RUNNING, state));
+  UIElements.emplace_back(std::make_unique<Popup>(mConf.getRect("POPUP"), PState::PAUSED, state));
 
   IMGUI_CHECKVERSION();
   ig_context = ImGui::CreateContext();
@@ -102,9 +102,8 @@ void Program::render() {
   ImGui_ImplSDL2_NewFrame(Resources::getInstance()->getWindow());
   ImGui::NewFrame();
 
-  SDL_GL_MakeCurrent(Resources::getInstance()->getWindow(), Resources::getInstance()->getGLContext());
-  SDL_SetRenderDrawColor(Resources::getInstance()->getRenderer(), 50, 50, 50, 255);
-  SDL_RenderClear(Resources::getInstance()->getRenderer());
+  glClearColor(50 / 255.f, 50 / 255.f, 50 / 255.f, 1.f);
+  glClear(GL_COLOR_BUFFER_BIT);
   for (auto &elem : UIElements) {
     if (elem->isActive(state)) { elem->render(); }
   }
@@ -113,7 +112,8 @@ void Program::render() {
   // ImGui::ShowMetricsWindow();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  SDL_RenderPresent(Resources::getInstance()->getRenderer());
+  SDL_GL_SwapWindow(Resources::getInstance()->getWindow());
+  GL_CHECK;
 }
 
 bool Program::handleEvents() {

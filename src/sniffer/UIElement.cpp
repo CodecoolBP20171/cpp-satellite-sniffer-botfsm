@@ -1,25 +1,15 @@
-#include "stdafx.h"
 #include "UIElement.h"
 
+UIElement::UIElement(SDL_Rect rect, PState state)
+    : mRect(rect), mActiveState(state), mPoint{0, 0}, mConf(Config::getInstance()) {}
 
-UIElement::UIElement(SDL_Rect rect, PState state) 
-	: rect(rect), activeState(state), point{0,0}
-{
+UIElement::~UIElement() {}
+
+bool UIElement::isClicked(const SDL_MouseButtonEvent e, PState &state) {
+  // could use SDL_PointInRect
+  mPoint.x = e.x;
+  mPoint.y = e.y;
+  return SDL_PointInRect(&mPoint, &mRect);
 }
 
-
-UIElement::~UIElement()
-{
-}
-
-bool UIElement::isClicked(const SDL_MouseButtonEvent e, PState& state)
-{
-	// could use SDL_PointInRect
-	point.x = e.x; point.y = e.y;
-	return SDL_PointInRect(&point, &rect);
-}
-
-bool UIElement::isActive(const PState & state) const
-{
-	return activeState == state;
-}
+bool UIElement::isActive(const PState &state) const { return mActiveState == state; }

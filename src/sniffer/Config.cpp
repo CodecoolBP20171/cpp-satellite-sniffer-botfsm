@@ -1,129 +1,68 @@
 #include "Config.h"
 
-#include "stdafx.h"
-
-#include <rapidjson/document.h>
 #include <rapidjson/pointer.h>
 
+#include <exception>
 #include <fstream>
 #include <streambuf>
 #include <string>
-#include <vector>
 
-rapidjson::Document Config::mConfig = rapidjson::Document();
-Config::configMap Config::config = Config::configMap();
-std::map<std::string, SDL_Rect> Config::rectMap = std::map<std::string, SDL_Rect>();
-bool Config::loaded = false;
-
-int Config::getIntOption(const std::string &section, const std::string &option) {
-  if (!loaded) Config::loadConfig();
-  auto opt = Config::config[section][option];
-  if (opt.type && opt.type == ConfigValue::CVT_INT) return opt.ival;
-  return 0;
+const SDL_Rect &Config::getRect(const std::string_view &name) {
+  if (rects.find(name) != rects.end()) { return rects.at(name); }
+  throw std::runtime_error(std::string("No rect found with name: ") + name.data());
 }
 
-double Config::getRealOption(const std::string &section, const std::string &option) {
-  if (!loaded) Config::loadConfig();
-  auto opt = Config::config[section][option];
-  if (opt.type && opt.type == ConfigValue::CVT_REAL) return opt.rval;
-  return 0.0;
-}
-
-Uint32 Config::getColorOption(const std::string &section, const std::string &option) {
-  if (!loaded) Config::loadConfig();
-  auto opt = Config::config[section][option];
-  if (opt.type && opt.type == ConfigValue::CVT_COLOR) return opt.cval;
-  return Uint32();
-}
-
-std::string Config::getStringOption(const std::string &section, const std::string &option) {
-  if (!loaded) Config::loadConfig();
-  auto opt = Config::config[section][option];
-  if (opt.type && opt.type == ConfigValue::CVT_STRING) return opt.sval;
-  return std::string();
-}
-
-const SDL_Rect &Config::getRect(const std::string &name) { return rectMap[name]; }
-
-void Config::loadConfig() {
+Config::Config() {
   std::ifstream confFile("settings.json");
   std::string confCont;
   confFile.seekg(0, std::ios::end);
   confCont.reserve(confFile.tellg());
   confFile.seekg(0, std::ios::beg);
   confCont.assign(std::istreambuf_iterator<char>(confFile), std::istreambuf_iterator<char>());
-  Config::mConfig.Parse(confCont.c_str());
-
-  Config::loaded = true;
+  mConfig.Parse(confCont.c_str());
+  // TODO fill Dimensions object
+  // TODO create rects
 }
 
-Config::Config() {}
-
-Config::ConfigValue::ConfigValue(const std::string &value) : type(CVT_UNKNOWN), ival(0), rval(0.0) {
-  if (value.empty()) return;
-  sval = value;
-  type = CVT_STRING;
-  if (sval.substr(0, 2) == "0x") {
-    cval = stoul(value, 0, 16);
-    type = CVT_COLOR;
-    return;
-  }
-  try {
-    rval = stod(value);
-    type = CVT_REAL;
-    if (value.find('.') != std::string::npos) return;
-    ival = stoi(value);
-    type = CVT_INT;
-  } catch (...) { return; }
+Config &Config::getInstance() {
+  static Config instance;
+  return instance;
 }
 
-Config::ConfigValue Config::ConfigValue::operator+(const ConfigValue &right) {
-  ConfigValue res(*this);
-  if (type == right.type) {
-    switch (type) {
-    case ConfigValue::CVT_INT:
-      res.ival += right.ival;
-      break;
-    case ConfigValue::CVT_REAL:
-      res.rval += right.rval;
-      break;
-    default:
-      return ConfigValue();
-    }
-    return res;
-  }
-  return ConfigValue();
+int Config::getIntValue(const std::string_view &path) {
+  auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
+  if (val->IsInt()) { return val->GetInt(); }
+  throw std::runtime_error(std::string("No integer value at path: ") + path.data());
 }
 
-Config::ConfigValue Config::ConfigValue::operator-(const ConfigValue &right) {
-  ConfigValue res(*this);
-  if (type == right.type) {
-    switch (type) {
-    case ConfigValue::CVT_INT:
-      res.ival -= right.ival;
-      break;
-    case ConfigValue::CVT_REAL:
-      res.rval -= right.rval;
-      break;
-    default:
-      return ConfigValue();
-    }
-    return res;
-  }
-  return ConfigValue();
+double Config::getRealValue(const std::string_view &path) {
+  auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
+  if (val->IsDouble()) { return val->GetDouble(); }
+  throw std::runtime_error(std::string("No floating point value at path: ") + path.data());
 }
 
-Config::ConfigValue Config::ConfigValue::operator/(const int &right) {
-  ConfigValue res(*this);
-  switch (type) {
-  case ConfigValue::CVT_INT:
-    res.ival /= right;
-    break;
-  case ConfigValue::CVT_REAL:
-    res.rval /= right;
-    break;
-  default:
-    return ConfigValue();
+const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) {
+  if (colors.find(path) != colors.end()) { return colors.at(path); }
+  auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
+  if (val->IsString() && val->GetStringLength() == 8) {
+    std::string_view strVal{val->GetString()};
+    auto R{strVal.substr(0, 2)};
+    auto G{strVal.substr(2, 2)};
+    auto B{strVal.substr(4, 2)};
+    auto A{strVal.substr(6, 2)};
+    try {
+      auto r{std::stoi(R.data(), nullptr, 16)};
+      auto g{std::stoi(G.data(), nullptr, 16)};
+      auto b{std::stoi(B.data(), nullptr, 16)};
+      auto a{std::stoi(A.data(), nullptr, 16)};
+      colors[path] = Graphics::rgba_color{r / 255.f, g / 255.f, b / 255.f, a / 255.f};
+    } catch (std::exception &) { throw std::runtime_error(std::string("Color parsing error at path: ") + path.data()); }
   }
-  return res;
+  throw std::runtime_error(std::string("No color value at path: ") + path.data());
+}
+
+const std::string_view &Config::getStringValue(const std::string_view &path) {
+  auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
+  if (val->IsString()) { return val->GetString(); }
+  throw std::runtime_error(std::string("No string value at path: ") + path.data());
 }

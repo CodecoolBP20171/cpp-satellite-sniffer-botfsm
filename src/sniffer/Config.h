@@ -1,37 +1,27 @@
 #pragma once
+
+#include "types.h"
+
 #include <SDL.h>
-#include <rapidjson/fwd.h>
+#include <rapidjson/document.h>
 
 #include <map>
 #include <memory>
 #include <string>
+#include <string_view>
 
 class Config {
 public:
-  static rapidjson::Document mConfig;
-  static int getIntOption(const std::string &section, const std::string &option);
-  static double getRealOption(const std::string &section, const std::string &option);
-  static Uint32 getColorOption(const std::string &section, const std::string &option);
-  static std::string getStringOption(const std::string &section, const std::string &option);
-  static const SDL_Rect &getRect(const std::string &name);
+  static Config &getInstance();
+  rapidjson::Document mConfig;
+  int getIntValue(const std::string_view &path);
+  double getRealValue(const std::string_view &path);
+  const Graphics::rgba_color &getColorValue(const std::string_view &path);
+  const std::string_view &getStringValue(const std::string_view &path);
+  const SDL_Rect &getRect(const std::string_view &name);
 
 private:
-  struct ConfigValue {
-    enum ValueType { CVT_UNKNOWN = 0, CVT_INT, CVT_REAL, CVT_COLOR, CVT_STRING };
-    ValueType type;
-    int ival;
-    double rval;
-    Uint32 cval;
-    std::string sval;
-    ConfigValue(const std::string &value = "");
-    ConfigValue operator+(const ConfigValue &right);
-    ConfigValue operator-(const ConfigValue &right);
-    ConfigValue operator/(const int &right);
-  };
-  using configMap = std::map<std::string, std::map<std::string, ConfigValue>>;
-  static configMap config;
-  static std::map<std::string, SDL_Rect> rectMap;
-  static bool loaded;
-  static void loadConfig();
+  std::map<std::string_view, SDL_Rect> rects;
+  std::map<std::string_view, Graphics::rgba_color> colors;
   Config();
 };

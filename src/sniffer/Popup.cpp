@@ -4,7 +4,6 @@
 #include "Globals.h"
 #include "Resources.h"
 #include "Satellites.h"
-#include "stdafx.h"
 
 #include <imgui.h>
 
@@ -13,11 +12,11 @@ Popup::Popup(SDL_Rect rect, PState state, PState &programState) : UIElement(rect
 bool Popup::isClicked(const SDL_MouseButtonEvent e, PState &state) { return false; }
 
 void Popup::render() {
-  ImGui::SetNextWindowPos(ImVec2(Config::getIntOption("Dimensions", "POPUP_OFFSET_X"),
-                                 Config::getIntOption("Dimensions", "POPUP_OFFSET_Y")),
-                          ImGuiCond_Once);
+  ImGui::SetNextWindowPos(
+      ImVec2(mConf.getIntValue("/Dimensions/POPUP_OFFSET_X"), mConf.getIntValue("/Dimensions/POPUP_OFFSET_Y")),
+      ImGuiCond_Once);
   ImGui::SetNextWindowSize(
-      ImVec2(Config::getIntOption("Dimensions", "POPUP_WIDTH"), Config::getIntOption("Dimensions", "POPUP_HEIGHT")),
+      ImVec2(mConf.getIntValue("/Dimensions/POPUP_WIDTH"), mConf.getIntValue("/Dimensions/POPUP_HEIGHT")),
       ImGuiCond_Once);
   if (ImGui::Begin("Choose which satellites to show.",
                    nullptr,
@@ -26,15 +25,14 @@ void Popup::render() {
     Satellites::getInstance()->renderPopupSatellits();
     ImGui::Columns(1);
 
-    ImGui::Dummy(ImVec2(0, Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING")));
+    ImGui::Dummy(ImVec2(0, mConf.getIntValue("/Dimensions/MENU_BUTTON_SPACING")));
     ImGui::Dummy(ImVec2(0, 0));
-    ImGui::SameLine(ImGui::GetWindowContentRegionMax().x -
-                    (Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") / 2) -
-                    Config::getIntOption("Dimensions", "MENU_BUTTON_SPACING"));
+    ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - (mConf.getIntValue("/Dimensions/MENU_BUTTON_WIDTH") / 2) -
+                    mConf.getIntValue("/Dimensions/MENU_BUTTON_SPACING"));
 
     if (ImGui::Button("OK##popup_ok",
-                      ImVec2(Config::getIntOption("Dimensions", "MENU_BUTTON_WIDTH") / 2,
-                             Config::getIntOption("Dimensions", "MENU_BUTTON_HEIGHT") / 2))) {
+                      ImVec2(mConf.getIntValue("/Dimensions/MENU_BUTTON_WIDTH") / 2,
+                             mConf.getIntValue("/Dimensions/MENU_BUTTON_HEIGHT") / 2))) {
       Satellites::getInstance()->saveSatelliteList();
       state = PState::RUNNING;
     }

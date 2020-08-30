@@ -1,49 +1,70 @@
 #pragma once
-#include <memory>
+
+#include "Config.h"
+#include "types.h"
+
 #include <SDL.h>
 #include <SDL_ttf.h>
+
+#include <GL/glew.h>
+
 #include <map>
-#include "Sprite.h"
+#include <memory>
+#include <string_view>
+#include <vector>
 
-template<typename T>
-using sptr = std::shared_ptr<T>;
+#define GL_CHECK Resources::GLErrors(__FILE__, __LINE__)
+
+template <typename T> using sptr = std::shared_ptr<T>;
 struct sdl_deleter {
-    void operator()(SDL_Window* p) const { SDL_DestroyWindow(p); }
+  void operator()(SDL_Window *p) const { SDL_DestroyWindow(p); }
 
-    void operator()(SDL_Renderer* p) const { SDL_DestroyRenderer(p); }
+  void operator()(SDL_Renderer *p) const { SDL_DestroyRenderer(p); } // not needed anymore
 
-    void operator()(SDL_Texture* p) const { SDL_DestroyTexture(p); }
+  void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
 
-    void operator()(TTF_Font* p) const { TTF_CloseFont(p); }
+  void operator()(TTF_Font *p) const { TTF_CloseFont(p); }
 };
 class Resources {
 public:
-    static sptr<Resources>& getInstance();
-    static void releaseResources();
-    TTF_Font* getFont();
-    sptr<Sprite>& getMap();
-    sptr<Sprite>& getCleanMap();
-    SDL_Rect getMapDimensions();
-    sptr<Sprite>& getSat(std::string& type);
+  static bool GLErrors(const char *file, int line);
+  static sptr<Resources> &getInstance();
+  static void releaseResources();
+  TTF_Font *getFont();
 
-    SDL_Window* getWindow();
-    SDL_Renderer* getRenderer();
-    SDL_GLContext& getGLContext();
-    void resetRenderer();
+  SDL_Window *getWindow();
+  SDL_GLContext &getGLContext();
+  const std::array<Graphics::texture_vertex, 4> &getIconTextureVertices(const std::string_view &iconName);
+  GLuint textureProgramId;
+  GLuint trajectoryProgramId;
+  GLuint mapTextureId;
+  GLuint atlasTextureId;
+  GLuint mapVBOId, mapVAOId, mapIBOId;
+  GLuint iconVBOId, iconVAOId, iconIBOId;
+  GLuint trajectoryVBOId, trajectoryVAOId, trajectoryIBOId;
+  std::vector<Graphics::texture_vertex> iconBuffer;
+  std::vector<GLuint> iconIndexBuf;
+  std::vector<Graphics::color_vertex> trajectoryBuffer;
+  std::vector<GLuint> trajectoryIndexBuf;
+  float zcx{.5f}, zcy{.5f};
+  SDL_Rect mapDimensions{0, 0, 0, 0};
+  SDL_Rect iconDimensions{0, 0, 0, 0};
+
 private:
-    static sptr<Resources> instance;
+  static sptr<Resources> instance;
 
-    std::unique_ptr<SDL_Window, sdl_deleter> window;
-    std::unique_ptr<SDL_Renderer, sdl_deleter> renderer;
-    std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
-    SDL_GLContext glContext;
+  Config &mConf;
+  std::unique_ptr<SDL_Window, sdl_deleter> window;
+  std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
+  SDL_GLContext glContext;
 
-    sptr<Sprite> map;
-    sptr<Sprite> cleanMap;
-    std::map<std::string, sptr<Sprite>> sats;
+  std::map<std::string_view, std::array<Graphics::texture_vertex, 4>> atlasCoords;
 
-    void release();
+  void release();
 
-    Resources();
-    void loadTextures();
+  Resources();
+  void loadTextures();
+  void initAtlas();
+  void loadShaders();
+  void initBuffers();
 };

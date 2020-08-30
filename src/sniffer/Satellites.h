@@ -1,4 +1,5 @@
 #pragma once
+#include "Config.h"
 #include "Satellite.h"
 #include "UISatellite.h"
 
@@ -17,6 +18,7 @@ public:
 
 private:
   static sptr<Satellites> instance;
+  Config &mConf;
   void loadSatellites();
   Satellites();
   std::vector<Satellite> sats;

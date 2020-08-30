@@ -17,7 +17,8 @@
     "MAP": "map.png",
     "STATION": "station.png",
     "TELESCOPE": "telescope.png",
-    "GPS": "gps.png"
+    "GPS": "gps.png",
+    "ATLAS": "icons.png"
   },
   "DataFiles": {
     "DATA_DIR": "satellites",
@@ -40,10 +41,9 @@
     "RENDER_DISTANCE_GAP": 100
   },
   "TrajectoryRender": {
-    "LINE_WEIGHT": 16,
-    // SDL2_gfx is fcked we need ABGR: 0xAABBGGRR (something with the indians XD)
-    "FORWARD_COLOR": "0xDD19FCF4",
-    "BACKWARD_COLOR": "0xDD0A0066"
+    "LINE_WEIGHT": 2.5,
+    "FORWARD_COLOR": "F4FC19DD",
+    "BACKWARD_COLOR": "66000ADD"
   },
   "ZoomLevel": {
     "MAX": 3,
