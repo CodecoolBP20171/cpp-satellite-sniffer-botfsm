@@ -1,8 +1,8 @@
 Language: Cpp
 BasedOnStyle: LLVM
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: Always
 AllowShortLoopsOnASingleLine: true
 BinPackArguments: false
 BinPackParameters: false

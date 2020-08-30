@@ -38,7 +38,7 @@
     "MAX_POINTS": 100,
     "MAX_DISTANCE": 0.4,
     "DISTANCE_GAP": 0.05,
-    "RENDER_DISTANCE_GAP": 100
+    "RENDER_DISTANCE_GAP": 0.1
   },
   "TrajectoryRender": {
     "LINE_WEIGHT": 2.5,
@@ -46,7 +46,7 @@
     "BACKWARD_COLOR": "66000ADD"
   },
   "ZoomLevel": {
-    "MAX": 3,
+    "MAX": 5,
     "MIN": 0
   }
 }

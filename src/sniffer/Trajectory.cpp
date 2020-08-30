@@ -14,7 +14,7 @@ void Trajectory::calculate(std::time_t time, Satellite &sat) {
   int cntr(0);
   double fullDistance(0.0);
   static const double MAX_DISTANCE = mConf.getRealValue("/TrajectoryLimits/MAX_DISTANCE");
-  static const int MAX_POINTS = mConf.getRealValue("/TrajectoryLimits/MAX_POINTS");
+  static const int MAX_POINTS = mConf.getIntValue("/TrajectoryLimits/MAX_POINTS");
 
   do {
     points.emplace_back(sat.getPositionAtTime(time));
@@ -35,10 +35,12 @@ void Trajectory::render(int zoom) {
 
 void Trajectory::renderNewTexture(int zoom) {
   auto res = Resources::getInstance();
+  auto [R, G, B, A]{mConf.getColorValue(direction == Direction::FORWARD ? "/TrajectoryRender/FORWARD_COLOR"
+                                                                        : "/TrajectoryRender/BACKWARD_COLOR")};
   float lastX = points[0].longitude / (MathConstants::PI * 2);
   res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
   res->trajectoryBuffer.emplace_back(
-      Graphics::color_vertex{lastX, static_cast<float>(points[0].latitude / MathConstants::PI), 1.f, 1.f, 0.f});
+      Graphics::color_vertex{lastX, static_cast<float>(points[0].latitude / MathConstants::PI), R, G, B});
   for (int i = 1; i < points.size(); ++i) {
     float x(points[i].longitude / (MathConstants::PI * 2));
     float y(points[i].latitude / MathConstants::PI);
@@ -47,21 +49,18 @@ void Trajectory::renderNewTexture(int zoom) {
       if (x > lastX) {
         x = 0.f;
         res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
-        // TODO set color depending on forward/backward trajectory
-        res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, 1.f, 1.f, 0.f});
+        res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, R, G, B});
         x = 1.f;
       } else {
         x = 1.f;
         res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
-        // TODO set color depending on forward/backward trajectory
-        res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, 1.f, 1.f, 0.f});
+        res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, R, G, B});
         x = 0.f;
       }
       res->trajectoryIndexBuf.emplace_back(-1);
     }
     res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
-    // TODO set color depending on forward/backward trajectory
-    res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, 1.f, 1.f, 0.f});
+    res->trajectoryBuffer.emplace_back(Graphics::color_vertex{x, y, R, G, B});
 
     lastX = x;
   }
