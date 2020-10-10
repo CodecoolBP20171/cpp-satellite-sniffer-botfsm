@@ -192,7 +192,8 @@ void Resources::initBuffers() {
 
   // map buffers
 
-  Graphics::texture_vertex verticies[] = {{0.f, 1.f, 0.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {1.f, 0.f, 1.f, 0.f}};
+  Graphics::texture_vertex verticies[] = {
+      {0.f, 1.f, 0.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {1.f, 0.f, 1.f, 0.f}};
   GLuint indices[] = {0, 1, 2, 2, 1, 3};
 
   glGenVertexArrays(1, &mapVAOId);

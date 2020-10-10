@@ -1,8 +1,7 @@
 #pragma once
 
-enum class PState
-{
-	RUNNING,
-	PAUSED,
-	QUIT
+enum class PState {
+  RUNNING,
+  PAUSED,
+  QUIT,
 };

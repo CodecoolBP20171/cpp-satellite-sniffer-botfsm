@@ -1,5 +1,5 @@
 #pragma once
 
 namespace MathConstants {
-	const double PI = acos(-1);
+const double PI = acos(-1);
 }
