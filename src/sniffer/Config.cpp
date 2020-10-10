@@ -41,7 +41,8 @@ void Config::LoadSettingsFile() {
   confCont.reserve(confFile.tellg());
   confFile.seekg(0, std::ios::beg);
   confCont.assign(std::istreambuf_iterator<char>(confFile), std::istreambuf_iterator<char>());
-  const auto flags{rapidjson::kParseDefaultFlags | rapidjson::kParseCommentsFlag | rapidjson::kParseTrailingCommasFlag};
+  const auto flags{rapidjson::kParseDefaultFlags | rapidjson::kParseCommentsFlag | // NOLINT(hicpp-signed-bitwise)
+                   rapidjson::kParseTrailingCommasFlag};                           // NOLINT(hicpp-signed-bitwise)
   mConfig.Parse<flags>(confCont.c_str());
 }
 
@@ -100,7 +101,10 @@ const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) 
     if (rr.ec != ok || gr.ec != ok || br.ec != ok || ar.ec != ok) {
       throw std::runtime_error(std::string("Color parsing error at path: ") + path.data());
     }
-    colors[path] = Graphics::rgba_color{r / 255.f, g / 255.f, b / 255.f, a / 255.f};
+    colors[path] = Graphics::rgba_color{static_cast<float>(r) / 255.f,
+                                        static_cast<float>(g) / 255.f,
+                                        static_cast<float>(b) / 255.f,
+                                        static_cast<float>(a) / 255.f};
     return colors[path];
   }
   throw std::runtime_error(std::string("No color value at path: ") + path.data());

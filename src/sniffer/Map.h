@@ -8,7 +8,7 @@
 class Map : public UIElement {
 public:
   Map(SDL_Rect rect, PState state, int &zoom);
-  bool isClicked(const SDL_MouseButtonEvent e, PState &state) override;
+  bool isClicked(const SDL_MouseButtonEvent &e, PState &state) override;
   void render() override;
 
 private:

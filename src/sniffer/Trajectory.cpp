@@ -33,17 +33,17 @@ void Trajectory::render(int zoom) {
   lastZoom = zoom;
 }
 
-void Trajectory::renderNewTexture(int zoom) {
+void Trajectory::renderNewTexture([[maybe_unused]] int zoom) {
   auto res = Resources::getInstance();
   auto [R, G, B, A]{mConf.getColorValue(direction == Direction::FORWARD ? "/TrajectoryRender/FORWARD_COLOR"
                                                                         : "/TrajectoryRender/BACKWARD_COLOR")};
-  float lastX = points[0].longitude / (MathConstants::PI * 2);
+  auto lastX{static_cast<float>(points[0].longitude / (MathConstants::PI * 2))};
   res->trajectoryIndexBuf.emplace_back(res->trajectoryBuffer.size());
   res->trajectoryBuffer.emplace_back(
       Graphics::color_vertex{lastX, static_cast<float>(points[0].latitude / MathConstants::PI), R, G, B});
   for (int i = 1; i < points.size(); ++i) {
-    float x(points[i].longitude / (MathConstants::PI * 2));
-    float y(points[i].latitude / MathConstants::PI);
+    auto x{static_cast<float>(points[i].longitude / (MathConstants::PI * 2))};
+    auto y{static_cast<float>(points[i].latitude / MathConstants::PI)};
     float delta = abs(x - lastX);
     if (delta > mConf.getRealValue("/TrajectoryLimits/RENDER_DISTANCE_GAP")) {
       if (x > lastX) {

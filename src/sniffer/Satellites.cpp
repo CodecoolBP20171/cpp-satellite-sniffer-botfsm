@@ -10,7 +10,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
 
 std::shared_ptr<Satellites> Satellites::instance = nullptr;
 
@@ -28,7 +27,7 @@ void Satellites::updatePosition() {
   for (auto &sat : sats) { sat.updatePosition(); }
 }
 
-void Satellites::renderUISatellits(int zoom) {
+void Satellites::renderUISatellites(int zoom) {
   auto res = Resources::getInstance();
   // TODO only do this if trajectory is recalculated or map zoomed
   res->iconBuffer.clear();
@@ -57,8 +56,8 @@ void Satellites::renderUISatellits(int zoom) {
   glUseProgram(res->trajectoryProgramId);
 
   // TODO move this to some other place
-  static auto line_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
-  static auto line_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+  static auto line_zcULoc{glGetUniformLocation(res->trajectoryProgramId, "zoom_center")};
+  static auto line_zlULoc{glGetUniformLocation(res->trajectoryProgramId, "zoom_level")};
 
   glUniform2f(line_zcULoc, res->zcx, res->zcy);
   glUniform1f(line_zlULoc, static_cast<float>(std::pow(2, zoom)));
@@ -106,8 +105,8 @@ void Satellites::renderUISatellits(int zoom) {
   GL_CHECK;
 }
 
-void Satellites::renderPopupSatellits() {
-  static int height = sats.size() / 3 + 1;
+void Satellites::renderPopupSatellites() {
+  static auto height{sats.size() / 3 + 1};
   int cnt = 0;
   for (auto &sat : sats) {
     if (ImGui::Selectable(sat.getName().c_str(), sat.isShown())) { sat.toggleShown(); }
@@ -132,7 +131,7 @@ void Satellites::loadSatellites() {
     std::getline(sat, noradId, ';');
     std::getline(sat, type, ';');
     sat >> visible;
-    sats.emplace_back(Satellite{name, noradId, type, static_cast<bool>(visible)});
+    sats.emplace_back(Satellite{std::move(name), std::move(noradId), std::move(type), static_cast<bool>(visible)});
   }
   file.close();
 }

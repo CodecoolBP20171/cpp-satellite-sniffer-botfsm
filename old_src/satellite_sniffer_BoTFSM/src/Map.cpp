@@ -13,12 +13,12 @@ void Map::render() {
   res->zcx = (source.x + .5f * source.w) / res->mapDimensions.w;
   res->zcy = (source.y + .5f * source.h) / res->mapDimensions.h;
 
-  glViewport(0, 0, rect.w, rect.h);
+  glViewport(0, 0, mRect.w, mRect.h);
 
   glUseProgram(res->textureProgramId);
   glBindTexture(GL_TEXTURE_2D, res->mapTextureId);
 
-  //TODO move this some other place
+  // TODO move this some other place
   static auto map_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
   static auto map_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
   static auto map_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};

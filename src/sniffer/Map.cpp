@@ -1,7 +1,6 @@
 #include "Map.h"
 
 #include "Config.h"
-#include "Globals.h"
 #include "Resources.h"
 
 Map::Map(SDL_Rect rect, PState state, int &zoom)
@@ -9,8 +8,10 @@ Map::Map(SDL_Rect rect, PState state, int &zoom)
 
 void Map::render() {
   auto res = Resources::getInstance();
-  res->zcx = (source.x + .5f * source.w) / res->mapDimensions.w;
-  res->zcy = (source.y + .5f * source.h) / res->mapDimensions.h;
+  res->zcx =
+      (static_cast<float>(source.x) + .5f * static_cast<float>(source.w)) / static_cast<float>(res->mapDimensions.w);
+  res->zcy =
+      (static_cast<float>(source.y) + .5f * static_cast<float>(source.h)) / static_cast<float>(res->mapDimensions.h);
 
   glViewport(0, 0, mRect.w, mRect.h);
 
@@ -34,10 +35,10 @@ void Map::render() {
 
   GL_CHECK;
 
-  Satellites::getInstance()->renderUISatellits(zoom);
+  Satellites::getInstance()->renderUISatellites(zoom);
 }
 
-bool Map::isClicked(const SDL_MouseButtonEvent e, PState &state) {
+bool Map::isClicked(const SDL_MouseButtonEvent &e, PState &state) {
   if (UIElement::isClicked(e, state)) {
     if (e.button == SDL_BUTTON_LEFT && zoom < mConf.getIntValue("/ZoomLevel/MAX")) { zoomIn(e); }
     if (e.button == SDL_BUTTON_RIGHT && zoom > mConf.getIntValue("/ZoomLevel/MIN")) { zoomOut(); }

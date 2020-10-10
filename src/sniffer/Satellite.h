@@ -17,11 +17,10 @@ public:
   CoordGeodetic &getPosition();
   Trajectory &getForwardTrajectory();
   Trajectory &getBackTrajectory();
-  ~Satellite();
 
   void toggleShown();
   time_t getDelta(std::time_t &time);
-  bool isShown();
+  bool isShown() const;
   void show();
   void hide();
   std::string &getName();

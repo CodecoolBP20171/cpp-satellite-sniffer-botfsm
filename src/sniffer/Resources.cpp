@@ -10,12 +10,12 @@
 #include <vector>
 
 namespace {
-static GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
+GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
   GLuint loadedShader = glCreateShader(_shaderType);
 
   if (loadedShader == 0) { throw LoadError(); }
 
-  std::string shaderCode = "";
+  std::string shaderCode;
   std::ifstream shaderStream(_fileName);
 
   if (!shaderStream.is_open()) { throw LoadError(); }
@@ -26,7 +26,7 @@ static GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
   shaderStream.close();
 
   const char *sourcePointer = shaderCode.c_str();
-  glShaderSource(loadedShader, 1, &sourcePointer, NULL);
+  glShaderSource(loadedShader, 1, &sourcePointer, nullptr);
 
   glCompileShader(loadedShader);
 
@@ -38,7 +38,7 @@ static GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
 
   if (GL_FALSE == result) {
     std::vector<char> VertexShaderErrorMessage(infoLogLength);
-    glGetShaderInfoLog(loadedShader, infoLogLength, NULL, &VertexShaderErrorMessage[0]);
+    glGetShaderInfoLog(loadedShader, infoLogLength, nullptr, &VertexShaderErrorMessage[0]);
 
     std::cerr << "Shader compilation error in file: " << _fileName << '\n';
     std::cerr << &VertexShaderErrorMessage[0] << '\n';
@@ -51,8 +51,8 @@ static GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
 sptr<Resources> Resources::instance = nullptr;
 Resources::Resources() : mConf(Config::getInstance()) {
   std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
-                                                                SDL_WINDOWPOS_CENTERED,
-                                                                SDL_WINDOWPOS_CENTERED,
+                                                                SDL_WINDOWPOS_CENTERED, // NOLINT(hicpp-signed-bitwise)
+                                                                SDL_WINDOWPOS_CENTERED, // NOLINT(hicpp-signed-bitwise)
                                                                 mConf.getIntValue("/Dimensions/WINDOW_WIDTH"),
                                                                 mConf.getIntValue("/Dimensions/WINDOW_HEIGHT"),
                                                                 SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL));
@@ -64,6 +64,7 @@ Resources::Resources() : mConf(Config::getInstance()) {
   glContext = SDL_GL_CreateContext(window.get());
 
   GLenum res{0};
+  (void)res; // suppress IDE never used warning
   if ((res = glewInit())) {
     std::cerr << "Failed to initialize OpenGL loader!\n" << glewGetErrorString(res) << std::endl;
     throw LoadError();
@@ -80,8 +81,8 @@ Resources::Resources() : mConf(Config::getInstance()) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glPrimitiveRestartIndex(static_cast<GLuint>(-1));
 
-  std::unique_ptr<TTF_Font, sdl_deleter> fon(TTF_OpenFont(mConf.getStringValue("/FontFiles/MAP_TEXT").data(),
-                                                          mConf.getIntValue("/Dimensions/MAP_TEXT_SIZE")));
+  std::unique_ptr<TTF_Font, sdl_deleter> fon(
+      TTF_OpenFont(mConf.getStringValue("/FontFiles/MAP_TEXT").data(), mConf.getIntValue("/Dimensions/MAP_TEXT_SIZE")));
   if (!fon) {
     std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
     throw LoadError();
@@ -153,10 +154,12 @@ void Resources::loadTextures() {
 void Resources::initAtlas() {
   static const char *NAMES[] = {"STATION", "GPS", "TELESCOPE"};
   static const int ARRAY_SIZE = sizeof(NAMES) / sizeof(NAMES[0]);
-  const int N = 4; // NxN entries in the atlas
-  const float N_INV = 1.f / N;
+  static const int N = 4; // NxN entries in the atlas
+  static const float N_INV = 1.f / N;
   for (int i = 0; i < ARRAY_SIZE; i++) {
-    float xMin = N_INV * (i % N), xMax = xMin + N_INV, yMin = N_INV * (i / N), yMax = yMin + N_INV;
+    float xMin = N_INV * static_cast<float>(i % N), xMax = xMin + N_INV,
+          yMin = N_INV * static_cast<float>(i / N), // NOLINT(bugprone-integer-division)
+        yMax = yMin + N_INV;
     atlasCoords.emplace(std::make_pair<std::string_view, std::array<Graphics::texture_vertex, 4>>(
         NAMES[i],
         {Graphics::texture_vertex{0.f, 0.f, xMin, yMax},
@@ -204,7 +207,7 @@ void Resources::initBuffers() {
   glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), 0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), nullptr);
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), (void *)(2 * sizeof(float)));
@@ -221,7 +224,7 @@ void Resources::initBuffers() {
   glBindBuffer(GL_ARRAY_BUFFER, iconVBOId);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), 0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), nullptr);
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::texture_vertex), (void *)(2 * sizeof(float)));
@@ -237,7 +240,7 @@ void Resources::initBuffers() {
   glBindBuffer(GL_ARRAY_BUFFER, trajectoryVBOId);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::color_vertex), 0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Graphics::color_vertex), nullptr);
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Graphics::color_vertex), (void *)(2 * sizeof(float)));
@@ -274,7 +277,6 @@ bool Resources::GLErrors(const char *file, int line) {
   switch (err) {
   case GL_NO_ERROR:
     return true;
-    break; // returns true if ok!
   case GL_INVALID_ENUM:
     msg = "Invalid enum";
     expl = "An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no "

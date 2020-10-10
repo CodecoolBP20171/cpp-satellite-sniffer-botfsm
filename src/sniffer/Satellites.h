@@ -11,8 +11,8 @@ template <typename T> using sptr = std::shared_ptr<T>;
 class Satellites {
 public:
   static sptr<Satellites> &getInstance();
-  void renderUISatellits(int zoom);
-  void renderPopupSatellits();
+  void renderUISatellites(int zoom);
+  void renderPopupSatellites();
   void saveSatelliteList();
   void updatePosition();
 

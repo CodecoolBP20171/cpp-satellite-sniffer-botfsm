@@ -8,6 +8,6 @@ struct texture_vertex {
   float posx, posy, texx, texy;
 };
 struct color_vertex {
-  float posx, posy, colr, colg, colb;
+  [[maybe_unused]] float posx, posy, colr, colg, colb;
 };
 } // namespace Graphics

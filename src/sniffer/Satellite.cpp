@@ -2,7 +2,6 @@
 
 #include "Config.h"
 #include "Globals.h"
-#include "Resources.h"
 
 #include <CoordGeodetic.h>
 #include <SGP4.h>
@@ -12,14 +11,15 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
+#include <utility>
 
 #define _CRT_SECURE_NO_WARNINGS
 
 Satellite::Satellite(std::string name, std::string noradId, std::string type, bool visible)
-    : mName(name), mNoradId(noradId), mTLE(loadTle()), mSatelliteType(type), mSGP4(mTLE), mShown(visible),
-      mForwardTrajectory(Trajectory::FORWARD), mBackTrajectory(Trajectory::BACK), mConf(Config::getInstance()) {
+    : mName(std::move(name)), mNoradId(std::move(noradId)), mTLE(loadTle()), mSatelliteType(std::move(type)),
+      mSGP4(mTLE), mShown(visible), mForwardTrajectory(Trajectory::FORWARD), mBackTrajectory(Trajectory::BACK),
+      mConf(Config::getInstance()) {
   updatePosition();
 }
 
@@ -70,15 +70,13 @@ void Satellite::updatePosition() {
 void Satellite::updatePosition(std::time_t time) {
   if (!mShown) return;
   auto *tmptime = gmtime(&time);
-  std::tm stime;
+  std::tm stime{};
   std::memcpy(&stime, tmptime, sizeof(std::tm));
   calculate(stime);
   mForwardTrajectory.calculate(time, *this);
   mBackTrajectory.calculate(time, *this);
   transformOrigo();
 }
-
-Satellite::~Satellite() {}
 
 void Satellite::toggleShown() {
   mShown = !mShown;
@@ -92,7 +90,7 @@ time_t Satellite::getDelta(std::time_t &time) {
   return static_cast<time_t>(round(rate / 24));
 }
 
-bool Satellite::isShown() { return mShown; }
+bool Satellite::isShown() const { return mShown; }
 
 void Satellite::show() {
   if (!mShown) {

@@ -11,7 +11,6 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include <GL/gl.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
@@ -121,8 +120,7 @@ bool Program::handleEvents() {
   while (SDL_PollEvent(&e) != 0) {
     ImGui_ImplSDL2_ProcessEvent(&e);
     if (e.type == SDL_QUIT) { return true; }
-    auto &io = ImGui::GetIO();
-    if (!io.WantCaptureMouse) {
+    if (!io->WantCaptureMouse) {
       if (e.type == SDL_MOUSEBUTTONUP) {
         for (auto &elem : UIElements) {
           if (elem->isActive(state) && elem->isClicked(e.button, state)) { break; }
