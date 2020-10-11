@@ -7,6 +7,7 @@
 class UIElement {
 public:
   UIElement(SDL_Rect rect, PState state);
+  virtual ~UIElement() = default;
   virtual bool isClicked(const SDL_MouseButtonEvent &e, PState &state);
   virtual void render() = 0;
   [[nodiscard]] bool isActive(const PState &state) const;
