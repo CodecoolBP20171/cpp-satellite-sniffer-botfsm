@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Ninja build",
+            "label": "Build",
             "type": "shell",
             "command": "ninja",
             "args": [
@@ -12,7 +12,13 @@
                 "${workspaceFolder}/build",
                 "sniffer"
             ],
-            "problemMatcher": [],
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}/build"
+                ]
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -23,7 +29,42 @@
             "type": "shell",
             "command": "ninja",
             "args": [
+                "-C",
+                "${workspaceFolder}/build",
                 "clean"
+            ]
+        },
+        {
+            "label": "CMake Configure",
+            "command": "cmake",
+            "args": [
+                "-G",
+                "Ninja",
+                "-B",
+                "${workspaceFolder}/build",
+                "-S",
+                "${workspaceFolder}"
+            ],
+            "dependsOn": "Create build dir",
+            "problemMatcher": []
+        },
+        {
+            "label": "Create build dir",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "${workspaceFolder}/build"
+            ],
+            "dependsOn": "Remove build dir"
+        },
+        {
+            "label": "Remove build dir",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rfd",
+                "${workspaceFolder}/build"
             ]
         }
     ]
