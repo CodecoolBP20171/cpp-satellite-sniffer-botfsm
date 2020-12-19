@@ -1,6 +1,7 @@
 #include "Config.h"
 
 #include <rapidjson/pointer.h>
+#include <spdlog/fmt/fmt.h>
 
 #include <charconv>
 #include <fstream>
@@ -9,7 +10,7 @@
 
 const SDL_Rect &Config::getRect(const std::string_view &name) {
   if (rects.find(name) != rects.end()) { return rects.at(name); }
-  throw std::runtime_error(std::string("No rect found with name: ") + name.data());
+  throw std::runtime_error(fmt::format("No rect found with name: {}", name.data()));
 }
 
 Config::Config() {
@@ -74,13 +75,13 @@ Config &Config::getInstance() {
 int Config::getIntValue(const std::string_view &path) {
   auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
   if (val->IsInt()) { return val->GetInt(); }
-  throw std::runtime_error(std::string("No integer value at path: ") + path.data());
+  throw std::runtime_error(fmt::format("No integer value at path: {}", path.data()));
 }
 
 double Config::getRealValue(const std::string_view &path) {
   auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
   if (val->IsDouble()) { return val->GetDouble(); }
-  throw std::runtime_error(std::string("No floating point value at path: ") + path.data());
+  throw std::runtime_error(fmt::format("No floating point value at path: {}", path.data()));
 }
 
 const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) {
@@ -99,7 +100,7 @@ const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) 
     auto ar = std::from_chars(A.data(), A.data() + A.size(), a, 16);
     static std::errc ok;
     if (rr.ec != ok || gr.ec != ok || br.ec != ok || ar.ec != ok) {
-      throw std::runtime_error(std::string("Color parsing error at path: ") + path.data());
+      throw std::runtime_error(fmt::format("Color parsing error at path: {}", path.data()));
     }
     colors[path] = Graphics::rgba_color{static_cast<float>(r) / 255.f,
                                         static_cast<float>(g) / 255.f,
@@ -107,11 +108,11 @@ const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) 
                                         static_cast<float>(a) / 255.f};
     return colors[path];
   }
-  throw std::runtime_error(std::string("No color value at path: ") + path.data());
+  throw std::runtime_error(fmt::format("No color value at path: {}", path.data()));
 }
 
 std::string_view Config::getStringValue(const std::string_view &path) {
   auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
   if (val->IsString()) { return val->GetString(); }
-  throw std::runtime_error(std::string("No string value at path: ") + path.data());
+  throw std::runtime_error(fmt::format("No string value at path: {}", path.data()));
 }
