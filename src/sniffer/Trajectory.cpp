@@ -34,9 +34,9 @@ void Trajectory::render(int zoom) {
 }
 
 void Trajectory::renderNewTexture([[maybe_unused]] int zoom) {
-  auto &res {Resources::getInstance()};
-  auto [R, G, B, A]{mConf.getColorValue(direction == Direction::FORWARD ? "/TrajectoryRender/FORWARD_COLOR"
-                                                                        : "/TrajectoryRender/BACKWARD_COLOR")};
+  auto &res{Resources::getInstance()};
+  auto [R, G, B, A]{mConf.getColor(direction == Direction::FORWARD ? "/TrajectoryRender/FORWARD_COLOR"
+                                                                   : "/TrajectoryRender/BACKWARD_COLOR")};
   auto lastX{static_cast<float>(points[0].longitude / (MathConstants::PI * 2))};
   res.trajectoryIndexBuf.emplace_back(res.trajectoryBuffer.size());
   res.trajectoryBuffer.emplace_back(

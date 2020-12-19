@@ -17,7 +17,6 @@ Config::Config() {
   LoadSettingsFile();
   CalculateDimensions();
   CreateRects();
-  getColorValue("/TrajectoryRender/FORWARD_COLOR");
 }
 
 void Config::CreateRects() {
@@ -84,7 +83,7 @@ double Config::getRealValue(const std::string_view &path) {
   throw std::runtime_error(fmt::format("No floating point value at path: {}", path.data()));
 }
 
-const Graphics::rgba_color &Config::getColorValue(const std::string_view &path) {
+const Graphics::rgba_color &Config::getColor(const std::string_view &path) {
   if (colors.find(path) != colors.end()) { return colors.at(path); }
   auto val{rapidjson::Pointer(path.data()).Get(mConfig)};
   if (val->IsString() && val->GetStringLength() == 8) {

@@ -15,7 +15,7 @@ public:
   static Config &getInstance();
   int getIntValue(const std::string_view &path);
   double getRealValue(const std::string_view &path);
-  const Graphics::rgba_color &getColorValue(const std::string_view &path);
+  const Graphics::rgba_color &getColor(const std::string_view &path);
   std::string_view getStringValue(const std::string_view &path);
   const SDL_Rect &getRect(const std::string_view &name);
 
