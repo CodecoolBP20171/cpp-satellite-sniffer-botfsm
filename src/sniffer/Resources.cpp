@@ -48,7 +48,6 @@ GLuint loadShader(GLenum _shaderType, const std::string &_fileName) {
 }
 } // namespace
 
-sptr<Resources> Resources::instance = nullptr;
 Resources::Resources() : mConf(Config::getInstance()) {
   std::unique_ptr<SDL_Window, sdl_deleter> win(SDL_CreateWindow("Satellites",
                                                                 SDL_WINDOWPOS_CENTERED, // NOLINT(hicpp-signed-bitwise)
@@ -90,18 +89,18 @@ Resources::Resources() : mConf(Config::getInstance()) {
   fon.swap(ttffont);
 }
 
-sptr<Resources> &Resources::getInstance() {
-  if (!instance) {
-    instance = sptr<Resources>(new Resources());
+Resources &Resources::getInstance() {
+  static Resources instance;
+  if (!instance.loaded) {
+    instance.loadTextures();
     GL_CHECK;
-    instance->loadTextures();
+    instance.initAtlas();
     GL_CHECK;
-    instance->initAtlas();
+    instance.loadShaders();
     GL_CHECK;
-    instance->loadShaders();
+    instance.initBuffers();
     GL_CHECK;
-    instance->initBuffers();
-    GL_CHECK;
+    instance.loaded = true;
   }
   return instance;
 }
@@ -256,11 +255,6 @@ void Resources::initBuffers() {
 SDL_Window *Resources::getWindow() { return window.get(); }
 
 SDL_GLContext &Resources::getGLContext() { return glContext; }
-
-void Resources::releaseResources() {
-  if (instance) instance->release();
-  instance.reset();
-}
 
 TTF_Font *Resources::getFont() { return ttffont.get(); }
 

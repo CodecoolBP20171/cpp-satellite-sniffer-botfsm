@@ -28,8 +28,8 @@ struct sdl_deleter {
 class Resources {
 public:
   static bool GLErrors(const char *file, int line);
-  static sptr<Resources> &getInstance();
-  static void releaseResources();
+  static Resources &getInstance();
+  void release();
   TTF_Font *getFont();
 
   SDL_Window *getWindow();
@@ -51,16 +51,13 @@ public:
   SDL_Rect iconDimensions{0, 0, 0, 0};
 
 private:
-  static sptr<Resources> instance;
-
+  bool loaded{false};
   Config &mConf;
   std::unique_ptr<SDL_Window, sdl_deleter> window;
   std::unique_ptr<TTF_Font, sdl_deleter> ttffont;
   SDL_GLContext glContext;
 
   std::map<std::string_view, std::array<Graphics::texture_vertex, 4>> atlasCoords;
-
-  void release();
 
   Resources();
   void loadTextures();

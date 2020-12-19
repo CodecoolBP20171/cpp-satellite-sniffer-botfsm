@@ -28,81 +28,83 @@ void Satellites::updatePosition() {
 }
 
 void Satellites::renderUISatellites(int zoom) {
-  auto res = Resources::getInstance();
+  auto &res{Resources::getInstance()};
   // TODO only do this if trajectory is recalculated or map zoomed
-  res->iconBuffer.clear();
-  res->trajectoryBuffer.clear();
-  res->iconIndexBuf.clear();
-  res->trajectoryIndexBuf.clear();
+  res.iconBuffer.clear();
+  res.trajectoryBuffer.clear();
+  res.iconIndexBuf.clear();
+  res.trajectoryIndexBuf.clear();
 
   for (auto &sat : UISats) { sat.render(zoom); }
 
-  // render trajectories
-  glBindBuffer(GL_ARRAY_BUFFER, res->trajectoryVBOId);
-  glBufferData(GL_ARRAY_BUFFER,
-               sizeof(Graphics::color_vertex) * res->trajectoryBuffer.size(),
-               res->trajectoryBuffer.data(),
-               GL_STREAM_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->trajectoryIBOId);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               sizeof(GLuint) * res->trajectoryIndexBuf.size(),
-               res->trajectoryIndexBuf.data(),
-               GL_STREAM_DRAW);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glUseProgram(res->trajectoryProgramId);
-
-  // TODO move this to some other place
-  static auto line_zcULoc{glGetUniformLocation(res->trajectoryProgramId, "zoom_center")};
-  static auto line_zlULoc{glGetUniformLocation(res->trajectoryProgramId, "zoom_level")};
-
-  glUniform2f(line_zcULoc, res->zcx, res->zcy);
-  glUniform1f(line_zlULoc, static_cast<float>(std::pow(2, zoom)));
-
-  glBindVertexArray(res->trajectoryVAOId);
-  glLineWidth(2.5f);
-  glDrawElements(GL_LINE_STRIP, res->trajectoryIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
-
-  glBindVertexArray(0);
-  glUseProgram(0);
-
-  // render icons
-
-  glBindBuffer(GL_ARRAY_BUFFER, res->iconVBOId);
-  glBufferData(GL_ARRAY_BUFFER,
-               sizeof(Graphics::texture_vertex) * res->iconBuffer.size(),
-               res->iconBuffer.data(),
-               GL_STREAM_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->iconIBOId);
-  glBufferData(
-      GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * res->iconIndexBuf.size(), res->iconIndexBuf.data(), GL_STREAM_DRAW);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glUseProgram(res->textureProgramId);
-  glBindTexture(GL_TEXTURE_2D, res->atlasTextureId);
-
-  // TODO move this somewhere else
-  static auto icon_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
-  static auto icon_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
-  static auto icon_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
-
-  glUniform1i(icon_tsULoc, 0);
-  glUniform2f(icon_zcULoc, res->zcx, res->zcy);
-  glUniform1f(icon_zlULoc, static_cast<float>(std::pow(2, zoom)));
-
-  glBindVertexArray(res->iconVAOId);
-  glDrawElements(GL_TRIANGLES, res->iconIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
-
-  glBindVertexArray(0);
-  glUseProgram(0);
+  renderTrajectories(zoom);
+  renderIcons(zoom);
 
   GL_CHECK;
+}
+void Satellites::renderIcons(int zoom) const {
+  auto &res{Resources::getInstance()};
+  glBindBuffer(GL_ARRAY_BUFFER, res.iconVBOId);
+  glBufferData(
+      GL_ARRAY_BUFFER, sizeof(Graphics::texture_vertex) * res.iconBuffer.size(), res.iconBuffer.data(), GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res.iconIBOId);
+  glBufferData(
+      GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * res.iconIndexBuf.size(), res.iconIndexBuf.data(), GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res.textureProgramId);
+  glBindTexture(GL_TEXTURE_2D, res.atlasTextureId);
+
+  // TODO move this somewhere else
+  static auto icon_tsULoc{glGetUniformLocation(res.textureProgramId, "tex_sampl")};
+  static auto icon_zcULoc{glGetUniformLocation(res.textureProgramId, "zoom_center")};
+  static auto icon_zlULoc{glGetUniformLocation(res.textureProgramId, "zoom_level")};
+
+  glUniform1i(icon_tsULoc, 0);
+  glUniform2f(icon_zcULoc, res.zcx, res.zcy);
+  glUniform1f(icon_zlULoc, static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res.iconVAOId);
+  glDrawElements(GL_TRIANGLES, res.iconIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+}
+void Satellites::renderTrajectories(int zoom) const {
+  auto &res{Resources::getInstance()};
+  glBindBuffer(GL_ARRAY_BUFFER, res.trajectoryVBOId);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Graphics::color_vertex) * res.trajectoryBuffer.size(),
+               res.trajectoryBuffer.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res.trajectoryIBOId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               sizeof(GLuint) * res.trajectoryIndexBuf.size(),
+               res.trajectoryIndexBuf.data(),
+               GL_STREAM_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(res.trajectoryProgramId);
+
+  // TODO move this to some other place
+  static auto line_zcULoc{glGetUniformLocation(res.trajectoryProgramId, "zoom_center")};
+  static auto line_zlULoc{glGetUniformLocation(res.trajectoryProgramId, "zoom_level")};
+
+  glUniform2f(line_zcULoc, res.zcx, res.zcy);
+  glUniform1f(line_zlULoc, static_cast<float>(std::pow(2, zoom)));
+
+  glBindVertexArray(res.trajectoryVAOId);
+  glLineWidth(2.5f);
+  glDrawElements(GL_LINE_STRIP, res.trajectoryIndexBuf.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
 }
 
 void Satellites::renderPopupSatellites() {

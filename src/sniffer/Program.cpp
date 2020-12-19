@@ -58,7 +58,7 @@ void Program::init() {
 
   ImGui::StyleColorsDark();
 
-  ImGui_ImplSDL2_InitForOpenGL(Resources::getInstance()->getWindow(), Resources::getInstance()->getGLContext());
+  ImGui_ImplSDL2_InitForOpenGL(Resources::getInstance().getWindow(), Resources::getInstance().getGLContext());
   ImGui_ImplOpenGL3_Init(/*glsl_version=*/"#version 130");
 
   loaded = true;
@@ -82,7 +82,7 @@ void Program::unload() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext(ig_context);
-  Resources::releaseResources();
+  Resources::getInstance().release();
   TTF_Quit();
   IMG_Quit();
   SDL_Quit();
@@ -98,7 +98,7 @@ void Program::updatePositions() {
 
 void Program::render() {
   ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplSDL2_NewFrame(Resources::getInstance()->getWindow());
+  ImGui_ImplSDL2_NewFrame(Resources::getInstance().getWindow());
   ImGui::NewFrame();
 
   glClearColor(50 / 255.f, 50 / 255.f, 50 / 255.f, 1.f);
@@ -111,7 +111,7 @@ void Program::render() {
   // ImGui::ShowMetricsWindow();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  SDL_GL_SwapWindow(Resources::getInstance()->getWindow());
+  SDL_GL_SwapWindow(Resources::getInstance().getWindow());
   GL_CHECK;
 }
 

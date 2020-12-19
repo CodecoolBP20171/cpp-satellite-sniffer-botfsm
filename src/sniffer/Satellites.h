@@ -23,4 +23,6 @@ private:
   Satellites();
   std::vector<Satellite> sats;
   std::list<UISatellite> UISats;
+  void renderTrajectories(int zoom) const;
+  void renderIcons(int zoom) const;
 };

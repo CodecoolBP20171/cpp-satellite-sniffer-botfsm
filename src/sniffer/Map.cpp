@@ -4,30 +4,30 @@
 #include "Resources.h"
 
 Map::Map(SDL_Rect rect, PState state, int &zoom)
-    : UIElement(rect, state), source(Resources::getInstance()->mapDimensions), zoom(zoom) {}
+    : UIElement(rect, state), source(Resources::getInstance().mapDimensions), zoom(zoom) {}
 
 void Map::render() {
-  auto res = Resources::getInstance();
-  res->zcx =
-      (static_cast<float>(source.x) + .5f * static_cast<float>(source.w)) / static_cast<float>(res->mapDimensions.w);
-  res->zcy =
-      (static_cast<float>(source.y) + .5f * static_cast<float>(source.h)) / static_cast<float>(res->mapDimensions.h);
+  auto &res{Resources::getInstance()};
+  res.zcx =
+      (static_cast<float>(source.x) + .5f * static_cast<float>(source.w)) / static_cast<float>(res.mapDimensions.w);
+  res.zcy =
+      (static_cast<float>(source.y) + .5f * static_cast<float>(source.h)) / static_cast<float>(res.mapDimensions.h);
 
   glViewport(0, 0, mRect.w, mRect.h);
 
-  glUseProgram(res->textureProgramId);
-  glBindTexture(GL_TEXTURE_2D, res->mapTextureId);
+  glUseProgram(res.textureProgramId);
+  glBindTexture(GL_TEXTURE_2D, res.mapTextureId);
 
   // TODO move this to a better place
-  static auto map_tsULoc{glGetUniformLocation(res->textureProgramId, "tex_sampl")};
-  static auto map_zcULoc{glGetUniformLocation(res->textureProgramId, "zoom_center")};
-  static auto map_zlULoc{glGetUniformLocation(res->textureProgramId, "zoom_level")};
+  static auto map_tsULoc{glGetUniformLocation(res.textureProgramId, "tex_sampl")};
+  static auto map_zcULoc{glGetUniformLocation(res.textureProgramId, "zoom_center")};
+  static auto map_zlULoc{glGetUniformLocation(res.textureProgramId, "zoom_level")};
 
   glUniform1i(map_tsULoc, 0);
-  glUniform2f(map_zcULoc, res->zcx, res->zcy);
+  glUniform2f(map_zcULoc, res.zcx, res.zcy);
   glUniform1f(map_zlULoc, static_cast<float>(std::pow(2, zoom)));
 
-  glBindVertexArray(res->mapVAOId);
+  glBindVertexArray(res.mapVAOId);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);
@@ -48,37 +48,37 @@ bool Map::isClicked(const SDL_MouseButtonEvent &e, PState &state) {
 }
 
 void Map::zoomIn(const SDL_MouseButtonEvent &e) {
-  auto res = Resources::getInstance();
+  auto &res{Resources::getInstance()};
   zoom++;
   source.x = e.x * source.w / mRect.w + source.x;
   source.y = (e.y - mConf.getIntValue("/Dimensions/MENU_HEIGHT")) * source.h / mRect.h + source.y;
-  source.w = static_cast<int>(std::ceil(res->mapDimensions.w / std::pow(2, zoom)));
-  source.h = static_cast<int>(std::ceil(res->mapDimensions.h / std::pow(2, zoom)));
+  source.w = static_cast<int>(std::ceil(res.mapDimensions.w / std::pow(2, zoom)));
+  source.h = static_cast<int>(std::ceil(res.mapDimensions.h / std::pow(2, zoom)));
   source.x -= source.w / 2;
   source.y -= source.h / 2;
   clampToBorder();
 }
 
 void Map::zoomOut() {
-  auto res = Resources::getInstance();
+  auto &res{Resources::getInstance()};
   zoom--;
   source.x -= source.w / 2;
   source.y -= source.h / 2;
-  source.w = static_cast<int>(std::ceil(res->mapDimensions.w / std::pow(2, zoom)));
-  source.h = static_cast<int>(std::ceil(res->mapDimensions.h / std::pow(2, zoom)));
+  source.w = static_cast<int>(std::ceil(res.mapDimensions.w / std::pow(2, zoom)));
+  source.h = static_cast<int>(std::ceil(res.mapDimensions.h / std::pow(2, zoom)));
   clampToBorder();
 }
 
 void Map::clampToBorder() {
-  auto res = Resources::getInstance();
+  auto &res{Resources::getInstance()};
   if (source.x <= 0) {
     source.x = 0;
-  } else if (source.x + source.w > res->mapDimensions.w) {
-    source.x = res->mapDimensions.w - source.w;
+  } else if (source.x + source.w > res.mapDimensions.w) {
+    source.x = res.mapDimensions.w - source.w;
   }
   if (source.y <= 0) {
     source.y = 0;
-  } else if (source.y + source.h > res->mapDimensions.h) {
-    source.y = res->mapDimensions.h - source.h;
+  } else if (source.y + source.h > res.mapDimensions.h) {
+    source.y = res.mapDimensions.h - source.h;
   }
 }

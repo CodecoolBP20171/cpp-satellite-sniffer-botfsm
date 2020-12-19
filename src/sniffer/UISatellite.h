@@ -10,7 +10,7 @@ class UISatellite : UIElement {
 public:
   explicit UISatellite(Satellite &sat);
   void render() override{};
-  void render(int zoom);
+  void render(int zoom_level);
   bool isClicked(const SDL_MouseButtonEvent &e, PState &state) override;
 
 private:
