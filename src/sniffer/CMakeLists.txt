@@ -21,7 +21,8 @@ target_include_directories(sniffer PRIVATE
         ${GLEW_INCLDUE_DIRS}
         ${CMAKE_CURRENT_LIST_DIR}/../sgp4
         ${CMAKE_CURRENT_LIST_DIR}/../imgui
-        ${CMAKE_CURRENT_LIST_DIR}/../../lib/rapidjson/include
+        ${RAPIDJOSN_INCLUDE_DIR}
+        ${SPDLOG_INCLUDE_DIR}
         )
 
 target_link_libraries(sniffer PRIVATE

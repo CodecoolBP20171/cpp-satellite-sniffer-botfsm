@@ -11,7 +11,7 @@ IncludeBlocks: Regroup
 IncludeCategories:
   - Regex: '".*\.(h|hpp|hh)"'
     Priority: 1
-  - Regex: '<(nlohmann/|spdlog/|GL/|imgui|).*\.(h|hpp|hh)>'
+  - Regex: '<(rapidjson/|spdlog/|GL/|imgui|SDL).*\.(h|hpp|hh)>'
     Priority: 3
   - Regex: '<.*\.(h|hpp|hh)>'
     Priority: 2
