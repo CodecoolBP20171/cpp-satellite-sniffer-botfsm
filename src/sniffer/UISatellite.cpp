@@ -6,6 +6,8 @@
 
 #include <SDL2_gfxPrimitives.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
 UISatellite::UISatellite(Satellite &sat)
     : UIElement({0, 0, 0, 0}, PState::RUNNING), sat(sat), trajectoryForward(sat.getForwardTrajectory()),
       trajectoryBackward(sat.getBackTrajectory()) {}
@@ -54,3 +56,5 @@ void UISatellite::renderTrajectory(int zoom) {
   trajectoryForward.render(zoom);
   trajectoryBackward.render(zoom);
 }
+
+#pragma clang diagnostic pop

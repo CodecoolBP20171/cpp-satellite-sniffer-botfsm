@@ -28,8 +28,8 @@ private:
   Uint32 timestep;
   Uint32 lastCalculationTime;
   Uint32 calculationTimeStep;
-  ImGuiContext *ig_context = nullptr;
-  ImGuiIO *io = nullptr;
+  ImGuiContext *ig_context{nullptr};
+  ImGuiIO *io{nullptr};
   bool handleEvents();
   void updatePositions();
   void render();
