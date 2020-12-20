@@ -35,20 +35,6 @@
             ]
         },
         {
-            "label": "CMake Configure",
-            "command": "cmake",
-            "args": [
-                "-G",
-                "Ninja",
-                "-B",
-                "${workspaceFolder}/build",
-                "-S",
-                "${workspaceFolder}"
-            ],
-            "dependsOn": "Create build dir",
-            "problemMatcher": []
-        },
-        {
             "label": "Create build dir",
             "type": "shell",
             "command": "mkdir",
