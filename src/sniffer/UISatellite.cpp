@@ -5,7 +5,6 @@
 #include "Resources.h"
 
 #include <SDL2_gfxPrimitives.h>
-
 #include <imgui.h>
 
 #pragma clang diagnostic push
@@ -45,21 +44,22 @@ void UISatellite::render(int zoom) {
   res.iconIndexBuf.emplace_back(start + 1);
   res.iconIndexBuf.emplace_back(start + 3);
 
-  // TODO render text with imgui
-  // auto textPos(text->getDimensions());
-  // textPos.x = satRect.x + satSize.w / zoom;
-  // textPos.y = satRect.y;
-  // textPos.w /= zoom;
-  // textPos.h /= zoom;
-  // text->render(&textPos);
   ImGui::SetNextWindowContentSize({static_cast<float>(mConf.getIntValue("/Dimensions/MAP_WIDTH")),
                                    static_cast<float>(mConf.getIntValue("/Dimensions/MAP_HEIGHT"))});
   ImGui::SetNextWindowPos({0.f, static_cast<float>(mConf.getIntValue("/Dimensions/MENU_HEIGHT"))});
-  auto textSize{ImGui::CalcTextSize(sat.getName().c_str())};
+  auto textSize = ImGui::CalcTextSize(sat.getName().c_str());
   if (ImGui::Begin("name_overlay",
                    nullptr,
                    ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs)) {
-    ImGui::SetCursorPos({0.f, 0.f});
+    auto pcx = float(cx * mConf.getIntValue("/Dimensions/MAP_WIDTH") * zoom_level -
+                     (res.zcx * zoom_level * mConf.getIntValue("/Dimensions/MAP_WIDTH") -
+                      mConf.getIntValue("/Dimensions/MAP_WIDTH") / 2)) -
+               textSize.x / 2;
+    auto pcy = float(cy * mConf.getIntValue("/Dimensions/MAP_HEIGHT") * zoom_level -
+                     (res.zcy * zoom_level * mConf.getIntValue("/Dimensions/MAP_HEIGHT") -
+                      mConf.getIntValue("/Dimensions/MAP_HEIGHT") / 2)) +
+               hh * mConf.getIntValue("/Dimensions/MAP_HEIGHT");
+    ImGui::SetCursorPos({pcx, pcy});
     ImGui::Text("%s", sat.getName().c_str());
     ImGui::End();
   }
